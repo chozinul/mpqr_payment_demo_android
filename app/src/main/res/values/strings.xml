@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MPQR Payment</string>
+    <string name="txt_available_balance">Available Balance</string>
+    <string name="placeholder_available_balance">$120.90</string>
+    <string name="txt_scan_qr">Scan QR Code</string>
+    <string name="card">Card</string>
+</resources>
