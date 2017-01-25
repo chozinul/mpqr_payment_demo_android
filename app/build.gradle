@@ -55,5 +55,10 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.5.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.0'
 
+    compile 'org.apache.commons:commons-lang3:3.5' //required dependencies
+    compile 'com.journeyapps:zxing-android-embedded:3.4.0' //required dependencies
+    compile files('libs/pushpayment-core-sdk-1.0.0.jar')
+    compile(name:'qr-scan-sdk-release-1.0.0', ext:'aar')
+
     testCompile 'junit:junit:4.12'
 }
