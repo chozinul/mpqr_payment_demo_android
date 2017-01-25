@@ -13,6 +13,7 @@ import com.mastercard.labs.mpqrpayment.database.model.Card;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onPageSelected(int position) {
         Card card = this.cards.get(position);
 
-        availableBalanceTextView.setText(card.getBalanceAmount());
+        String balanceAmount = String.format(Locale.US, "$%1$.2f", card.getBalance());
+        availableBalanceTextView.setText(balanceAmount);
     }
 
     @Override
