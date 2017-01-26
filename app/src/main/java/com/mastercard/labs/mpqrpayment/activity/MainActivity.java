@@ -1,15 +1,24 @@
 package com.mastercard.labs.mpqrpayment.activity;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
 import com.mastercard.labs.mpqrpayment.database.model.Card;
+import com.mastercard.mpqr.pushpayment.exception.FormatException;
+import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
+import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
+import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,6 +26,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -120,5 +130,35 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }
             });
         }
+    }
+
+    @OnClick(R.id.scan_qr_button)
+    public void scanFromCamera() {
+        IntentIntegrator integrator = new PPIntentIntegrator(this);
+        integrator.setOrientationLocked(false);
+        integrator.setBeepEnabled(false);
+        integrator.setPrompt("Scan QR Code");
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            IntentResult result = PPIntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            PushPaymentData pushPaymentData = (PushPaymentData) data.getSerializableExtra(PPIntents.PUSH_PAYMENT_DATA);
+            if (pushPaymentData != null) {
+                // TODO: Show UI
+            } else {
+                // TODO: Show error
+            }
+        } else if (resultCode == RESULT_CANCELED) {
+            if (data != null) {
+                FormatException e = (FormatException) data.getSerializableExtra(PPIntents.PARSE_ERROR);
+                if (e != null) {
+                    // TODO: Show error
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

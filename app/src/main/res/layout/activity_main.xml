@@ -66,7 +66,7 @@
         <Button android:id="@+id/transaction_history"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="Transaction History"
+                android:text="@string/transaction_history"
                 android:fontFamily="sans-serif"
                 android:textColor="@color/colorWhite"
                 android:layout_gravity="center"
@@ -134,12 +134,14 @@
 
         </LinearLayout>
 
-        <ImageView
+        <ImageButton
+                android:id="@+id/scan_qr_button"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:src="@drawable/scan_qr"
+                android:src="@drawable/scan_qr_button"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:background="@color/colorTransparent"
                 android:contentDescription="@string/txt_scan_qr"/>
 
     </LinearLayout>
