@@ -33,7 +33,7 @@ public class CardFragment extends Fragment {
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                        Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.item_card, container, false);
+        View rootView = inflater.inflate(R.layout.item_card_coverflow, container, false);
         ImageView coverImageView = (ImageView) rootView.findViewById(R.id.image_cover);
         coverImageView.setImageDrawable(ContextCompat.getDrawable(getContext(), resourceId));
         return rootView;

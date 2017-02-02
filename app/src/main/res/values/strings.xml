@@ -12,5 +12,8 @@
     <string name="amount">Amount</string>
     <string name="currency">Currency</string>
     <string name="change">Change</string>
-    <string name="pay_with_card">Pay with **** %s</string>
+    <string name="pay_with_card">Pay with %s</string>
+    <string name="cancel">Cancel</string>
+    <string name="balance_of_card">Balance: %,.2f</string>
+    <string name="select">Select</string>
 </resources>

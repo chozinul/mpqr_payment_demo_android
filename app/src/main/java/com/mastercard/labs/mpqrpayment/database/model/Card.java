@@ -65,4 +65,8 @@ public class Card extends RealmObject {
     public void setBalance(Double balance) {
         this.balance = balance;
     }
+
+    public String getMaskedPan() {
+        return "**** " + cardNumber.substring(cardNumber.length() - 4);
+    }
 }

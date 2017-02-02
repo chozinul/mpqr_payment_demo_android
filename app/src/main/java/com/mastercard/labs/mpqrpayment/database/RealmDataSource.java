@@ -3,6 +3,8 @@ package com.mastercard.labs.mpqrpayment.database;
 import com.mastercard.labs.mpqrpayment.database.model.Card;
 import com.mastercard.labs.mpqrpayment.database.model.User;
 
+import java.util.List;
+
 import io.realm.Realm;
 
 /**
@@ -33,7 +35,7 @@ public class RealmDataSource implements DataSource {
 
 
     @Override
-    public Card getCard(Long cardId) {
+    public Card getCard(Long userId, Long cardId) {
         if (cardId == null) {
             return null;
         }
@@ -41,5 +43,15 @@ public class RealmDataSource implements DataSource {
         Realm realm = Realm.getDefaultInstance();
 
         return realm.where(Card.class).equalTo("cardId", cardId).findFirst();
+    }
+
+    @Override
+    public List<Card> getCards(Long userId) {
+        User user = getUser(userId);
+        if (user == null) {
+            return null;
+        }
+
+        return user.getCards();
     }
 }

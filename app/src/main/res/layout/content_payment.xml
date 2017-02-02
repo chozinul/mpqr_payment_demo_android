@@ -172,26 +172,31 @@
     </RelativeLayout>
 
     <RelativeLayout
+            android:id="@+id/rl_payment_card"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:padding="10dp"
             android:gravity="center">
 
         <TextView
                 android:id="@+id/txt_payment_card"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="20dp"
                 android:drawablePadding="15dp"
                 android:textSize="@dimen/size_x"
                 tools:drawableLeft="@drawable/mastercard_logo"
                 tools:text="Pay with ****4410"/>
         <Button
+                android:id="@+id/btn_change_card"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/change"
                 android:textSize="@dimen/size_x"
                 android:background="@color/colorTransparent"
                 android:textColor="@color/colorDeepSeaBlue"
+                android:layout_alignTop="@id/txt_payment_card"
+                android:layout_alignBottom="@id/txt_payment_card"
                 android:layout_toEndOf="@id/txt_payment_card"/>
     </RelativeLayout>
 

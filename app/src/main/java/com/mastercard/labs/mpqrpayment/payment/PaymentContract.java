@@ -2,7 +2,10 @@ package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.BasePresenter;
 import com.mastercard.labs.mpqrpayment.BaseView;
+import com.mastercard.labs.mpqrpayment.database.model.Card;
 import com.mastercard.labs.mpqrpayment.database.model.CardType;
+
+import java.util.List;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/1/17
@@ -34,7 +37,9 @@ public interface PaymentContract {
 
         void setMerchantCity(String merchantCity);
 
-        void setCardInfo(CardType cardType, String cardNumber);
+        void setCard(Card card);
+
+        void showCardSelection(List<Card> cards, int selectedCardIdx);
     }
 
     interface Presenter extends BasePresenter {
@@ -48,5 +53,7 @@ public interface PaymentContract {
         void setTip(double tipAmount);
 
         void setCurrencyCode(String currencyCode);
+
+        void selectCard();
     }
 }

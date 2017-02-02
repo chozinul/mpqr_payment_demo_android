@@ -240,13 +240,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void showPaymentActivity(String pushPaymentDataString) {
-        Bundle bundle = new Bundle();
-        bundle.putString(PaymentActivity.BUNDLE_PP_KEY, pushPaymentDataString);
-        bundle.putLong(PaymentActivity.BUNDLE_CARD_ID_KEY, user.getCards().get(selectedCardIdx).getCardId());
+        Long userId = user.getUserId();
+        Card selectedCard = user.getCards().get(selectedCardIdx);
 
-        Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtras(bundle);
-
+        Intent intent = PaymentActivity.newIntent(this, pushPaymentDataString, userId, selectedCard.getCardId());
         startActivity(intent);
     }
 }

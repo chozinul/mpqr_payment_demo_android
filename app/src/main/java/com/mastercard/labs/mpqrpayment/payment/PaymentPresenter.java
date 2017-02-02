@@ -2,12 +2,13 @@ package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.database.DataSource;
 import com.mastercard.labs.mpqrpayment.database.model.Card;
+import com.mastercard.labs.mpqrpayment.database.model.User;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.parser.Parser;
 
-import java.util.Currency;
+import java.util.List;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/1/17
@@ -15,6 +16,7 @@ import java.util.Currency;
 class PaymentPresenter implements PaymentContract.Presenter {
     private PaymentContract.View paymentView;
     private DataSource dataSource;
+    private Long userId;
 
     private PushPaymentData paymentData;
     private Card card;
@@ -23,13 +25,15 @@ class PaymentPresenter implements PaymentContract.Presenter {
     private double amount;
     private double tip;
 
-    PaymentPresenter(PaymentContract.View paymentView, DataSource dataSource) {
+    PaymentPresenter(PaymentContract.View paymentView, DataSource dataSource, Long userId) {
         this.paymentView = paymentView;
         this.dataSource = dataSource;
+        this.userId = userId;
     }
 
     @Override
     public void start() {
+
     }
 
     @Override
@@ -99,14 +103,13 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void setCardId(Long cardId) {
-        card = dataSource.getCard(cardId);
+        card = dataSource.getCard(userId, cardId);
         if (card == null) {
             // TODO: Show error
             return;
         }
 
-        String cardNumber = card.getCardNumber();
-        paymentView.setCardInfo(card.getCardType(), cardNumber.substring(cardNumber.length() - 4, cardNumber.length()));
+        paymentView.setCard(card);
     }
 
     @Override
@@ -151,5 +154,11 @@ class PaymentPresenter implements PaymentContract.Presenter {
         }
 
         paymentView.setTotalAmount(total, currencyCode.toString());
+    }
+
+    @Override
+    public void selectCard() {
+        List<Card> cards = dataSource.getCards(userId);
+        paymentView.showCardSelection(cards, cards.indexOf(card));
     }
 }

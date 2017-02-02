@@ -1,29 +1,38 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
-import android.support.v4.app.NavUtils;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
+import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
 import com.mastercard.labs.mpqrpayment.database.RealmDataSource;
-import com.mastercard.labs.mpqrpayment.database.model.CardType;
+import com.mastercard.labs.mpqrpayment.database.model.Card;
 
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentContract.View {
     public static String BUNDLE_PP_KEY = "pushPaymentData";
+    public static String BUNDLE_USER_ID_KEY = "userId";
     public static String BUNDLE_CARD_ID_KEY = "cardId";
 
     private PaymentContract.Presenter presenter;
@@ -52,8 +61,24 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @BindView(R.id.txt_payment_card)
     TextView paymentCardTextView;
 
+    private String paymentDataString;
+    private Long userId;
+    private Long cardId;
+
     private boolean blockAmountTextViewChange;
     private boolean blockTipTextViewChange;
+
+    public static Intent newIntent(Context context, String pushPaymentDataString, Long userId, Long cardId) {
+        Bundle bundle = new Bundle();
+        bundle.putString(PaymentActivity.BUNDLE_PP_KEY, pushPaymentDataString);
+        bundle.putLong(PaymentActivity.BUNDLE_USER_ID_KEY, userId);
+        bundle.putLong(PaymentActivity.BUNDLE_CARD_ID_KEY, cardId);
+
+        Intent intent = new Intent(context, PaymentActivity.class);
+        intent.putExtras(bundle);
+
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +92,31 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String paymentDataString;
-        Long cardId;
         if (savedInstanceState != null) {
             paymentDataString = savedInstanceState.getString(BUNDLE_PP_KEY);
+            userId = savedInstanceState.getLong(BUNDLE_USER_ID_KEY);
             cardId = savedInstanceState.getLong(BUNDLE_CARD_ID_KEY);
         } else {
             paymentDataString = getIntent().getStringExtra(BUNDLE_PP_KEY);
+            userId = getIntent().getLongExtra(BUNDLE_USER_ID_KEY, -1L);
             cardId = getIntent().getLongExtra(BUNDLE_CARD_ID_KEY, -1L);
         }
 
-        presenter = new PaymentPresenter(this, RealmDataSource.getInstance());
+        presenter = new PaymentPresenter(this, RealmDataSource.getInstance(), userId);
         presenter.setPushPaymentDataString(paymentDataString);
         presenter.setCardId(cardId);
 
         amountEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
         tipEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(BUNDLE_PP_KEY, paymentDataString);
+        outState.putLong(BUNDLE_USER_ID_KEY, userId);
+        outState.putLong(BUNDLE_CARD_ID_KEY, cardId);
     }
 
     @Override
@@ -119,6 +153,11 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         blockTipTextViewChange = false;
 
         presenter.setTip(tip / 100);
+    }
+
+    @OnClick(value = R.id.rl_payment_card)
+    public void changeCardBtnPressed() {
+        presenter.selectCard();
     }
 
     private double validateAmount(Editable amountText) {
@@ -212,9 +251,9 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     @Override
-    public void setCardInfo(CardType cardType, String lastDigits) {
+    public void setCard(Card card) {
         @DrawableRes int imageId = 0;
-        switch (cardType) {
+        switch (card.getCardType()) {
             case MastercardBlack:
             case MastercardGold:
                 imageId = R.drawable.mastercard_logo;
@@ -227,7 +266,38 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         }
 
         paymentCardTextView.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
-        paymentCardTextView.setText(getString(R.string.pay_with_card, lastDigits));
+        paymentCardTextView.setText(getString(R.string.pay_with_card, card.getMaskedPan()));
+    }
+
+    @Override
+    public void showCardSelection(final List<Card> cards, int selectedCardIdx) {
+        final CardsArrayAdapter adapter = new CardsArrayAdapter(this, cards);
+        adapter.setSelectedIndex(selectedCardIdx);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setSingleChoiceItems(adapter, selectedCardIdx, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapter.setSelectedIndex(which);
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                .setCancelable(true)
+                .setPositiveButton(R.string.select, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.setCardId(cards.get(adapter.getSelectedIndex()).getCardId());
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create();
+
+        dialog.show();
     }
 
     private class AmountInputFilter implements InputFilter {

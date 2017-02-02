@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <ImageView
+            android:id="@+id/img_card_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_margin="20dp"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/card"
+            tools:src="@drawable/mastercard_logo"/>
+
+    <TextView
+            android:id="@+id/txt_payment_card"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            android:textSize="@dimen/size_x"
+            android:layout_toEndOf="@id/img_card_logo"
+            android:textColor="@color/text_main_color"
+            android:layout_alignTop="@id/img_card_logo"
+            tools:text="Pay with ****4410"/>
+
+    <TextView
+            android:id="@+id/txt_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_below="@id/txt_payment_card"
+            android:layout_alignStart="@id/txt_payment_card"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/colorWarmGrey"
+            tools:text="Balance: 120.90"/>
+
+    <RadioButton
+            android:id="@+id/rb_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:focusable="false"
+            android:clickable="false"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorLightGrey"
+            android:layout_marginBottom="2dp"/>
+
+</RelativeLayout>
