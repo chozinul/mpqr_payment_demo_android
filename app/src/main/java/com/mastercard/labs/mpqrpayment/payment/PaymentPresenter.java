@@ -1,5 +1,6 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
+import com.mastercard.labs.mpqrpayment.database.DataSource;
 import com.mastercard.labs.mpqrpayment.database.model.Card;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
@@ -12,16 +13,19 @@ import java.util.Currency;
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/1/17
  */
 class PaymentPresenter implements PaymentContract.Presenter {
-    private PushPaymentData paymentData;
-    private Card cardId;
     private PaymentContract.View paymentView;
+    private DataSource dataSource;
+
+    private PushPaymentData paymentData;
+    private Card card;
 
     private CurrencyCode currencyCode;
     private double amount;
     private double tip;
 
-    PaymentPresenter(PaymentContract.View paymentView) {
+    PaymentPresenter(PaymentContract.View paymentView, DataSource dataSource) {
         this.paymentView = paymentView;
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -91,8 +95,18 @@ class PaymentPresenter implements PaymentContract.Presenter {
         paymentView.setMerchantCity(paymentData.getMerchantCity());
 
         updateTotal();
+    }
 
-        // TODO: Add card info
+    @Override
+    public void setCardId(Long cardId) {
+        card = dataSource.getCard(cardId);
+        if (card == null) {
+            // TODO: Show error
+            return;
+        }
+
+        String cardNumber = card.getCardNumber();
+        paymentView.setCardInfo(card.getCardType(), cardNumber.substring(cardNumber.length() - 4, cardNumber.length()));
     }
 
     @Override

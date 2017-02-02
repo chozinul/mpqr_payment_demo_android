@@ -1,16 +1,20 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
-import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
+import com.mastercard.labs.mpqrpayment.database.RealmDataSource;
+import com.mastercard.labs.mpqrpayment.database.model.CardType;
 
 import java.util.Locale;
 
@@ -19,7 +23,8 @@ import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentContract.View {
-    public static String BUNDLE_PP_KEY = "PushPaymentData";
+    public static String BUNDLE_PP_KEY = "pushPaymentData";
+    public static String BUNDLE_CARD_ID_KEY = "cardId";
 
     private PaymentContract.Presenter presenter;
 
@@ -44,6 +49,9 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @BindView(R.id.txt_merchant_city)
     TextView merchantCityTextView;
 
+    @BindView(R.id.txt_payment_card)
+    TextView paymentCardTextView;
+
     private boolean blockAmountTextViewChange;
     private boolean blockTipTextViewChange;
 
@@ -60,14 +68,18 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String paymentDataString;
+        Long cardId;
         if (savedInstanceState != null) {
             paymentDataString = savedInstanceState.getString(BUNDLE_PP_KEY);
+            cardId = savedInstanceState.getLong(BUNDLE_CARD_ID_KEY);
         } else {
             paymentDataString = getIntent().getStringExtra(BUNDLE_PP_KEY);
+            cardId = getIntent().getLongExtra(BUNDLE_CARD_ID_KEY, -1L);
         }
 
-        presenter = new PaymentPresenter(this);
+        presenter = new PaymentPresenter(this, RealmDataSource.getInstance());
         presenter.setPushPaymentDataString(paymentDataString);
+        presenter.setCardId(cardId);
 
         amountEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
         tipEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
@@ -176,7 +188,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void setTotalAmount(double amount, String currencyCode) {
-        totalAmountTextView.setText(String.format(Locale.getDefault(), "%s %.2f", currencyCode, amount));
+        totalAmountTextView.setText(String.format(Locale.getDefault(), "%s %,.2f", currencyCode, amount));
     }
 
     @Override
@@ -197,6 +209,25 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void setMerchantCity(String merchantCity) {
         merchantCityTextView.setText(merchantCity);
+    }
+
+    @Override
+    public void setCardInfo(CardType cardType, String lastDigits) {
+        @DrawableRes int imageId = 0;
+        switch (cardType) {
+            case MastercardBlack:
+            case MastercardGold:
+                imageId = R.drawable.mastercard_logo;
+                break;
+            case SavingsAccount:
+                imageId = R.drawable.savings_account_logo;
+            default:
+                // TODO: Add default card logo
+                break;
+        }
+
+        paymentCardTextView.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
+        paymentCardTextView.setText(getString(R.string.pay_with_card, lastDigits));
     }
 
     private class AmountInputFilter implements InputFilter {

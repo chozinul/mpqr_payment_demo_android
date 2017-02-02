@@ -1,6 +1,5 @@
 package com.mastercard.labs.mpqrpayment.activity;
 
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.MainApplication;
@@ -24,7 +22,6 @@ import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
 import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Currency;
@@ -36,12 +33,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
 import me.crosswall.lib.coverflow.CoverFlow;
 import me.crosswall.lib.coverflow.core.PagerContainer;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
-    public static String BUNDLE_USER_KEY = "user_id";
+    public static String BUNDLE_USER_KEY = "userId";
+    public static String BUNDLE_SELECTED_CARD_IDX = "selectedCardIdx";
 
     @BindView(R.id.pager_container)
     PagerContainer pagerContainer;
@@ -53,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private Long userId;
     private User user;
+    private int selectedCardIdx = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +84,26 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 .spaceSize(0f)
                 .build();
 
+        if (savedInstanceState != null) {
+            selectedCardIdx = savedInstanceState.getInt(BUNDLE_SELECTED_CARD_IDX, -1);
+        }
+
         invalidateViews();
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(BUNDLE_SELECTED_CARD_IDX, selectedCardIdx);
+    }
+
+    @Override
     protected void onDestroy() {
-        realm.removeAllChangeListeners();
+        if (user != null) {
+            user.removeChangeListeners();
+        }
+
         realm.close();
 
         super.onDestroy();
@@ -105,19 +117,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        Card card = this.user.getCards().get(position);
-        updateBalance(card);
+        selectedCardIdx = position;
+        updateBalance();
     }
 
-    private void updateBalance(Card card) {
-        CurrencyCode currencyCode = CurrencyCode.fromNumericCode(card.getCurrencyNumericCode());
-        String balanceAmount = String.format(Locale.getDefault(), "%.2f", card.getBalance());
+    private void updateBalance() {
+        Card selectedCard = user.getCards().get(selectedCardIdx);
+
+        CurrencyCode currencyCode = CurrencyCode.fromNumericCode(selectedCard.getCurrencyNumericCode());
+        String balanceAmount = String.format(Locale.getDefault(), "%.2f", selectedCard.getBalance());
         if (currencyCode != null) {
             try {
                 Currency currency = Currency.getInstance(currencyCode.toString());
                 NumberFormat format = NumberFormat.getCurrencyInstance();
                 format.setCurrency(currency);
-                balanceAmount = format.format(card.getBalance());
+                balanceAmount = format.format(selectedCard.getBalance());
             } catch (Exception ex) {
                 // Ignore this
             }
@@ -153,27 +167,42 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void refreshCards(User user) {
-        this.user = realm.copyFromRealm(user);
+        if (user.getCards().isEmpty()) {
+            // TODO: Show error
+            return;
+        }
+
+        if (selectedCardIdx == -1) {
+            selectedCardIdx = user.getCards().indexOf(user.getDefaultCard());
+        }
+
+        Card selectedCard = user.getCards().get(selectedCardIdx);
+
+        List<Card> cards = user.getCards();
 
         final ViewPager viewPager = pagerContainer.getViewPager();
         CardPagerAdapter pagerAdapter = (CardPagerAdapter) viewPager.getAdapter();
 
-        pagerAdapter.setCards(Collections.unmodifiableList(this.user.getCards()));
+        pagerAdapter.setCards(Collections.unmodifiableList(cards));
         pagerAdapter.notifyDataSetChanged();
 
         viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
 
-        if (user.getCards().size() > 0) {
-            updateBalance(user.getCards().get(0));
-            // Manually setting the first View to be elevated
-            viewPager.post(new Runnable() {
-                @Override
-                public void run() {
-                    Fragment fragment = (Fragment) viewPager.getAdapter().instantiateItem(viewPager, 0);
-                    ViewCompat.setElevation(fragment.getView(), 8.0f);
-                }
-            });
+        if (selectedCard == null) {
+            selectedCard = user.getCards().first();
         }
+
+        viewPager.setCurrentItem(cards.indexOf(selectedCard));
+        updateBalance();
+
+        // Manually setting the first View to be elevated
+        viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                Fragment fragment = (Fragment) viewPager.getAdapter().instantiateItem(viewPager, selectedCardIdx);
+                ViewCompat.setElevation(fragment.getView(), 8.0f);
+            }
+        });
     }
 
     @OnClick(R.id.scan_qr_button)
@@ -213,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void showPaymentActivity(String pushPaymentDataString) {
         Bundle bundle = new Bundle();
         bundle.putString(PaymentActivity.BUNDLE_PP_KEY, pushPaymentDataString);
+        bundle.putLong(PaymentActivity.BUNDLE_CARD_ID_KEY, user.getCards().get(selectedCardIdx).getCardId());
 
         Intent intent = new Intent(this, PaymentActivity.class);
         intent.putExtras(bundle);
