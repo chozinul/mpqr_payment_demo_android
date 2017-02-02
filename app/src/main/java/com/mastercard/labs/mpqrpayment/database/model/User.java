@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class User extends RealmObject {
     @PrimaryKey
-    private String userId;
+    private Long userId;
 
     private String firstName;
     private String lastName;
@@ -20,11 +20,11 @@ public class User extends RealmObject {
 
     private RealmList<Card> cards;
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

@@ -9,6 +9,7 @@ import io.realm.annotations.PrimaryKey;
 public class Card extends RealmObject {
     private String bankName;
     private String cardType;
+    private String currencyNumericCode;
     private double balance;
 
     @PrimaryKey
@@ -36,6 +37,14 @@ public class Card extends RealmObject {
 
     public void setCardType(CardType cardType) {
         this.cardType = cardType.name();
+    }
+
+    public String getCurrencyNumericCode() {
+        return currencyNumericCode;
+    }
+
+    public void setCurrencyNumericCode(String currencyCode) {
+        this.currencyNumericCode = currencyCode;
     }
 
     public double getBalance() {

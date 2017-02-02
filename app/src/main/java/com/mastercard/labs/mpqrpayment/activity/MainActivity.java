@@ -12,16 +12,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mastercard.labs.mpqrpayment.MainApplication;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
 import com.mastercard.labs.mpqrpayment.database.model.Card;
+import com.mastercard.labs.mpqrpayment.database.model.User;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
+import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
 import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,6 +41,8 @@ import me.crosswall.lib.coverflow.CoverFlow;
 import me.crosswall.lib.coverflow.core.PagerContainer;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+    public static String BUNDLE_USER_KEY = "user_id";
+
     @BindView(R.id.pager_container)
     PagerContainer pagerContainer;
 
@@ -43,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     Realm realm;
 
-    private List<Card> cards;
+    private Long userId;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        userId = getIntent().getLongExtra(BUNDLE_USER_KEY, -1L);
+        // TODO: Only for debugging purposes till Login screen is implemented.
+        userId = MainApplication.loggedInUserId();
+
+        if (userId == -1) {
+            // TODO: Show error
+            return;
+        }
 
         realm = Realm.getDefaultInstance();
 
@@ -87,9 +105,24 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        Card card = this.cards.get(position);
+        Card card = this.user.getCards().get(position);
+        updateBalance(card);
+    }
 
-        String balanceAmount = String.format(Locale.US, "$%1$.2f", card.getBalance());
+    private void updateBalance(Card card) {
+        CurrencyCode currencyCode = CurrencyCode.fromNumericCode(card.getCurrencyNumericCode());
+        String balanceAmount = String.format(Locale.getDefault(), "%.2f", card.getBalance());
+        if (currencyCode != null) {
+            try {
+                Currency currency = Currency.getInstance(currencyCode.toString());
+                NumberFormat format = NumberFormat.getCurrencyInstance();
+                format.setCurrency(currency);
+                balanceAmount = format.format(card.getBalance());
+            } catch (Exception ex) {
+                // Ignore this
+            }
+        }
+
         availableBalanceTextView.setText(balanceAmount);
     }
 
@@ -99,29 +132,39 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void invalidateViews() {
-        RealmResults<Card> cards = realm.where(Card.class).findAll();
-        cards.addChangeListener(new RealmChangeListener<RealmResults<Card>>() {
+        if (user != null) {
+            user.removeChangeListeners();
+        }
+
+        user = realm.where(User.class).equalTo("userId", userId).findFirst();
+        if (user == null) {
+            // TODO: Show error
+            return;
+        }
+
+        user.addChangeListener(new RealmChangeListener<User>() {
             @Override
-            public void onChange(RealmResults<Card> result) {
+            public void onChange(User result) {
                 refreshCards(result);
             }
         });
 
-        refreshCards(cards);
+        refreshCards(user);
     }
 
-    private void refreshCards(RealmResults<Card> cards) {
-        this.cards = realm.copyFromRealm(cards);
+    private void refreshCards(User user) {
+        this.user = realm.copyFromRealm(user);
 
         final ViewPager viewPager = pagerContainer.getViewPager();
         CardPagerAdapter pagerAdapter = (CardPagerAdapter) viewPager.getAdapter();
 
-        pagerAdapter.setCards(Collections.unmodifiableList(this.cards));
+        pagerAdapter.setCards(Collections.unmodifiableList(this.user.getCards()));
         pagerAdapter.notifyDataSetChanged();
 
         viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
 
-        if (cards.size() > 0) {
+        if (user.getCards().size() > 0) {
+            updateBalance(user.getCards().get(0));
             // Manually setting the first View to be elevated
             viewPager.post(new Runnable() {
                 @Override
