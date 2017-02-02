@@ -5,4 +5,11 @@
     <string name="txt_scan_qr">Scan QR Code</string>
     <string name="card">Card</string>
     <string name="transaction_history">Transaction History</string>
+    <string name="title_activity_payment">PaymentActivity</string>
+    <string name="flat_convenience_fee">Flat Tip</string>
+    <string name="percentage_convenience_fee">Tip %</string>
+    <string name="tip">Tip</string>
+    <string name="amount">Amount</string>
+    <string name="currency">Currency</string>
+    <string name="change">Change</string>
 </resources>
