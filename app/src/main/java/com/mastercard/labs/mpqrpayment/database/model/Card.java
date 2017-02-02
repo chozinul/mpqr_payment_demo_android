@@ -7,20 +7,23 @@ import io.realm.annotations.PrimaryKey;
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 1/25/17
  */
 public class Card extends RealmObject {
+    @PrimaryKey
+    private Long cardId;
+
+    // TODO: Should add masked pan or not?
+
+    private String cardNumber;
     private String bankName;
     private String cardType;
     private String currencyNumericCode;
-    private double balance;
+    private Double balance;
 
-    @PrimaryKey
-    private String cardNumber;
-
-    public String getBankName() {
-        return bankName;
+    public Long getCardId() {
+        return cardId;
     }
 
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
+    public void setCardId(Long cardId) {
+        this.cardId = cardId;
     }
 
     public String getCardNumber() {
@@ -29,6 +32,14 @@ public class Card extends RealmObject {
 
     public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 
     public CardType getCardType() {
@@ -47,11 +58,11 @@ public class Card extends RealmObject {
         this.currencyNumericCode = currencyCode;
     }
 
-    public double getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
     }
 }

@@ -38,6 +38,7 @@ public class MainApplication extends Application {
 
     void setupDebugData() {
         Card card1 = new Card();
+        card1.setCardId(1L);
         card1.setBankName("Ecobank");
         card1.setCardNumber("5184680430000006");
         card1.setCardType(CardType.MastercardGold);
@@ -45,6 +46,7 @@ public class MainApplication extends Application {
         card1.setBalance(120.90);
 
         Card card2 = new Card();
+        card2.setCardId(2L);
         card2.setBankName("Ecobank");
         card2.setCardNumber("5105105105105101");
         card2.setCardType(CardType.MastercardBlack);
@@ -52,6 +54,7 @@ public class MainApplication extends Application {
         card2.setBalance(5100.20);
 
         Card card3 = new Card();
+        card3.setCardId(3L);
         card3.setBankName("Ecobank");
         card3.setCardNumber("5105105105105102");
         card3.setCardType(CardType.SavingsAccount);
@@ -67,6 +70,7 @@ public class MainApplication extends Application {
         user.setAddressState("MO");
         user.setAddressCountry("USA");
         user.setCards(new RealmList<>(card1, card2, card3));
+        user.setDefaultCard(card1);
 
         RealmConfiguration configuration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(configuration);

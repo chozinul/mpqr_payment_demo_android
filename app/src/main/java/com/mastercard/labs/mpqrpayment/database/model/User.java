@@ -20,6 +20,8 @@ public class User extends RealmObject {
 
     private RealmList<Card> cards;
 
+    private Card defaultCard;
+
     public Long getUserId() {
         return userId;
     }
@@ -82,5 +84,13 @@ public class User extends RealmObject {
 
     public void setCards(RealmList<Card> cards) {
         this.cards = cards;
+    }
+
+    public Card getDefaultCard() {
+        return defaultCard;
+    }
+
+    public void setDefaultCard(Card defaultCard) {
+        this.defaultCard = defaultCard;
     }
 }
