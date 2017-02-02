@@ -60,6 +60,8 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     compile 'com.android.support:design:25.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.0'
 }
