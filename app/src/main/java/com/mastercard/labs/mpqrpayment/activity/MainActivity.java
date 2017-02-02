@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     protected void onDestroy() {
-        realm.close();
         realm.removeAllChangeListeners();
+        realm.close();
 
         super.onDestroy();
     }
