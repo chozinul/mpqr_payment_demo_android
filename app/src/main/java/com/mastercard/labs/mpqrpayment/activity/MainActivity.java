@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
 import com.mastercard.labs.mpqrpayment.database.model.Card;
+import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
@@ -134,11 +135,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @OnClick(R.id.scan_qr_button)
     public void scanFromCamera() {
-        IntentIntegrator integrator = new PPIntentIntegrator(this);
-        integrator.setOrientationLocked(false);
-        integrator.setBeepEnabled(false);
-        integrator.setPrompt("Scan QR Code");
-        integrator.initiateScan();
+        // TODO: For testing only
+        showPaymentActivity("00020101021204154600678934521435204520453033565405100.05502015802US5910Merchant A6009Singapore62280305A600804030000708457843126304534B");
+
+//        IntentIntegrator integrator = new PPIntentIntegrator(this);
+//        integrator.setOrientationLocked(false);
+//        integrator.setBeepEnabled(false);
+//        integrator.setPrompt("Scan QR Code");
+//        integrator.initiateScan();
     }
 
     @Override
@@ -148,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             PushPaymentData pushPaymentData = (PushPaymentData) data.getSerializableExtra(PPIntents.PUSH_PAYMENT_DATA);
             if (pushPaymentData != null) {
                 // TODO: Show UI
+                showPaymentActivity(pushPaymentData.generatePushPaymentString());
             } else {
                 // TODO: Show error
             }
@@ -160,5 +165,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showPaymentActivity(String pushPaymentDataString) {
+        Bundle bundle = new Bundle();
+        bundle.putString(PaymentActivity.BUNDLE_PP_KEY, pushPaymentDataString);
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
     }
 }
