@@ -200,7 +200,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             @Override
             public void run() {
                 Fragment fragment = (Fragment) viewPager.getAdapter().instantiateItem(viewPager, selectedCardIdx);
-                ViewCompat.setElevation(fragment.getView(), 8.0f);
+                if (fragment == null) {
+                    fragment = (Fragment) viewPager.getAdapter().instantiateItem(viewPager, 0);
+                }
+                
+                if (fragment != null) {
+                    ViewCompat.setElevation(fragment.getView(), 8.0f);
+                }
             }
         });
     }
