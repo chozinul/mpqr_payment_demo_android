@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
-import com.mastercard.labs.mpqrpayment.database.RealmDataSource;
-import com.mastercard.labs.mpqrpayment.database.model.Card;
+import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
+import com.mastercard.labs.mpqrpayment.data.model.Card;
 
 import java.util.List;
 import java.util.Locale;

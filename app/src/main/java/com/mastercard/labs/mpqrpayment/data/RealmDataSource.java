@@ -1,7 +1,7 @@
-package com.mastercard.labs.mpqrpayment.database;
+package com.mastercard.labs.mpqrpayment.data;
 
-import com.mastercard.labs.mpqrpayment.database.model.Card;
-import com.mastercard.labs.mpqrpayment.database.model.User;
+import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.User;
 
 import java.util.List;
 

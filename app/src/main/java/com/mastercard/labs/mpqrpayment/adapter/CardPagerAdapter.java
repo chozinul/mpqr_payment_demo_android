@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.mastercard.labs.mpqrpayment.R;
-import com.mastercard.labs.mpqrpayment.database.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.Card;
 import com.mastercard.labs.mpqrpayment.fragment.CardFragment;
 
 import java.util.List;

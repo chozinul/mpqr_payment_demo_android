@@ -1,4 +1,4 @@
-package com.mastercard.labs.mpqrpayment.database.model;
+package com.mastercard.labs.mpqrpayment.data.model;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 1/25/17

@@ -1,12 +1,11 @@
 package com.mastercard.labs.mpqrpayment;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.mastercard.labs.mpqrpayment.database.model.Card;
-import com.mastercard.labs.mpqrpayment.database.model.CardType;
-import com.mastercard.labs.mpqrpayment.database.model.User;
+import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.CardType;
+import com.mastercard.labs.mpqrpayment.data.model.User;
 
 import java.util.Arrays;
 

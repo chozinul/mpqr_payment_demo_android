@@ -1,4 +1,4 @@
-package com.mastercard.labs.mpqrpayment.database.model;
+package com.mastercard.labs.mpqrpayment.data.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

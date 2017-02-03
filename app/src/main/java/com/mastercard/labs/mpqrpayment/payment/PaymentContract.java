@@ -2,8 +2,7 @@ package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.BasePresenter;
 import com.mastercard.labs.mpqrpayment.BaseView;
-import com.mastercard.labs.mpqrpayment.database.model.Card;
-import com.mastercard.labs.mpqrpayment.database.model.CardType;
+import com.mastercard.labs.mpqrpayment.data.model.Card;
 
 import java.util.List;
 

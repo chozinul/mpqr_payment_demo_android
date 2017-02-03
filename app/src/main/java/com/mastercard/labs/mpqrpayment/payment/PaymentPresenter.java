@@ -1,8 +1,7 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
-import com.mastercard.labs.mpqrpayment.database.DataSource;
-import com.mastercard.labs.mpqrpayment.database.model.Card;
-import com.mastercard.labs.mpqrpayment.database.model.User;
+import com.mastercard.labs.mpqrpayment.data.DataSource;
+import com.mastercard.labs.mpqrpayment.data.model.Card;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
