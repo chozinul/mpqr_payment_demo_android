@@ -12,7 +12,6 @@ import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.parser.Parser;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -166,8 +165,12 @@ class PaymentPresenter implements PaymentContract.Presenter {
         }
     }
 
+    private double getTotal() {
+        return amount + getTipAmount();
+    }
+
     private void updateTotal() {
-        double total = amount + getTipAmount();
+        double total = getTotal();
 
         paymentView.setTotalAmount(total, currencyCode.toString());
     }
@@ -202,16 +205,12 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 paymentView.hideProcessingPaymentLoading();
                 QRPaymentResponse paymentResponse = response.body();
                 if (paymentResponse.isApproved()) {
-                    Receipt receipt = new Receipt();
-                    receipt.setMerchantName(paymentData.getMerchantName());
-                    receipt.setMerchantCity(paymentData.getMerchantCity());
-                    receipt.setAmount(amount);
-                    receipt.setCurrencyCode(currencyCode.toString());
-                    receipt.setMaskedPan(card.getMaskedPan());
-
+                    Double tipAmount = null;
                     if (paymentData.getTipOrConvenienceIndicator() != null) {
-                        receipt.setTip(getTipAmount());
+                        tipAmount = getTipAmount();
                     }
+
+                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), amount, tipAmount, getTotal(), currencyCode.toString(), card.getMaskedPan());
 
                     paymentView.showReceipt(receipt);
                 } else {

@@ -23,6 +23,7 @@ import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
+import com.mastercard.labs.mpqrpayment.receipt.ReceiptActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 
 import java.util.List;
@@ -364,7 +365,10 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void showReceipt(Receipt receipt) {
-        // TODO: Implement it
+        Intent intent = ReceiptActivity.newIntent(this, receipt);
+        startActivity(intent);
+
+        finish();
     }
 
     @Override

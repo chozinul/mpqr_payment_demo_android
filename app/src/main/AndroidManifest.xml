@@ -12,8 +12,8 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".activity.MainActivity"
-                android:screenOrientation="portrait"
-                android:launchMode="singleTop">
+                android:launchMode="singleTop"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -30,6 +30,14 @@
                 android:label="@string/title_activity_payment"
                 android:parentActivityName=".activity.MainActivity"
                 android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>
+        </activity>
+        <activity android:name=".receipt.ReceiptActivity"
+                  android:label="@string/title_activity_receipt"
+                  android:parentActivityName=".activity.MainActivity"
+                  android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>

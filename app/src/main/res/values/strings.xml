@@ -5,7 +5,7 @@
     <string name="txt_scan_qr">Scan QR Code</string>
     <string name="card">Card</string>
     <string name="transaction_history">Transaction History</string>
-    <string name="title_activity_payment">PaymentActivity</string>
+    <string name="title_activity_payment">QR Code Payment</string>
     <string name="flat_convenience_fee">Flat Tip</string>
     <string name="percentage_convenience_fee">Tip %</string>
     <string name="tip">Tip</string>
@@ -21,8 +21,14 @@
     <string name="enter_pin_title">Enter PIN</string>
     <string name="enter_pin_message">Please enter your 6-digit PIN</string>
     <string name="ok">OK</string>
-    <string name="processing_payment_message">Processing payment ...</string>
+    <string name="processing_payment_message">Processing payment …</string>
     <string name="error">Error</string>
     <string name="invalid_pin">Invalid PIN</string>
     <string name="payment_failed">Payment failed</string>
+    <string name="city">City</string>
+    <string name="payment_card_used">Payment card used</string>
+    <string name="tick">tick</string>
+    <string name="receipt_success_payment">You have made a successful payment!</string>
+    <string name="title_activity_receipt">Completion</string>
+    <string name="txt_return">Return</string>
 </resources>

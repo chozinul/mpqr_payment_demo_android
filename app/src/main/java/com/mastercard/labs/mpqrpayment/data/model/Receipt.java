@@ -7,9 +7,20 @@ public class Receipt {
     private String merchantName;
     private String merchantCity;
     private Double amount;
-    private Double tip;
+    private Double tipAmount;
+    private Double totalAmount;
     private String currencyCode;
     private String maskedPan;
+
+    public Receipt(String merchantName, String merchantCity, Double amount, Double tipAmount, Double totalAmount, String currencyCode, String maskedPan) {
+        this.merchantName = merchantName;
+        this.merchantCity = merchantCity;
+        this.amount = amount;
+        this.tipAmount = tipAmount;
+        this.totalAmount = totalAmount;
+        this.currencyCode = currencyCode;
+        this.maskedPan = maskedPan;
+    }
 
     public String getMerchantName() {
         return merchantName;
@@ -35,12 +46,12 @@ public class Receipt {
         this.amount = amount;
     }
 
-    public Double getTip() {
-        return tip;
+    public Double getTipAmount() {
+        return tipAmount;
     }
 
-    public void setTip(Double tip) {
-        this.tip = tip;
+    public void setTipAmount(Double tipAmount) {
+        this.tipAmount = tipAmount;
     }
 
     public String getCurrencyCode() {
@@ -57,5 +68,13 @@ public class Receipt {
 
     public void setMaskedPan(String maskedPan) {
         this.maskedPan = maskedPan;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 }
