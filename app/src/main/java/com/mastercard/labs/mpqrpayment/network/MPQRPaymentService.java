@@ -1,7 +1,9 @@
 package com.mastercard.labs.mpqrpayment.network;
 
 import com.mastercard.labs.mpqrpayment.network.request.QRPaymentRequest;
+import com.mastercard.labs.mpqrpayment.network.response.QRPaymentResponse;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
@@ -10,5 +12,5 @@ import retrofit2.http.POST;
  */
 public interface MPQRPaymentService {
     @POST("/qr-pay")
-    public void makePayment(@Body QRPaymentRequest request);
+    Call<QRPaymentResponse> makePayment(@Body QRPaymentRequest request);
 }
