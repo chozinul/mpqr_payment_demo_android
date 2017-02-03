@@ -31,4 +31,5 @@
     <string name="receipt_success_payment">You have made a successful payment!</string>
     <string name="title_activity_receipt">Completion</string>
     <string name="txt_return">Return</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
