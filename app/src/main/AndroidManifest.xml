@@ -28,7 +28,8 @@
         <activity
                 android:name=".payment.PaymentActivity"
                 android:label="@string/title_activity_payment"
-                android:parentActivityName=".activity.MainActivity">
+                android:parentActivityName=".activity.MainActivity"
+                android:windowSoftInputMode="adjustResize">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>

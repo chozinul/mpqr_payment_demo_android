@@ -11,10 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
