@@ -27,6 +27,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textSize="@dimen/size_x"
+                    android:textColor="@color/colorTextBlack"
                     tools:text="Merchant Name"/>
 
             <TextView
@@ -39,21 +41,25 @@
                     android:drawablePadding="5dp"
                     android:layout_below="@+id/txt_merchant_name"
                     android:layout_centerHorizontal="true"
+                    android:textSize="@dimen/size_x"
+                    android:textColor="@color/colorTextBlack"
                     tools:text="City"/>
 
             <RelativeLayout
+                    style="@style/payment_layout"
                     android:id="@+id/rl_payment_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_centerHorizontal="true"
                     android:background="@drawable/rectangle_border"
                     android:layout_below="@id/txt_merchant_city">
 
                 <RelativeLayout
                         android:id="@+id/rl_currency"
-                        android:layout_width="95dp"
-                        android:layout_height="150dp"
-                        android:layout_alignParentStart="true">
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignTop="@+id/ll_amount_tip_container"
+                        android:layout_alignBottom="@+id/ll_amount_tip_container">
 
                     <TextView
                             android:id="@+id/txt_currency"
@@ -69,36 +75,29 @@
                             android:id="@+id/txt_currency_value"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:textSize="@dimen/size_24"
                             android:textColor="@color/colorDeepSeaBlue"
+                            android:layout_below="@id/txt_currency"
+                            android:gravity="center"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:drawableBottom="@drawable/ic_expand_more"
                             tools:text="INR"/>
-
-                    <ImageView
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/ic_expand_more"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="10dp"
-                            android:contentDescription="@string/dsc_down_arrow"/>
                 </RelativeLayout>
 
                 <LinearLayout
                         android:id="@+id/ll_amount_tip_container"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/rl_currency"
-                        android:layout_alignTop="@id/rl_currency"
-                        android:layout_alignBottom="@id/rl_currency"
                         android:orientation="vertical">
 
 
                     <RelativeLayout
                             android:id="@+id/rl_amount"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="75dp"
                             android:orientation="vertical"
                             android:paddingTop="10dp"
                             android:paddingStart="15dp"
@@ -123,6 +122,7 @@
                     </RelativeLayout>
 
                     <View
+                            android:id="@+id/top_border_tip"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/rectangle_border_width"
                             android:background="@color/colorPinkishGrey"/>
@@ -130,8 +130,7 @@
                     <RelativeLayout
                             android:id="@+id/rl_tip"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_height="75dp"
                             android:orientation="vertical"
                             android:paddingTop="10dp"
                             android:paddingStart="15dp"
@@ -148,11 +147,12 @@
                                 android:id="@+id/txt_tip_value"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/txt_tip"
                                 android:inputType="numberDecimal"
                                 android:digits="0123456789."
                                 android:textSize="@dimen/size_24"
-                                tools:text="20.00"/>
+                                tools:text="20.00"
+                                android:layout_below="@+id/txt_tip"
+                                android:layout_alignParentStart="true"/>
                     </RelativeLayout>
 
                 </LinearLayout>

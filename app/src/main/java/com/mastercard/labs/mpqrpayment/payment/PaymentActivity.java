@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +14,12 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.view.Gravity;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
@@ -64,6 +68,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @BindView(R.id.txt_payment_card)
     TextView paymentCardTextView;
+
+    @BindView(R.id.rl_tip)
+    RelativeLayout tipLayout;
+
+    @BindView(R.id.top_border_tip)
+    View topBorderTip;
 
     private String paymentDataString;
     private Long userId;
@@ -205,6 +215,10 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void setFlatConvenienceFee(double fee) {
         tipTitleTextView.setText(R.string.flat_convenience_fee);
+        tipLayout.setBackgroundResource(R.color.colorPinkishGrey);
+        tipTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDeepSeaBlue));
+        tipEditText.setTextColor(ContextCompat.getColor(this, R.color.colorBlack));
+
         setTipText(String.format(Locale.getDefault(), "%.2f", fee));
     }
 
@@ -243,12 +257,26 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void hideTipInformation() {
-        // TODO: Hide tip
+        topBorderTip.setVisibility(View.GONE);
+        tipLayout.setVisibility(View.GONE);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(currencyTextView.getLayoutParams());
+        layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+        layoutParams.addRule(RelativeLayout.BELOW, R.id.txt_currency);
+        currencyTextView.setLayoutParams(layoutParams);
+        currencyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_expand_more, 0);
     }
 
     @Override
     public void showTipInformation() {
-        // TODO: Show tip
+        topBorderTip.setVisibility(View.VISIBLE);
+        tipLayout.setVisibility(View.VISIBLE);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(currencyTextView.getLayoutParams());
+        layoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.addRule(RelativeLayout.BELOW, R.id.txt_currency);
+        currencyTextView.setLayoutParams(layoutParams);
+        currencyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_expand_more);
     }
 
     @Override
