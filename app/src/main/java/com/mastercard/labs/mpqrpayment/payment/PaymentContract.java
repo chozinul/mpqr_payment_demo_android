@@ -3,6 +3,7 @@ package com.mastercard.labs.mpqrpayment.payment;
 import com.mastercard.labs.mpqrpayment.BasePresenter;
 import com.mastercard.labs.mpqrpayment.BaseView;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 
 import java.util.List;
 
@@ -39,6 +40,18 @@ public interface PaymentContract {
         void setCard(Card card);
 
         void showCardSelection(List<Card> cards, int selectedCardIdx);
+
+        void askPin(int pinLength);
+
+        void showProcessingPaymentLoading();
+
+        void hideProcessingPaymentLoading();
+
+        void showReceipt(Receipt receipt);
+
+        void showPaymentFailedError();
+
+        void showInvalidPinError();
     }
 
     interface Presenter extends BasePresenter {
@@ -54,5 +67,9 @@ public interface PaymentContract {
         void setCurrencyCode(String currencyCode);
 
         void selectCard();
+
+        void makePayment();
+
+        void pin(String pin);
     }
 }

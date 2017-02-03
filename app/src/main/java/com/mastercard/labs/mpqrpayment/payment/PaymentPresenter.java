@@ -2,17 +2,31 @@ package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.data.DataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.Receipt;
+import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
+import com.mastercard.labs.mpqrpayment.network.request.QRPaymentRequest;
+import com.mastercard.labs.mpqrpayment.network.response.QRPaymentResponse;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.parser.Parser;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/1/17
  */
 class PaymentPresenter implements PaymentContract.Presenter {
+    private static int PIN_SIZE = 6;
+    private static Pattern pinPattern = Pattern.compile("[0-9]{" + PIN_SIZE + "}");
+
     private PaymentContract.View paymentView;
     private DataSource dataSource;
     private Long userId;
@@ -58,6 +72,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
         }
 
         amount = paymentData.getTransactionAmount();
+        tip = 0;
 
         paymentView.setAmount(amount);
 
@@ -143,14 +158,16 @@ class PaymentPresenter implements PaymentContract.Presenter {
         }
     }
 
-    private void updateTotal() {
-        double total = 0;
-
+    private double getTipAmount() {
         if (PushPaymentData.TipConvenienceIndicator.PERCENTAGE_CONVENIENCE_FEE.equals(paymentData.getTipOrConvenienceIndicator())) {
-            total += amount * tip / 100;
+            return amount * tip / 100;
         } else {
-            total += amount + tip;
+            return tip;
         }
+    }
+
+    private void updateTotal() {
+        double total = amount + getTipAmount();
 
         paymentView.setTotalAmount(total, currencyCode.toString());
     }
@@ -159,5 +176,55 @@ class PaymentPresenter implements PaymentContract.Presenter {
     public void selectCard() {
         List<Card> cards = dataSource.getCards(userId);
         paymentView.showCardSelection(cards, cards.indexOf(card));
+    }
+
+    @Override
+    public void makePayment() {
+        paymentView.askPin(PIN_SIZE);
+    }
+
+    @Override
+    public void pin(String pin) {
+        Matcher matcher = pinPattern.matcher(pin);
+        if (!matcher.matches()) {
+            paymentView.showInvalidPinError();
+            return;
+        }
+
+        paymentView.showProcessingPaymentLoading();
+
+        // TODO: Validate pin on server
+
+        // TODO: Process payment
+        ServiceGenerator.getInstance().mpqrPaymentService().makePayment(new QRPaymentRequest()).enqueue(new Callback<QRPaymentResponse>() {
+            @Override
+            public void onResponse(Call<QRPaymentResponse> call, Response<QRPaymentResponse> response) {
+                paymentView.hideProcessingPaymentLoading();
+                QRPaymentResponse paymentResponse = response.body();
+                if (paymentResponse.isApproved()) {
+                    Receipt receipt = new Receipt();
+                    receipt.setMerchantName(paymentData.getMerchantName());
+                    receipt.setMerchantCity(paymentData.getMerchantCity());
+                    receipt.setAmount(amount);
+                    receipt.setCurrencyCode(currencyCode.toString());
+                    receipt.setMaskedPan(card.getMaskedPan());
+
+                    if (paymentData.getTipOrConvenienceIndicator() != null) {
+                        receipt.setTip(getTipAmount());
+                    }
+
+                    paymentView.showReceipt(receipt);
+                } else {
+                    // TODO: Show error
+                    paymentView.showPaymentFailedError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<QRPaymentResponse> call, Throwable t) {
+                // TODO: Show error
+                paymentView.showPaymentFailedError();
+            }
+        });
     }
 }

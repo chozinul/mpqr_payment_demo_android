@@ -18,4 +18,11 @@
     <string name="select">Select</string>
     <string name="pay">Pay</string>
     <string name="dsc_down_arrow">arrow</string>
+    <string name="enter_pin_title">Enter PIN</string>
+    <string name="enter_pin_message">Please enter your 6-digit PIN</string>
+    <string name="ok">OK</string>
+    <string name="processing_payment_message">Processing payment ...</string>
+    <string name="error">Error</string>
+    <string name="invalid_pin">Invalid PIN</string>
+    <string name="payment_failed">Payment failed</string>
 </resources>

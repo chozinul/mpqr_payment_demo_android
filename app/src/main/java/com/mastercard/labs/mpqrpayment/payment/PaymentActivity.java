@@ -1,5 +1,6 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spanned;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,6 +22,8 @@ import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.Receipt;
+import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -64,6 +70,8 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     private boolean blockAmountTextViewChange;
     private boolean blockTipTextViewChange;
+
+    private ProgressDialog progressDialog;
 
     public static Intent newIntent(Context context, String pushPaymentDataString, Long userId, Long cardId) {
         Bundle bundle = new Bundle();
@@ -155,6 +163,11 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @OnClick(value = R.id.rl_payment_card)
     public void changeCardBtnPressed() {
         presenter.selectCard();
+    }
+
+    @OnClick(value = R.id.btn_pay)
+    public void payBtnPressed() {
+        presenter.makePayment();
     }
 
     private double validateAmount(Editable amountText) {
@@ -295,6 +308,73 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
                 }).create();
 
         dialog.show();
+    }
+
+    @Override
+    public void askPin(int pinLength) {
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(pinLength)});
+        int margin = getResources().getDimensionPixelSize(R.dimen.size_10);
+        input.setPadding(margin, margin, margin, margin);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.enter_pin_title)
+                .setMessage(R.string.enter_pin_message)
+                .setView(input)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        presenter.pin(input.getText().toString());
+                    }
+                }).create();
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
+
+        dialog.show();
+    }
+
+    @Override
+    public void showProcessingPaymentLoading() {
+        hideProcessingPaymentLoading();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.processing_payment_message));
+        progressDialog.setCancelable(false);
+
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideProcessingPaymentLoading() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showReceipt(Receipt receipt) {
+        // TODO: Implement it
+    }
+
+    @Override
+    public void showPaymentFailedError() {
+        DialogUtils.showErrorDialog(this, R.string.error, R.string.payment_failed);
+    }
+
+    @Override
+    public void showInvalidPinError() {
+        DialogUtils.showErrorDialog(this, R.string.error, R.string.invalid_pin);
     }
 
     private class AmountInputFilter implements InputFilter {
