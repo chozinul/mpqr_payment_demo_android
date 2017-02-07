@@ -210,7 +210,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
                         tipAmount = getTipAmount();
                     }
 
-                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), amount, tipAmount, getTotal(), currencyCode.toString(), card.getMaskedPan());
+                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), amount, tipAmount, getTotal(), currencyCode.toString(), card.getMaskedIdentifier());
 
                     paymentView.showReceipt(receipt);
                 } else {

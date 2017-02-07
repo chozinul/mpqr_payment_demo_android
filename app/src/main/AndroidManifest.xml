@@ -11,14 +11,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity
-                android:name=".activity.MainActivity"
-                android:launchMode="singleTop"
-                android:screenOrientation="portrait">
+                android:name=".activity.SplashActivity"
+                android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+                android:name=".activity.MainActivity"
+                android:launchMode="singleTop"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name="com.mastercard.mpqr.pushpayment.scan.activity.PPCaptureActivity"
@@ -29,7 +33,8 @@
                 android:name=".payment.PaymentActivity"
                 android:label="@string/title_activity_payment"
                 android:parentActivityName=".activity.MainActivity"
-                android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>
@@ -38,14 +43,17 @@
                 android:name=".receipt.ReceiptActivity"
                 android:label="@string/title_activity_receipt"
                 android:parentActivityName=".activity.MainActivity"
-                android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>
         </activity>
         <activity
-                android:name=".LoginActivity"
-                android:label="@string/title_activity_login">
+                android:name=".login.LoginActivity"
+                android:label="@string/title_activity_login"
+                android:launchMode="singleTop"
+                android:screenOrientation="portrait">
         </activity>
     </application>
 

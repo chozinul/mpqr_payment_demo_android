@@ -26,6 +26,7 @@ import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.MethodType;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.receipt.ReceiptActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
@@ -291,11 +292,15 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void setCard(Card card) {
+        MethodType methodType = MethodType.fromString(card.getMethodType());
+
         @DrawableRes int imageId = 0;
-        switch (card.getCardType()) {
-            case MastercardBlack:
-            case MastercardGold:
-                imageId = R.drawable.mastercard_logo;
+        switch (methodType) {
+            case CreditCard:
+            case DebitCard:
+                if (card.getName().toLowerCase().contains("mastercard")) {
+                    imageId = R.drawable.mastercard_logo;
+                }
                 break;
             case SavingsAccount:
                 imageId = R.drawable.savings_account_logo;
@@ -305,7 +310,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         }
 
         paymentCardTextView.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
-        paymentCardTextView.setText(getString(R.string.pay_with_card, card.getMaskedPan()));
+        paymentCardTextView.setText(getString(R.string.pay_with_card, card.getMaskedIdentifier()));
     }
 
     @Override

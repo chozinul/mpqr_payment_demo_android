@@ -13,16 +13,50 @@ public class LoginResponse {
 
     private List<PaymentInstrument> paymentInstruments;
 
-    static class PaymentInstrument {
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public List<PaymentInstrument> getPaymentInstruments() {
+        return paymentInstruments;
+    }
+
+    public void setPaymentInstruments(List<PaymentInstrument> paymentInstruments) {
+        this.paymentInstruments = paymentInstruments;
+    }
+
+    public static class PaymentInstrument {
+        private long id;
         private String acquirerName;
         private String issuerName;
         private String name;
         private String methodType;
-        private BigDecimal balance;
+        private Double balance;
         private String maskedIdentifier;
         private String currencyNumericCode;
 
-        public PaymentInstrument(String acquirerName, String issuerName, String name, String methodType, BigDecimal balance, String maskedIdentifier, String currencyNumericCode) {
+        public PaymentInstrument(long id, String acquirerName, String issuerName, String name, String methodType, Double balance, String maskedIdentifier, String currencyNumericCode) {
+            this.id = id;
             this.acquirerName = acquirerName;
             this.issuerName = issuerName;
             this.name = name;
@@ -30,6 +64,14 @@ public class LoginResponse {
             this.balance = balance;
             this.maskedIdentifier = maskedIdentifier;
             this.currencyNumericCode = currencyNumericCode;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
         }
 
         public String getAcquirerName() {
@@ -64,11 +106,11 @@ public class LoginResponse {
             this.methodType = methodType;
         }
 
-        public BigDecimal getBalance() {
+        public Double getBalance() {
             return balance;
         }
 
-        public void setBalance(BigDecimal balance) {
+        public void setBalance(Double balance) {
             this.balance = balance;
         }
 

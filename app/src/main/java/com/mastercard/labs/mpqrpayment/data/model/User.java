@@ -1,5 +1,7 @@
 package com.mastercard.labs.mpqrpayment.data.model;
 
+import java.util.UUID;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -9,8 +11,9 @@ import io.realm.annotations.PrimaryKey;
  */
 public class User extends RealmObject {
     @PrimaryKey
-    private Long userId;
+    private String id;
 
+    private Long userId;
     private String firstName;
     private String lastName;
     private String addressLine1;
@@ -21,6 +24,14 @@ public class User extends RealmObject {
     private RealmList<Card> cards;
 
     private Card defaultCard;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;

@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.MethodType;
+import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
 
 import java.util.List;
 
@@ -47,21 +49,8 @@ public class CardsArrayAdapter extends ArrayAdapter<Card> {
             return view;
         }
 
-        @DrawableRes int imageId = 0;
-        switch (card.getCardType()) {
-            case MastercardBlack:
-            case MastercardGold:
-                imageId = R.drawable.mastercard_logo;
-                break;
-            case SavingsAccount:
-                imageId = R.drawable.savings_account_logo;
-            default:
-                // TODO: Add default card logo
-                break;
-        }
-
-        cardLogo.setImageResource(imageId);
-        cardNumber.setText(card.getMaskedPan());
+        cardLogo.setImageResource(DrawableUtils.getPaymentMethodLogo(card));
+        cardNumber.setText(card.getMaskedIdentifier());
         balance.setText(getContext().getString(R.string.balance_of_card, card.getBalance()));
 
         radioButton.setChecked(selectedIndex == position);

@@ -124,18 +124,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void updateBalance() {
         Card selectedCard = user.getCards().get(selectedCardIdx);
 
-        CurrencyCode currencyCode = CurrencyCode.fromNumericCode(selectedCard.getCurrencyNumericCode());
-        String balanceAmount = String.format(Locale.getDefault(), "%.2f", selectedCard.getBalance());
-        if (currencyCode != null) {
-            try {
-                Currency currency = Currency.getInstance(currencyCode.toString());
-                NumberFormat format = NumberFormat.getCurrencyInstance();
-                format.setCurrency(currency);
-                balanceAmount = format.format(selectedCard.getBalance());
-            } catch (Exception ex) {
-                // Ignore this
-            }
-        }
+        String balanceAmount = CurrencyCode.formatAmount(selectedCard.getBalance(), selectedCard.getCurrencyNumericCode());
 
         availableBalanceTextView.setText(balanceAmount);
     }

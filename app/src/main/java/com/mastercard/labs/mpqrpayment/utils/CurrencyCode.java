@@ -1,5 +1,9 @@
 package com.mastercard.labs.mpqrpayment.utils;
 
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
+
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/2/17
  */
@@ -213,5 +217,22 @@ public enum CurrencyCode {
 
     public void setCurrencyName(String currencyName) {
         this.currencyName = currencyName;
+    }
+
+    public static String formatAmount(Double amount, String currencyNumericCode) {
+        CurrencyCode currencyCode = CurrencyCode.fromNumericCode(currencyNumericCode);
+        String balanceAmount = String.format(Locale.getDefault(), "%.2f", amount);;
+        if (currencyCode != null) {
+            try {
+                Currency currency = Currency.getInstance(currencyCode.toString());
+                NumberFormat format = NumberFormat.getCurrencyInstance();
+                format.setCurrency(currency);
+                balanceAmount = format.format(amount);
+            } catch (Exception ex) {
+                // Ignore this
+            }
+        }
+
+        return balanceAmount;
     }
 }

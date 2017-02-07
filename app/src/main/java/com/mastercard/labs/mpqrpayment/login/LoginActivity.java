@@ -2,140 +2,87 @@ package com.mastercard.labs.mpqrpayment.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mastercard.labs.mpqrpayment.R;
-import com.mastercard.labs.mpqrpayment.data.model.User;
-import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
-import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
+import com.mastercard.labs.mpqrpayment.activity.MainActivity;
+import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnFocusChange;
 
 /**
  * A login screen that offers login via access code & pin.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements LoginContract.View {
+    private LoginContract.Presenter presenter;
 
     // UI references.
-    private EditText mAccessCodeEditText;
-    private EditText mPinEditText;
-    private View mProgressView;
-    private View mLoginFormView;
+    @BindView(R.id.txt_access_code)
+    EditText mAccessCodeEditText;
 
-    private Call<User> authRequest;
+    @BindView(R.id.txt_pin)
+    EditText mPinEditText;
+
+    @BindView(R.id.login_progress)
+    View mProgressView;
+
+    @BindView(R.id.login_form)
+    View mLoginFormView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
-        mAccessCodeEditText = (EditText) findViewById(R.id.accessCode);
 
-        mPinEditText = (EditText) findViewById(R.id.pin);
+        ButterKnife.bind(this);
+
         mPinEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    presenter.login(mAccessCodeEditText.getText().toString(), mPinEditText.getText().toString());
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        presenter = new LoginPresenter(this, RealmDataSource.getInstance());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-    /**
-     * Attempts to sign in or register the account specified by the login form. If there are form
-     * errors (invalid email, missing fields, etc.), the errors are presented and no actual login
-     * attempt is made.
-     */
-    private void attemptLogin() {
-        if (authRequest != null) {
-            return;
-        }
-
-        // Reset errors.
-        mAccessCodeEditText.setError(null);
-        mPinEditText.setError(null);
-
-        // Store values at the time of the login attempt.
-        String accessCode = mAccessCodeEditText.getText().toString();
-        String pin = mPinEditText.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid pin, if the user entered one.
-        if (!TextUtils.isEmpty(pin) && !isPinValid(pin)) {
-            mPinEditText.setError(getString(R.string.error_invalid_pin));
-            focusView = mPinEditText;
-            cancel = true;
-        }
-
-        // Check for a valid access codes.
-        if (TextUtils.isEmpty(accessCode)) {
-            mAccessCodeEditText.setError(getString(R.string.error_field_required));
-            focusView = mAccessCodeEditText;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-
-            authRequest = ServiceGenerator.getInstance().mpqrPaymentService().login(new LoginAccessCodeRequest(accessCode, pin));
-            authRequest.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    showProgress(false);
-
-                    finish();
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    showProgress(false);
-
-                    if (!call.isCanceled()) {
-                        mPinEditText.setError(getString(R.string.error_incorrect_pin));
-                        mPinEditText.requestFocus();
-                    }
-                }
-            });
-        }
+        presenter.start();
     }
 
-    private boolean isPinValid(String pin) {
-        return pin.length() == 6;
+    @OnClick(value = R.id.email_sign_in_button)
+    public void signInButtonPressed() {
+        presenter.login(mAccessCodeEditText.getText().toString(), mPinEditText.getText().toString());
+    }
+
+    @OnFocusChange(value = {R.id.txt_access_code, R.id.txt_pin})
+    public void focusChanged(View view, boolean hasFocus) {
+        if (!hasFocus) {
+            // Hide keyboard
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     /**
@@ -171,6 +118,59 @@ public class LoginActivity extends AppCompatActivity {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    @Override
+    public void clearAccessCodeError() {
+        mAccessCodeEditText.setError(null);
+        mAccessCodeEditText.clearFocus();
+    }
+
+    @Override
+    public void clearPinError() {
+        mPinEditText.setError(null);
+        mPinEditText.clearFocus();
+    }
+
+    @Override
+    public void setAccessCodeRequired() {
+        mAccessCodeEditText.setError(getString(R.string.error_field_required));
+        mAccessCodeEditText.requestFocus();
+    }
+
+    @Override
+    public void showProgress() {
+        showProgress(true);
+    }
+
+    @Override
+    public void hideProgress() {
+        showProgress(false);
+    }
+
+    @Override
+    public void startMainFlow() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void setIncorrectPin() {
+        mPinEditText.setError(getString(R.string.error_incorrect_pin));
+        mPinEditText.requestFocus();
+    }
+
+    @Override
+    public void setInvalidPinError() {
+        mPinEditText.setError(getString(R.string.error_incorrect_pin));
+        mPinEditText.requestFocus();
+    }
+
+    @Override
+    public void showNetworkError() {
+        Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_LONG).show();
     }
 }
 

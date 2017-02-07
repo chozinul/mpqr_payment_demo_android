@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
 import com.mastercard.labs.mpqrpayment.fragment.CardFragment;
+import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
 
 import java.util.List;
 
@@ -39,21 +40,7 @@ public class CardPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Card card = cards.get(position);
 
-        int drawableId;
-        switch (card.getCardType()) {
-            case MastercardBlack:
-                drawableId = R.drawable.mastercard_black;
-                break;
-            case MastercardGold:
-                drawableId = R.drawable.mastercard_gold;
-                break;
-            case SavingsAccount:
-                drawableId = R.drawable.saving_account;
-                break;
-            default:
-                drawableId = -1;
-                break;
-        }
+        int drawableId = DrawableUtils.getPaymentMethodImage(card);
 
         return CardFragment.newInstance(drawableId);
     }

@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content">
 
                 <EditText
-                        android:id="@+id/accessCode"
+                        android:id="@+id/txt_access_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_access_code"
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content">
 
                 <EditText
-                        android:id="@+id/pin"
+                        android:id="@+id/txt_pin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_pin"
@@ -101,6 +101,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_gravity="bottom"
             android:text="@string/action_sign_in"
             android:textStyle="bold"
             android:textColor="@color/colorWhite"

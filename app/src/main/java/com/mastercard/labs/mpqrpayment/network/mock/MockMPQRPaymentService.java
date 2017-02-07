@@ -2,7 +2,6 @@ package com.mastercard.labs.mpqrpayment.network.mock;
 
 import com.google.gson.Gson;
 
-import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
@@ -29,13 +28,14 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     }
 
     @Override
-    public Call<User> login(@Body LoginAccessCodeRequest request) {
+    public Call<LoginResponse> login(@Body LoginAccessCodeRequest request) {
         String dummyResponse = "{\n" +
-                "  \"id\": 1,\n" +
+                "  \"id\": 2,\n" +
                 "  \"firstName\": \"Muhammad\",\n" +
                 "  \"lastName\": \"Azeem\",\n" +
                 "  \"paymentInstruments\": [\n" +
                 "    {\n" +
+                "      \"id\": 4,\n" +
                 "      \"acquirerName\": \"Mastercard\",\n" +
                 "      \"issuerName\": \"Ecobank\",\n" +
                 "      \"name\": \"MastercardGold\",\n" +
@@ -45,6 +45,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
                 "      \"currencyNumericCode\": 356\n" +
                 "    },\n" +
                 "    {\n" +
+                "      \"id\": 5,\n" +
                 "      \"acquirerName\": \"Mastercard\",\n" +
                 "      \"issuerName\": \"Ecobank\",\n" +
                 "      \"name\": \"MastercardBlack\",\n" +
@@ -54,6 +55,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
                 "      \"currencyNumericCode\": 356\n" +
                 "    },\n" +
                 "    {\n" +
+                "      \"id\": 6,\n" +
                 "      \"acquirerName\": \"Mastercard\",\n" +
                 "      \"issuerName\": \"Ecobank\",\n" +
                 "      \"name\": \"MastercardBlack\",\n" +
