@@ -32,4 +32,21 @@
     <string name="title_activity_receipt">Completion</string>
     <string name="txt_return">Return</string>
     <string name="dismiss">Dismiss</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_access_code">Access Code</string>
+    <string name="prompt_pin">6 Digit Pin</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="error_invalid_access_code">This access code is invalid</string>
+    <string name="error_invalid_pin">This pin is too short</string>
+    <string name="error_incorrect_pin">This pin is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="logo">logo</string>
+    <string name="forgot_pin">Forgot PIN?</string>
+    <string name="pin_length">6</string>
+
+    <item name="visible" type="id"/>
+    <item name="masked" type="id"/>
+
 </resources>

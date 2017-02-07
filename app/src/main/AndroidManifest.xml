@@ -34,13 +34,18 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>
         </activity>
-        <activity android:name=".receipt.ReceiptActivity"
-                  android:label="@string/title_activity_receipt"
-                  android:parentActivityName=".activity.MainActivity"
-                  android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+        <activity
+                android:name=".receipt.ReceiptActivity"
+                android:label="@string/title_activity_receipt"
+                android:parentActivityName=".activity.MainActivity"
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>
+        </activity>
+        <activity
+                android:name=".LoginActivity"
+                android:label="@string/title_activity_login">
         </activity>
     </application>
 

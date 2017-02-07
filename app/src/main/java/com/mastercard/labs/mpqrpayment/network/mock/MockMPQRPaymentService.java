@@ -1,7 +1,12 @@
 package com.mastercard.labs.mpqrpayment.network.mock;
 
+import com.google.gson.Gson;
+
+import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
+import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
+import com.mastercard.labs.mpqrpayment.network.response.LoginResponse;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
 
 import java.text.DateFormat;
@@ -21,6 +26,49 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     public MockMPQRPaymentService(BehaviorDelegate<MPQRPaymentService> delegate) {
         this.delegate = delegate;
+    }
+
+    @Override
+    public Call<User> login(@Body LoginAccessCodeRequest request) {
+        String dummyResponse = "{\n" +
+                "  \"id\": 1,\n" +
+                "  \"firstName\": \"Muhammad\",\n" +
+                "  \"lastName\": \"Azeem\",\n" +
+                "  \"paymentInstruments\": [\n" +
+                "    {\n" +
+                "      \"acquirerName\": \"Mastercard\",\n" +
+                "      \"issuerName\": \"Ecobank\",\n" +
+                "      \"name\": \"MastercardGold\",\n" +
+                "      \"methodType\": \"DebitCard\",\n" +
+                "      \"balance\": \"5100.20\",\n" +
+                "      \"maskedIdentifier\": \"**** 0006\",\n" +
+                "      \"currencyNumericCode\": 356\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"acquirerName\": \"Mastercard\",\n" +
+                "      \"issuerName\": \"Ecobank\",\n" +
+                "      \"name\": \"MastercardBlack\",\n" +
+                "      \"methodType\": \"CreditCard\",\n" +
+                "      \"balance\": \"120.90\",\n" +
+                "      \"maskedIdentifier\": \"**** 5101\",\n" +
+                "      \"currencyNumericCode\": 356\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"acquirerName\": \"Mastercard\",\n" +
+                "      \"issuerName\": \"Ecobank\",\n" +
+                "      \"name\": \"MastercardBlack\",\n" +
+                "      \"methodType\": \"SavingsAccount\",\n" +
+                "      \"balance\": \"21370.00\",\n" +
+                "      \"maskedIdentifier\": \"**** 5102\",\n" +
+                "      \"currencyNumericCode\": 356\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+        Gson gson = new Gson();
+        LoginResponse response = gson.fromJson(dummyResponse, LoginResponse.class);
+
+        return delegate.returningResponse(response).login(request);
     }
 
     @Override
