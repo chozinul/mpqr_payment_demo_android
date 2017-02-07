@@ -3,7 +3,7 @@ package com.mastercard.labs.mpqrpayment.network.request;
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/2/17
  */
-public class QRPaymentRequest {
+public class PaymentRequest {
     private String receiverCardNumber;
     private String senderCardNumber;
     private String currency;

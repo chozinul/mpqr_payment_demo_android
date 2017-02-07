@@ -1,8 +1,8 @@
 package com.mastercard.labs.mpqrpayment.network.mock;
 
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
-import com.mastercard.labs.mpqrpayment.network.request.QRPaymentRequest;
-import com.mastercard.labs.mpqrpayment.network.response.QRPaymentResponse;
+import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
+import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,8 +24,8 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     }
 
     @Override
-    public Call<QRPaymentResponse> makePayment(@Body QRPaymentRequest request) {
-        QRPaymentResponse response = new QRPaymentResponse();
+    public Call<PaymentResponse> makePayment(@Body PaymentRequest request) {
+        PaymentResponse response = new PaymentResponse();
         response.setApproved(true);
         response.setTransactionDate(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date()));
         response.setTransactionReference(UUID.randomUUID().toString());

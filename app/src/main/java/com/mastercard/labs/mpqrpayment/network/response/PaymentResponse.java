@@ -3,7 +3,7 @@ package com.mastercard.labs.mpqrpayment.network.response;
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/2/17
  */
-public class QRPaymentResponse {
+public class PaymentResponse {
     private boolean approved;
     private String transactionReference;
     private String transactionDate;

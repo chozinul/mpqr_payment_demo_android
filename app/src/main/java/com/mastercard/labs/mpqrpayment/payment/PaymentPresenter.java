@@ -4,8 +4,8 @@ import com.mastercard.labs.mpqrpayment.data.DataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Card;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
-import com.mastercard.labs.mpqrpayment.network.request.QRPaymentRequest;
-import com.mastercard.labs.mpqrpayment.network.response.QRPaymentResponse;
+import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
+import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
@@ -199,11 +199,11 @@ class PaymentPresenter implements PaymentContract.Presenter {
         // TODO: Validate pin on server
 
         // TODO: Process payment
-        ServiceGenerator.getInstance().mpqrPaymentService().makePayment(new QRPaymentRequest()).enqueue(new Callback<QRPaymentResponse>() {
+        ServiceGenerator.getInstance().mpqrPaymentService().makePayment(new PaymentRequest()).enqueue(new Callback<PaymentResponse>() {
             @Override
-            public void onResponse(Call<QRPaymentResponse> call, Response<QRPaymentResponse> response) {
+            public void onResponse(Call<PaymentResponse> call, Response<PaymentResponse> response) {
                 paymentView.hideProcessingPaymentLoading();
-                QRPaymentResponse paymentResponse = response.body();
+                PaymentResponse paymentResponse = response.body();
                 if (paymentResponse.isApproved()) {
                     Double tipAmount = null;
                     if (paymentData.getTipOrConvenienceIndicator() != null) {
@@ -220,7 +220,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
             }
 
             @Override
-            public void onFailure(Call<QRPaymentResponse> call, Throwable t) {
+            public void onFailure(Call<PaymentResponse> call, Throwable t) {
                 // TODO: Show error
                 paymentView.showPaymentFailedError();
             }
