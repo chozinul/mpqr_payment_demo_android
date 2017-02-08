@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="@string/placeholder_available_balance"
+                tools:text="@string/placeholder_available_balance"
                 android:gravity="center"
                 android:fontFamily="sans-serif-thin"
                 android:textColor="@color/colorWhite"
