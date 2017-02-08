@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
+import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
@@ -287,6 +288,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         Long userId = user.getId();
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
-        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), pushPaymentData.getMerchantName(), pushPaymentData.getMerchantCity());
+        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), merchant(pushPaymentData));
+    }
+
+    private Merchant merchant(PushPaymentData pushPaymentData) {
+        Merchant merchant = new Merchant();
+
+        merchant.setName(pushPaymentData.getMerchantName());
+        merchant.setCity(pushPaymentData.getMerchantCity());
+        merchant.setCategoryCode(pushPaymentData.getMerchantCategoryCode());
+        merchant.setIdentifierVisa02(pushPaymentData.getMerchantIdentifierVisa02());
+        merchant.setIdentifierVisa03(pushPaymentData.getMerchantIdentifierVisa03());
+        merchant.setIdentifierMastercard04(pushPaymentData.getMerchantIdentifierMastercard04());
+        merchant.setIdentifierMastercard05(pushPaymentData.getMerchantIdentifierMastercard05());
+        merchant.setIdentifierNPCI06(pushPaymentData.getMerchantIdentifierNPCI06());
+        merchant.setIdentifierNPCI07(pushPaymentData.getMerchantIdentifierNPCI07());
+
+        return merchant;
     }
 }

@@ -79,8 +79,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
             // TODO: Show error
         }
 
-        paymentView.setMerchantName(paymentData.getMerchantName());
-        paymentView.setMerchantCity(paymentData.getMerchantCity());
+        paymentView.setMerchantName(paymentData.getMerchant().getName());
+        paymentView.setMerchantCity(paymentData.getMerchant().getCity());
 
         updateTotal();
     }
@@ -169,7 +169,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
                         tipAmount = paymentData.getTipAmount();
                     }
 
-                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier());
+                    Receipt receipt = new Receipt(paymentData.getMerchant().getName(), paymentData.getMerchant().getCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier());
 
                     paymentView.showReceipt(receipt);
                 } else {
