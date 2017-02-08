@@ -11,7 +11,7 @@
             android:layout_height="20dp"
             android:layout_margin="20dp"
             android:layout_alignParentTop="true"
-            android:contentDescription="@string/card"
+            android:contentDescription="@string/paymentInstrument"
             tools:src="@drawable/mastercard_logo"/>
 
     <TextView

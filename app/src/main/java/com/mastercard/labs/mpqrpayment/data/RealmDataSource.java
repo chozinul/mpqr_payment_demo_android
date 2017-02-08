@@ -1,6 +1,6 @@
 package com.mastercard.labs.mpqrpayment.data;
 
-import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 
 import java.util.List;
@@ -28,13 +28,6 @@ public class RealmDataSource implements DataSource {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.beginTransaction();
 
-            User dbUser = realm.where(User.class).equalTo("userId", user.getUserId()).findFirst();
-            if (dbUser == null) {
-                user.setId(UUID.randomUUID().toString());
-            } else {
-                user.setId(dbUser.getId());
-            }
-
             user = realm.copyToRealmOrUpdate(user);
 
             realm.commitTransaction();
@@ -44,22 +37,15 @@ public class RealmDataSource implements DataSource {
     }
 
     @Override
-    public Card saveCard(Card card) {
+    public PaymentInstrument saveCard(PaymentInstrument paymentInstrument) {
         try (Realm realm = Realm.getDefaultInstance()) {
             realm.beginTransaction();
 
-            Card dbCard = realm.where(Card.class).equalTo("cardId", card.getCardId()).findFirst();
-            if (dbCard == null) {
-                card.setId(UUID.randomUUID().toString());
-            } else {
-                card.setId(dbCard.getId());
-            }
-
-            card = realm.copyToRealmOrUpdate(card);
+            paymentInstrument = realm.copyToRealmOrUpdate(paymentInstrument);
 
             realm.commitTransaction();
 
-            return realm.copyFromRealm(card);
+            return realm.copyFromRealm(paymentInstrument);
         }
     }
 
@@ -70,7 +56,7 @@ public class RealmDataSource implements DataSource {
         }
 
         try (Realm realm = Realm.getDefaultInstance()) {
-            User user = realm.where(User.class).equalTo("userId", userId).findFirst();
+            User user = realm.where(User.class).equalTo("id", userId).findFirst();
             if (user == null) {
                 return null;
             } else {
@@ -81,33 +67,33 @@ public class RealmDataSource implements DataSource {
 
 
     @Override
-    public Card getCard(Long userId, Long cardId) {
+    public PaymentInstrument getCard(Long userId, Long cardId) {
         if (cardId == null) {
             return null;
         }
 
         try (Realm realm = Realm.getDefaultInstance()) {
-            Card card = realm.where(Card.class).equalTo("cardId", cardId).findFirst();
-            if (card == null) {
+            PaymentInstrument paymentInstrument = realm.where(PaymentInstrument.class).equalTo("id", cardId).findFirst();
+            if (paymentInstrument == null) {
                 return null;
             } else {
-                return realm.copyFromRealm(card);
+                return realm.copyFromRealm(paymentInstrument);
             }
         }
     }
 
     @Override
-    public List<Card> getCards(Long userId) {
+    public List<PaymentInstrument> getCards(Long userId) {
         if (userId == null) {
             return null;
         }
 
         try (Realm realm = Realm.getDefaultInstance()) {
-            User user = realm.where(User.class).equalTo("userId", userId).findFirst();
+            User user = realm.where(User.class).equalTo("id", userId).findFirst();
             if (user == null) {
                 return null;
             } else {
-                return realm.copyFromRealm(user.getCards());
+                return realm.copyFromRealm(user.getPaymentInstruments());
             }
         }
     }

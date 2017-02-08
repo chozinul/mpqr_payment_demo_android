@@ -13,8 +13,10 @@ import android.widget.TextView;
 import com.mastercard.labs.mpqrpayment.MainApplication;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
-import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
+import com.mastercard.labs.mpqrpayment.network.LoginManager;
+import com.mastercard.labs.mpqrpayment.network.token.TokenInterceptor;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
@@ -22,11 +24,8 @@ import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
 import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
 
-import java.text.NumberFormat;
 import java.util.Collections;
-import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         userId = getIntent().getLongExtra(BUNDLE_USER_KEY, -1L);
         // TODO: Only for debugging purposes till Login screen is implemented.
-        userId = MainApplication.loggedInUserId();
+        userId = LoginManager.getInstance().getLoggedInUserId();
 
         if (userId == -1) {
             // TODO: Show error
@@ -122,9 +121,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void updateBalance() {
-        Card selectedCard = user.getCards().get(selectedCardIdx);
+        PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
-        String balanceAmount = CurrencyCode.formatAmount(selectedCard.getBalance(), selectedCard.getCurrencyNumericCode());
+        String balanceAmount = CurrencyCode.formatAmount(selectedPaymentInstrument.getBalance(), selectedPaymentInstrument.getCurrencyNumericCode());
 
         availableBalanceTextView.setText(balanceAmount);
     }
@@ -139,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             user.removeChangeListeners();
         }
 
-        user = realm.where(User.class).equalTo("userId", userId).findFirst();
+        user = realm.where(User.class).equalTo("id", userId).findFirst();
         if (user == null) {
             // TODO: Show error
             return;
@@ -156,32 +155,36 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void refreshCards(User user) {
-        if (user.getCards().isEmpty()) {
+        if (user.getPaymentInstruments().isEmpty()) {
             // TODO: Show error
             return;
         }
 
         if (selectedCardIdx == -1) {
-            selectedCardIdx = user.getCards().indexOf(user.getDefaultCard());
+            for (int i = 0; i < user.getPaymentInstruments().size(); i++) {
+                if (user.getPaymentInstruments().get(i).isDefault()) {
+                    selectedCardIdx = i;
+                }
+            }
         }
 
-        Card selectedCard = user.getCards().get(selectedCardIdx);
+        PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
-        List<Card> cards = user.getCards();
+        List<PaymentInstrument> paymentInstruments = user.getPaymentInstruments();
 
         final ViewPager viewPager = pagerContainer.getViewPager();
         CardPagerAdapter pagerAdapter = (CardPagerAdapter) viewPager.getAdapter();
 
-        pagerAdapter.setCards(Collections.unmodifiableList(cards));
+        pagerAdapter.setPaymentInstruments(Collections.unmodifiableList(paymentInstruments));
         pagerAdapter.notifyDataSetChanged();
 
         viewPager.setOffscreenPageLimit(pagerAdapter.getCount());
 
-        if (selectedCard == null) {
-            selectedCard = user.getCards().first();
+        if (selectedPaymentInstrument == null) {
+            selectedPaymentInstrument = user.getPaymentInstruments().first();
         }
 
-        viewPager.setCurrentItem(cards.indexOf(selectedCard));
+        viewPager.setCurrentItem(paymentInstruments.indexOf(selectedPaymentInstrument));
         updateBalance();
 
         // Manually setting the first View to be elevated
@@ -235,10 +238,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void showPaymentActivity(String pushPaymentDataString) {
-        Long userId = user.getUserId();
-        Card selectedCard = user.getCards().get(selectedCardIdx);
+        Long userId = user.getId();
+        PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
-        Intent intent = PaymentActivity.newIntent(this, pushPaymentDataString, userId, selectedCard.getCardId());
+        Intent intent = PaymentActivity.newIntent(this, pushPaymentDataString, userId, selectedPaymentInstrument.getId());
         startActivity(intent);
     }
 }

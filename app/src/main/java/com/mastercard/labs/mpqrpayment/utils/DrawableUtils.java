@@ -3,36 +3,36 @@ package com.mastercard.labs.mpqrpayment.utils;
 import android.support.annotation.DrawableRes;
 
 import com.mastercard.labs.mpqrpayment.R;
-import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.MethodType;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/7/17
  */
 public class DrawableUtils {
-    public static @DrawableRes int getPaymentMethodLogo(Card card) {
-        MethodType methodType = MethodType.fromString(card.getMethodType());
+    public static @DrawableRes int getPaymentMethodLogo(PaymentInstrument paymentInstrument) {
+        MethodType methodType = MethodType.fromString(paymentInstrument.getMethodType());
 
         @DrawableRes int imageId = 0;
         switch (methodType) {
             case CreditCard:
             case DebitCard:
-                if (card.getName().toLowerCase().contains("mastercard")) {
+                if (paymentInstrument.getName().toLowerCase().contains("mastercard")) {
                     imageId = R.drawable.mastercard_logo;
                 }
                 break;
             case SavingsAccount:
                 imageId = R.drawable.savings_account_logo;
             default:
-                // TODO: Add default card logo
+                // TODO: Add default paymentInstrument logo
                 break;
         }
 
         return imageId;
     }
 
-    public static @DrawableRes int getPaymentMethodImage(Card card) {
-        MethodType methodType = MethodType.fromString(card.getMethodType());
+    public static @DrawableRes int getPaymentMethodImage(PaymentInstrument paymentInstrument) {
+        MethodType methodType = MethodType.fromString(paymentInstrument.getMethodType());
 
         @DrawableRes int imageId = 0;
         switch (methodType) {
@@ -46,7 +46,7 @@ public class DrawableUtils {
                 imageId = R.drawable.saving_account;
                 break;
             default:
-                // TODO: Add default card image
+                // TODO: Add default paymentInstrument image
                 break;
         }
 

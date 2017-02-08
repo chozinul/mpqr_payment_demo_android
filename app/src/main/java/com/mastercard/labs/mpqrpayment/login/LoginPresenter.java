@@ -1,13 +1,10 @@
 package com.mastercard.labs.mpqrpayment.login;
 
-import com.mastercard.labs.mpqrpayment.MainApplication;
 import com.mastercard.labs.mpqrpayment.data.DataSource;
-import com.mastercard.labs.mpqrpayment.data.model.Card;
-import com.mastercard.labs.mpqrpayment.data.model.MethodType;
-import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
 import com.mastercard.labs.mpqrpayment.network.response.LoginResponse;
+import com.mastercard.labs.mpqrpayment.network.LoginManager;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,7 +17,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private LoginContract.View mView;
     private DataSource dataSource;
-    private Call<LoginResponse> authRequest;
+    private Call<LoginResponse> loginRequest;
 
     public LoginPresenter(LoginContract.View view, DataSource dataSource) {
         this.mView = view;
@@ -38,7 +35,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void login(String accessCode, String pin) {
-        if (authRequest != null) {
+        if (loginRequest != null) {
             return;
         }
 
@@ -59,8 +56,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
         mView.showProgress();
 
-        authRequest = ServiceGenerator.getInstance().mpqrPaymentService().login(new LoginAccessCodeRequest(accessCode, pin));
-        authRequest.enqueue(new Callback<LoginResponse>() {
+        loginRequest = ServiceGenerator.getInstance().mpqrPaymentService().login(new LoginAccessCodeRequest(accessCode, pin));
+        loginRequest.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful()) {
@@ -84,36 +81,10 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     private void loginSuccess(LoginResponse response) {
-        User user = new User();
-        user.setUserId(response.getId());
-        user.setFirstName(response.getFirstName());
-        user.setLastName(response.getLastName());
+        LoginManager.getInstance().setToken(response.getToken());
 
-        user = dataSource.saveUser(user);
+        dataSource.saveUser(response.getUser());
 
-        if (response.getPaymentInstruments() != null) {
-            for (LoginResponse.PaymentInstrument instrument : response.getPaymentInstruments()) {
-                Card card = new Card();
-                card.setCardId(instrument.getId());
-                card.setAcquirerName(instrument.getAcquirerName());
-                card.setIssuerName(instrument.getIssuerName());
-                card.setName(instrument.getName());
-                card.setMethodType(instrument.getMethodType());
-                card.setBalance(instrument.getBalance());
-                card.setMaskedIdentifier(instrument.getMaskedIdentifier());
-                card.setCurrencyNumericCode(instrument.getCurrencyNumericCode());
-
-                card = dataSource.saveCard(card);
-                if (user.getDefaultCard() == null) {
-                    user.setDefaultCard(card);
-                }
-
-                user.getCards().add(card);
-            }
-        }
-
-        user = dataSource.saveUser(user);
-
-        MainApplication.setLoggedInUserId(user.getUserId());
+        LoginManager.getInstance().setLoggedInUserId(response.getUser().getId());
     }
 }

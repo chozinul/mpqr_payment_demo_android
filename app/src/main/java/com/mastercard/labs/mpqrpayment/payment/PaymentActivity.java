@@ -14,7 +14,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,7 +24,7 @@ import android.widget.TextView;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
-import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.MethodType;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.receipt.ReceiptActivity;
@@ -291,31 +290,31 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     @Override
-    public void setCard(Card card) {
-        MethodType methodType = MethodType.fromString(card.getMethodType());
+    public void setCard(PaymentInstrument paymentInstrument) {
+        MethodType methodType = MethodType.fromString(paymentInstrument.getMethodType());
 
         @DrawableRes int imageId = 0;
         switch (methodType) {
             case CreditCard:
             case DebitCard:
-                if (card.getName().toLowerCase().contains("mastercard")) {
+                if (paymentInstrument.getName().toLowerCase().contains("mastercard")) {
                     imageId = R.drawable.mastercard_logo;
                 }
                 break;
             case SavingsAccount:
                 imageId = R.drawable.savings_account_logo;
             default:
-                // TODO: Add default card logo
+                // TODO: Add default paymentInstrument logo
                 break;
         }
 
         paymentCardTextView.setCompoundDrawablesWithIntrinsicBounds(imageId, 0, 0, 0);
-        paymentCardTextView.setText(getString(R.string.pay_with_card, card.getMaskedIdentifier()));
+        paymentCardTextView.setText(getString(R.string.pay_with_card, paymentInstrument.getMaskedIdentifier()));
     }
 
     @Override
-    public void showCardSelection(final List<Card> cards, int selectedCardIdx) {
-        final CardsArrayAdapter adapter = new CardsArrayAdapter(this, cards);
+    public void showCardSelection(final List<PaymentInstrument> paymentInstruments, int selectedCardIdx) {
+        final CardsArrayAdapter adapter = new CardsArrayAdapter(this, paymentInstruments);
         adapter.setSelectedIndex(selectedCardIdx);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -330,7 +329,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
                 .setPositiveButton(R.string.select, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        presenter.setCardId(cards.get(adapter.getSelectedIndex()).getCardId());
+                        presenter.setCardId(paymentInstruments.get(adapter.getSelectedIndex()).getId());
                         dialog.dismiss();
                     }
                 })

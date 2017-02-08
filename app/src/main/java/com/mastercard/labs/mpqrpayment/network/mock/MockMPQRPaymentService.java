@@ -2,6 +2,7 @@ package com.mastercard.labs.mpqrpayment.network.mock;
 
 import com.google.gson.Gson;
 
+import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
@@ -30,47 +31,102 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     @Override
     public Call<LoginResponse> login(@Body LoginAccessCodeRequest request) {
         String dummyResponse = "{\n" +
-                "  \"id\": 2,\n" +
-                "  \"firstName\": \"Muhammad\",\n" +
-                "  \"lastName\": \"Azeem\",\n" +
-                "  \"paymentInstruments\": [\n" +
-                "    {\n" +
-                "      \"id\": 4,\n" +
-                "      \"acquirerName\": \"Mastercard\",\n" +
-                "      \"issuerName\": \"Ecobank\",\n" +
-                "      \"name\": \"MastercardGold\",\n" +
-                "      \"methodType\": \"DebitCard\",\n" +
-                "      \"balance\": \"5100.20\",\n" +
-                "      \"maskedIdentifier\": \"**** 0006\",\n" +
-                "      \"currencyNumericCode\": 356\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 5,\n" +
-                "      \"acquirerName\": \"Mastercard\",\n" +
-                "      \"issuerName\": \"Ecobank\",\n" +
-                "      \"name\": \"MastercardBlack\",\n" +
-                "      \"methodType\": \"CreditCard\",\n" +
-                "      \"balance\": \"120.90\",\n" +
-                "      \"maskedIdentifier\": \"**** 5101\",\n" +
-                "      \"currencyNumericCode\": 356\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 6,\n" +
-                "      \"acquirerName\": \"Mastercard\",\n" +
-                "      \"issuerName\": \"Ecobank\",\n" +
-                "      \"name\": \"MastercardBlack\",\n" +
-                "      \"methodType\": \"SavingsAccount\",\n" +
-                "      \"balance\": \"21370.00\",\n" +
-                "      \"maskedIdentifier\": \"**** 5102\",\n" +
-                "      \"currencyNumericCode\": 356\n" +
-                "    }\n" +
-                "  ]\n" +
+                "  \"user\": {\n" +
+                "    \"id\": 62,\n" +
+                "    \"firstName\": \"Muhammad\",\n" +
+                "    \"lastName\": \"Azeem\",\n" +
+                "    \"paymentInstruments\": [\n" +
+                "      {\n" +
+                "        \"id\": 184,\n" +
+                "        \"acquirerName\": \"Mastercard\",\n" +
+                "        \"issuerName\": \"Ecobank\",\n" +
+                "        \"name\": \"MastercardGold\",\n" +
+                "        \"methodType\": \"DebitCard\",\n" +
+                "        \"balance\": \"5100.20\",\n" +
+                "        \"maskedIdentifier\": \"**** 0006\",\n" +
+                "        \"currencyNumericCode\": 356,\n" +
+                "        \"isDefault\": true\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 185,\n" +
+                "        \"acquirerName\": \"Mastercard\",\n" +
+                "        \"issuerName\": \"Ecobank\",\n" +
+                "        \"name\": \"MastercardBlack\",\n" +
+                "        \"methodType\": \"CreditCard\",\n" +
+                "        \"balance\": \"120.90\",\n" +
+                "        \"maskedIdentifier\": \"**** 5101\",\n" +
+                "        \"currencyNumericCode\": 356,\n" +
+                "        \"isDefault\": false\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 186,\n" +
+                "        \"acquirerName\": \"Mastercard\",\n" +
+                "        \"issuerName\": \"Ecobank\",\n" +
+                "        \"name\": \"MastercardBlack\",\n" +
+                "        \"methodType\": \"SavingsAccount\",\n" +
+                "        \"balance\": \"21370.00\",\n" +
+                "        \"maskedIdentifier\": \"**** 5102\",\n" +
+                "        \"currencyNumericCode\": 356,\n" +
+                "        \"isDefault\": false\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsInR5cGUiOiJjb25zdW1lciIsImlhdCI6MTQ4NjUyNTcwOSwiZXhwIjoxNDg3ODIxNzA5fQ.QbRK_RG1yr40iKK2GKmnMoBKuLxLg-X2gsKPnolyJ7w\"\n" +
                 "}";
 
         Gson gson = new Gson();
         LoginResponse response = gson.fromJson(dummyResponse, LoginResponse.class);
 
         return delegate.returningResponse(response).login(request);
+    }
+
+    @Override
+    public Call<User> consumer() {
+        String dummyResponse = "{\n" +
+                "  \"id\": 60,\n" +
+                "  \"firstName\": \"Muhammad\",\n" +
+                "  \"lastName\": \"Azeem\",\n" +
+                "  \"paymentInstruments\": [\n" +
+                "    {\n" +
+                "      \"id\": 178,\n" +
+                "      \"acquirerName\": \"Mastercard\",\n" +
+                "      \"issuerName\": \"Ecobank\",\n" +
+                "      \"name\": \"MastercardGold\",\n" +
+                "      \"methodType\": \"DebitCard\",\n" +
+                "      \"balance\": \"5100.20\",\n" +
+                "      \"maskedIdentifier\": \"**** 0006\",\n" +
+                "      \"currencyNumericCode\": 356,\n" +
+                "      \"isDefault\": true\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": 179,\n" +
+                "      \"acquirerName\": \"Mastercard\",\n" +
+                "      \"issuerName\": \"Ecobank\",\n" +
+                "      \"name\": \"MastercardBlack\",\n" +
+                "      \"methodType\": \"CreditCard\",\n" +
+                "      \"balance\": \"120.90\",\n" +
+                "      \"maskedIdentifier\": \"**** 5101\",\n" +
+                "      \"currencyNumericCode\": 356,\n" +
+                "      \"isDefault\": false\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"id\": 180,\n" +
+                "      \"acquirerName\": \"Mastercard\",\n" +
+                "      \"issuerName\": \"Ecobank\",\n" +
+                "      \"name\": \"MastercardBlack\",\n" +
+                "      \"methodType\": \"SavingsAccount\",\n" +
+                "      \"balance\": \"21370.00\",\n" +
+                "      \"maskedIdentifier\": \"**** 5102\",\n" +
+                "      \"currencyNumericCode\": 356,\n" +
+                "      \"isDefault\": false\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
+
+        Gson gson = new Gson();
+        User response = gson.fromJson(dummyResponse, User.class);
+
+        return delegate.returningResponse(response).consumer();
     }
 
     @Override

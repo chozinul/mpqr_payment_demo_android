@@ -1,7 +1,6 @@
 package com.mastercard.labs.mpqrpayment.adapter;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
-import com.mastercard.labs.mpqrpayment.data.model.Card;
-import com.mastercard.labs.mpqrpayment.data.model.MethodType;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
 
 import java.util.List;
@@ -21,11 +19,11 @@ import java.util.List;
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/2/17
  */
-public class CardsArrayAdapter extends ArrayAdapter<Card> {
+public class CardsArrayAdapter extends ArrayAdapter<PaymentInstrument> {
     private int selectedIndex;
 
-    public CardsArrayAdapter(Context context, List<Card> cards) {
-        super(context, 0, cards);
+    public CardsArrayAdapter(Context context, List<PaymentInstrument> paymentInstruments) {
+        super(context, 0, paymentInstruments);
     }
 
     @NonNull
@@ -44,14 +42,14 @@ public class CardsArrayAdapter extends ArrayAdapter<Card> {
         TextView balance = (TextView) view.findViewById(R.id.txt_balance);
         RadioButton radioButton = (RadioButton) view.findViewById(R.id.rb_check);
 
-        Card card = getItem(position);
-        if (card == null) {
+        PaymentInstrument paymentInstrument = getItem(position);
+        if (paymentInstrument == null) {
             return view;
         }
 
-        cardLogo.setImageResource(DrawableUtils.getPaymentMethodLogo(card));
-        cardNumber.setText(card.getMaskedIdentifier());
-        balance.setText(getContext().getString(R.string.balance_of_card, card.getBalance()));
+        cardLogo.setImageResource(DrawableUtils.getPaymentMethodLogo(paymentInstrument));
+        cardNumber.setText(paymentInstrument.getMaskedIdentifier());
+        balance.setText(getContext().getString(R.string.balance_of_card, paymentInstrument.getBalance()));
 
         radioButton.setChecked(selectedIndex == position);
 

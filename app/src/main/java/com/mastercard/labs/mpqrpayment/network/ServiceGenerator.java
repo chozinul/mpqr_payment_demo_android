@@ -1,6 +1,7 @@
 package com.mastercard.labs.mpqrpayment.network;
 
 import com.mastercard.labs.mpqrpayment.network.mock.MockMPQRPaymentService;
+import com.mastercard.labs.mpqrpayment.network.token.TokenInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +46,7 @@ public class ServiceGenerator {
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder().dispatcher(dispatcher).addInterceptor(loggingInterceptor);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder().dispatcher(dispatcher).addInterceptor(loggingInterceptor).addInterceptor(new TokenInterceptor());
 
         Retrofit.Builder builder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())

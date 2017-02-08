@@ -10,6 +10,6 @@
             android:layout_gravity="center"
             android:scaleType="centerInside"
             android:visibility="visible"
-            android:contentDescription="@string/card"/>
+            android:contentDescription="@string/paymentInstrument"/>
 
 </RelativeLayout>

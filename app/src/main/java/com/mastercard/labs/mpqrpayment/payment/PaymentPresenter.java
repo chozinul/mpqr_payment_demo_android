@@ -1,7 +1,7 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.data.DataSource;
-import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
@@ -31,7 +31,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
     private Long userId;
 
     private PushPaymentData paymentData;
-    private Card card;
+    private PaymentInstrument paymentInstrument;
 
     private CurrencyCode currencyCode;
     private double amount;
@@ -116,13 +116,13 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void setCardId(Long cardId) {
-        card = dataSource.getCard(userId, cardId);
-        if (card == null) {
+        paymentInstrument = dataSource.getCard(userId, cardId);
+        if (paymentInstrument == null) {
             // TODO: Show error
             return;
         }
 
-        paymentView.setCard(card);
+        paymentView.setCard(paymentInstrument);
     }
 
     @Override
@@ -177,8 +177,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void selectCard() {
-        List<Card> cards = dataSource.getCards(userId);
-        paymentView.showCardSelection(cards, cards.indexOf(card));
+        List<PaymentInstrument> paymentInstruments = dataSource.getCards(userId);
+        paymentView.showCardSelection(paymentInstruments, paymentInstruments.indexOf(paymentInstrument));
     }
 
     @Override
@@ -210,7 +210,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
                         tipAmount = getTipAmount();
                     }
 
-                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), amount, tipAmount, getTotal(), currencyCode.toString(), card.getMaskedIdentifier());
+                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), amount, tipAmount, getTotal(), currencyCode.toString(), paymentInstrument.getMaskedIdentifier());
 
                     paymentView.showReceipt(receipt);
                 } else {

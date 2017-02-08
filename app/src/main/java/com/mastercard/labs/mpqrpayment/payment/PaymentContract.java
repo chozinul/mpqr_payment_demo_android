@@ -2,7 +2,7 @@ package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.BasePresenter;
 import com.mastercard.labs.mpqrpayment.BaseView;
-import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 
 import java.util.List;
@@ -37,9 +37,9 @@ public interface PaymentContract {
 
         void setMerchantCity(String merchantCity);
 
-        void setCard(Card card);
+        void setCard(PaymentInstrument paymentInstrument);
 
-        void showCardSelection(List<Card> cards, int selectedCardIdx);
+        void showCardSelection(List<PaymentInstrument> paymentInstruments, int selectedCardIdx);
 
         void askPin(int pinLength);
 

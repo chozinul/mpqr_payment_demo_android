@@ -1,6 +1,6 @@
 package com.mastercard.labs.mpqrpayment.data;
 
-import com.mastercard.labs.mpqrpayment.data.model.Card;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 
 import java.util.List;
@@ -11,11 +11,11 @@ import java.util.List;
 public interface DataSource {
     User saveUser(User user);
 
-    Card saveCard(Card card);
+    PaymentInstrument saveCard(PaymentInstrument paymentInstrument);
 
     User getUser(Long userId);
 
-    Card getCard(Long userId, Long cardId);
+    PaymentInstrument getCard(Long userId, Long cardId);
 
-    List<Card> getCards(Long userId);
+    List<PaymentInstrument> getCards(Long userId);
 }

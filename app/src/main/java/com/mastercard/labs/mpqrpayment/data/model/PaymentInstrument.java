@@ -6,11 +6,9 @@ import io.realm.annotations.PrimaryKey;
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 1/25/17
  */
-public class Card extends RealmObject {
+public class PaymentInstrument extends RealmObject {
     @PrimaryKey
-    private String id;
-
-    private Long cardId;
+    private Long id;
     private String acquirerName;
     private String issuerName;
     private String name;
@@ -18,21 +16,14 @@ public class Card extends RealmObject {
     private Double balance;
     private String maskedIdentifier;
     private String currencyNumericCode;
+    private Boolean isDefault;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String cardId) {
-        this.id = cardId;
-    }
-
-    public Long getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(Long cardId) {
-        this.cardId = cardId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAcquirerName() {
@@ -89,5 +80,13 @@ public class Card extends RealmObject {
 
     public void setCurrencyNumericCode(String currencyNumericCode) {
         this.currencyNumericCode = currencyNumericCode;
+    }
+
+    public Boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(Boolean aDefault) {
+        isDefault = aDefault;
     }
 }
