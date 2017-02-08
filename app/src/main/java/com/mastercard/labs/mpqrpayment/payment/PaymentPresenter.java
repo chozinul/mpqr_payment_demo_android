@@ -82,6 +82,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
         paymentView.setMerchantName(paymentData.getMerchant().getName());
         paymentView.setMerchantCity(paymentData.getMerchant().getCity());
 
+        setCardId(paymentData.getCardId());
+
         updateTotal();
     }
 
@@ -120,8 +122,9 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void setCurrencyCode(String currencyCode) {
-        if (currencyCode != null) {
-            paymentData.setTransactionCurrencyCode(currencyCode);
+        // Assign only if valid numeric code
+        if (CurrencyCode.fromNumericCode(currencyCode) != null) {
+            paymentData.setCurrencyNumericCode(currencyCode);
             updateTotal();
         } else {
             // TODO: Show error
@@ -131,7 +134,12 @@ class PaymentPresenter implements PaymentContract.Presenter {
     private void updateTotal() {
         double total = paymentData.getTotal();
 
-        paymentView.setTotalAmount(total, paymentData.getCurrencyCode().toString());
+        String currencyCode = "";
+        if (paymentData.getCurrencyCode() != null) {
+            currencyCode = paymentData.getCurrencyCode().toString();
+        }
+
+        paymentView.setTotalAmount(total, currencyCode);
     }
 
     @Override
@@ -142,6 +150,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void makePayment() {
+        // TODO: Validate payment data before moving forward
+
         paymentView.askPin(PIN_SIZE);
     }
 

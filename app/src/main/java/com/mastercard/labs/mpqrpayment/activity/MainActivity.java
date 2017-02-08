@@ -1,5 +1,6 @@
 package com.mastercard.labs.mpqrpayment.activity;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.content.Intent;
@@ -209,23 +210,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @OnClick(R.id.scan_qr_button)
     public void scanFromCamera() {
         // TODO: For testing only
-//        {
-//            try {
-//                showPaymentActivity(Parser.parse("00020101021204154600678934521435204520453033565405100.05502015802US5910Merchant A6009Singapore62280305A600804030000708457843126304534B"));
-//            } catch (FormatException e) {
-//                e.printStackTrace();
-//                Toast.makeText(this, "Invalid qr code string", Toast.LENGTH_LONG).show();
-//            }
-//        }
-        {
-            showMerchantActivity();
-        }
-
-//        IntentIntegrator integrator = new PPIntentIntegrator(this);
-//        integrator.setOrientationLocked(false);
-//        integrator.setBeepEnabled(false);
-//        integrator.setPrompt("Scan QR Code");
-//        integrator.initiateScan();
+        IntentIntegrator integrator = new PPIntentIntegrator(this);
+        integrator.setOrientationLocked(false);
+        integrator.setBeepEnabled(false);
+        integrator.setPrompt("Scan QR Code");
+        integrator.setCaptureActivity(CustomizedPPCaptureActivity.class);
+        integrator.initiateScan();
     }
 
     @Override
@@ -246,7 +236,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     // TODO: Show error
                 }
             }
+        } else if (resultCode == CustomizedPPCaptureActivity.RESULT_CANNOT_SCAN_QR) {
+            showMerchantActivity();
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -258,7 +251,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void showMerchantActivity() {
-        Intent intent = MerchantActivity.newIntent(this);
+        Long userId = user.getId();
+        PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
+
+        Intent intent = MerchantActivity.newIntent(this, userId, selectedPaymentInstrument.getId(), "356");
         startActivity(intent);
     }
 

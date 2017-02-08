@@ -1,9 +1,12 @@
 package com.mastercard.labs.mpqrpayment.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/3/17
  */
-public class Receipt {
+public class Receipt implements Parcelable {
     private String merchantName;
     private String merchantCity;
     private Double amount;
@@ -77,4 +80,43 @@ public class Receipt {
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.merchantName);
+        dest.writeString(this.merchantCity);
+        dest.writeValue(this.amount);
+        dest.writeValue(this.tipAmount);
+        dest.writeValue(this.totalAmount);
+        dest.writeString(this.currencyCode);
+        dest.writeString(this.maskedPan);
+    }
+
+    protected Receipt(Parcel in) {
+        this.merchantName = in.readString();
+        this.merchantCity = in.readString();
+        this.amount = (Double) in.readValue(Double.class.getClassLoader());
+        this.tipAmount = (Double) in.readValue(Double.class.getClassLoader());
+        this.totalAmount = (Double) in.readValue(Double.class.getClassLoader());
+        this.currencyCode = in.readString();
+        this.maskedPan = in.readString();
+    }
+
+    public static final Parcelable.Creator<Receipt> CREATOR = new Parcelable.Creator<Receipt>() {
+        @Override
+        public Receipt createFromParcel(Parcel source) {
+            return new Receipt(source);
+        }
+
+        @Override
+        public Receipt[] newArray(int size) {
+            return new Receipt[size];
+        }
+    };
 }

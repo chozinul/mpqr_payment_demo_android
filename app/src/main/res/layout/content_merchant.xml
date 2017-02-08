@@ -71,8 +71,20 @@
                         android:inputType="numberDecimal"
                         android:digits="0123456789"
                         android:textSize="@dimen/size_24"
+                        android:layout_toStartOf="@+id/pb_merchant_info"
                         tools:drawableEnd="@drawable/success_tick"
                         tools:text="12345678"/>
+
+                <ProgressBar
+                        android:id="@+id/pb_merchant_info"
+                        style="?android:attr/progressBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/txt_merchant_code_value"
+                        android:layout_alignBottom="@id/txt_merchant_code_value"
+                        android:layout_alignParentEnd="true"
+                        android:indeterminate="true"
+                        android:visibility="gone"/>
             </RelativeLayout>
 
             <View

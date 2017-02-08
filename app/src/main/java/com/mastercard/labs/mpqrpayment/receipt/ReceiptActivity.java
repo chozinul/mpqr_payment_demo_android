@@ -21,15 +21,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ReceiptActivity extends AppCompatActivity implements ReceiptContract.View {
-    private static String BUNDLE_MERCHANT_NAME = "merchantName";
-    private static String BUNDLE_MERCHANT_CITY = "merchantCity";
-    private static String BUNDLE_AMOUNT = "amount";
-    private static String BUNDLE_TIP_AMOUNT = "tipAmount";
-    private static String BUNDLE_TOTAL_AMOUNT = "totalAmount";
-    private static String BUNDLE_CURRENCY_CODE = "currencyCode";
-    private static String BUNDLE_MASKED_PAN = "maskedPan";
+    private static String BUNDLE_RECEIPT_KEY = "receipt";
 
     private ReceiptContract.Presenter presenter;
+    private Receipt receipt;
 
     @BindView(R.id.txt_total_amount)
     TextView totalAmountTextView;
@@ -54,13 +49,7 @@ public class ReceiptActivity extends AppCompatActivity implements ReceiptContrac
 
     public static Intent newIntent(Context context, Receipt receipt) {
         Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_MERCHANT_NAME, receipt.getMerchantName());
-        bundle.putString(BUNDLE_MERCHANT_CITY, receipt.getMerchantCity());
-        bundle.putDouble(BUNDLE_AMOUNT, receipt.getAmount());
-        bundle.putDouble(BUNDLE_TIP_AMOUNT, receipt.getTipAmount());
-        bundle.putDouble(BUNDLE_TOTAL_AMOUNT, receipt.getTotalAmount());
-        bundle.putString(BUNDLE_CURRENCY_CODE, receipt.getCurrencyCode());
-        bundle.putString(BUNDLE_MASKED_PAN, receipt.getMaskedPan());
+        bundle.putParcelable(BUNDLE_RECEIPT_KEY, receipt);
 
         Intent intent = new Intent(context, ReceiptActivity.class);
         intent.putExtras(bundle);
@@ -80,14 +69,11 @@ public class ReceiptActivity extends AppCompatActivity implements ReceiptContrac
 
         ButterKnife.bind(this);
 
-        Bundle bundle = getIntent().getExtras();
-        Receipt receipt = new Receipt(bundle.getString(BUNDLE_MERCHANT_NAME),
-                bundle.getString(BUNDLE_MERCHANT_CITY),
-                bundle.getDouble(BUNDLE_AMOUNT),
-                bundle.getDouble(BUNDLE_TIP_AMOUNT),
-                bundle.getDouble(BUNDLE_TOTAL_AMOUNT),
-                bundle.getString(BUNDLE_CURRENCY_CODE),
-                bundle.getString(BUNDLE_MASKED_PAN));
+        if (savedInstanceState != null) {
+            receipt = savedInstanceState.getParcelable(BUNDLE_RECEIPT_KEY);
+        } else {
+            receipt = getIntent().getParcelableExtra(BUNDLE_RECEIPT_KEY);
+        }
 
         presenter = new ReceiptPresenter(this, RealmDataSource.getInstance(), receipt);
     }
@@ -97,6 +83,13 @@ public class ReceiptActivity extends AppCompatActivity implements ReceiptContrac
         super.onResume();
 
         presenter.start();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(BUNDLE_RECEIPT_KEY, receipt);
     }
 
     @OnClick(value = R.id.btn_return)

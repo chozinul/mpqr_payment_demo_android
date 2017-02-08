@@ -60,6 +60,8 @@ public class LoginPresenter implements LoginContract.Presenter {
         loginRequest.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                loginRequest = null;
+
                 if (response.isSuccessful()) {
                     loginSuccess(response.body());
                 } else {
@@ -73,6 +75,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                loginRequest = null;
+
                 mView.hideProgress();
 
                 mView.showNetworkError();

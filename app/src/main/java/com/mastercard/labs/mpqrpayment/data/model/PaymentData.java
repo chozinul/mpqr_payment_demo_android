@@ -15,17 +15,17 @@ public class PaymentData implements Parcelable {
     private double transactionAmount;
     private TipInfo tipType;
     private double tip;
-    private String transactionCurrencyCode;
+    private String currencyNumericCode;
     private Merchant merchant;
 
-    public PaymentData(long userId, long cardId, boolean isDynamic, double transactionAmount, TipInfo tipType, double tip, String transactionCurrencyCode, Merchant merchant) {
+    public PaymentData(long userId, long cardId, boolean isDynamic, double transactionAmount, TipInfo tipType, double tip, String currencyNumericCode, Merchant merchant) {
         this.userId = userId;
         this.cardId = cardId;
         this.isDynamic = isDynamic;
         this.transactionAmount = transactionAmount;
         this.tipType = tipType;
         this.tip = tip;
-        this.transactionCurrencyCode = transactionCurrencyCode;
+        this.currencyNumericCode = currencyNumericCode;
         this.merchant = merchant;
     }
 
@@ -77,12 +77,12 @@ public class PaymentData implements Parcelable {
         this.tip = tip;
     }
 
-    public String getTransactionCurrencyCode() {
-        return transactionCurrencyCode;
+    public String getCurrencyNumericCode() {
+        return currencyNumericCode;
     }
 
-    public void setTransactionCurrencyCode(String transactionCurrencyCode) {
-        this.transactionCurrencyCode = transactionCurrencyCode;
+    public void setCurrencyNumericCode(String transactionCurrencyCode) {
+        this.currencyNumericCode = transactionCurrencyCode;
     }
 
     public Merchant getMerchant() {
@@ -106,7 +106,7 @@ public class PaymentData implements Parcelable {
     }
 
     public CurrencyCode getCurrencyCode() {
-        return CurrencyCode.fromNumericCode(transactionCurrencyCode);
+        return CurrencyCode.fromNumericCode(currencyNumericCode);
     }
 
     public enum TipInfo {
@@ -128,7 +128,7 @@ public class PaymentData implements Parcelable {
         dest.writeDouble(this.transactionAmount);
         dest.writeInt(this.tipType == null ? -1 : this.tipType.ordinal());
         dest.writeDouble(this.tip);
-        dest.writeString(this.transactionCurrencyCode);
+        dest.writeString(this.currencyNumericCode);
         dest.writeParcelable(this.merchant, flags);
     }
 
@@ -140,7 +140,7 @@ public class PaymentData implements Parcelable {
         int tmpTipType = in.readInt();
         this.tipType = tmpTipType == -1 ? null : TipInfo.values()[tmpTipType];
         this.tip = in.readDouble();
-        this.transactionCurrencyCode = in.readString();
+        this.currencyNumericCode = in.readString();
         this.merchant = in.readParcelable(Merchant.class.getClassLoader());
     }
 

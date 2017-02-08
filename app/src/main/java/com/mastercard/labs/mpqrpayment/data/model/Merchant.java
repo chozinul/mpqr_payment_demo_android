@@ -7,6 +7,7 @@ import android.os.Parcelable;
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/8/17
  */
 public class Merchant implements Parcelable {
+    private String code;
     private String name;
     private String city;
     private String categoryCode;
@@ -16,6 +17,14 @@ public class Merchant implements Parcelable {
     private String identifierMastercard05;
     private String identifierNPCI06;
     private String identifierNPCI07;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getName() {
         return name;
@@ -89,7 +98,6 @@ public class Merchant implements Parcelable {
         this.identifierNPCI07 = identifierNPCI07;
     }
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -97,6 +105,7 @@ public class Merchant implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.code);
         dest.writeString(this.name);
         dest.writeString(this.city);
         dest.writeString(this.categoryCode);
@@ -112,6 +121,7 @@ public class Merchant implements Parcelable {
     }
 
     protected Merchant(Parcel in) {
+        this.code = in.readString();
         this.name = in.readString();
         this.city = in.readString();
         this.categoryCode = in.readString();

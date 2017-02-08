@@ -2,6 +2,7 @@ package com.mastercard.labs.mpqrpayment.network.mock;
 
 import com.google.gson.Gson;
 
+import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
@@ -9,14 +10,19 @@ import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.LoginResponse;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import okhttp3.MediaType;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.mock.BehaviorDelegate;
+import retrofit2.mock.Calls;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/3/17
@@ -127,6 +133,27 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
         User response = gson.fromJson(dummyResponse, User.class);
 
         return delegate.returningResponse(response).consumer();
+    }
+
+    @Override
+    public Call<Merchant> merchant(String identifier) {
+        if (!identifier.equals("12345678")) {
+            ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "{\"success\": \"false\"}");
+            return delegate.returning(Calls.response(Response.error(404, responseBody))).merchant(identifier);
+        }
+
+        String dummyResponse = "{\n" +
+                "  \"code\": \"12345678\",\n" +
+                "  \"name\": \"FarmtoTable F&B\",\n" +
+                "  \"city\": Singapore,\n" +
+                "  \"categoryCode\": \"123\",\n" +
+                "  \"identifierMastercard04\": \"5555222233334444\"\n" +
+                "}";
+
+        Gson gson = new Gson();
+        Merchant response = gson.fromJson(dummyResponse, Merchant.class);
+
+        return delegate.returningResponse(response).merchant(identifier);
     }
 
     @Override

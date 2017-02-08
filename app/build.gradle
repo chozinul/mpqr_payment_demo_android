@@ -39,12 +39,13 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
     //required dependencies
+    compile 'com.journeyapps:zxing-android-embedded:3.4.0'
     compile files('libs/pushpayment-core-sdk-1.0.0.jar')
     compile(name: 'qr-scan-sdk-release-1.0.0', ext: 'aar')
 
