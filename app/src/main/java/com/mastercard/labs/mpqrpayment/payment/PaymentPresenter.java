@@ -1,15 +1,13 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.data.DataSource;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
-import com.mastercard.mpqr.pushpayment.exception.FormatException;
-import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
-import com.mastercard.mpqr.pushpayment.parser.Parser;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,19 +26,14 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     private PaymentContract.View paymentView;
     private DataSource dataSource;
-    private Long userId;
 
-    private PushPaymentData paymentData;
+    private PaymentData paymentData;
     private PaymentInstrument paymentInstrument;
 
-    private CurrencyCode currencyCode;
-    private double amount;
-    private double tip;
-
-    PaymentPresenter(PaymentContract.View paymentView, DataSource dataSource, Long userId) {
+    PaymentPresenter(PaymentContract.View paymentView, DataSource dataSource, PaymentData paymentData) {
         this.paymentView = paymentView;
         this.dataSource = dataSource;
-        this.userId = userId;
+        this.paymentData = paymentData;
     }
 
     @Override
@@ -48,21 +41,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     }
 
-    @Override
-    public void setPushPaymentDataString(String pushPaymentDataString) {
-        if (pushPaymentDataString != null) {
-            try {
-                paymentData = Parser.parse(pushPaymentDataString);
-            } catch (FormatException e) {
-                e.printStackTrace();
-
-                // TODO: Show error
-                return;
-            }
-        } else {
-            // TODO: Handle empty payment data
-            return;
-        }
+    public void setPaymentData(PaymentData paymentData) {
+        this.paymentData = paymentData;
 
         if (paymentData.isDynamic()) {
             // TODO: Handle dynamic QR
@@ -70,38 +50,29 @@ class PaymentPresenter implements PaymentContract.Presenter {
             // TODO: Handle static QR
         }
 
-        amount = paymentData.getTransactionAmount();
-        tip = 0;
+        paymentView.setAmount(paymentData.getTransactionAmount());
 
-        paymentView.setAmount(amount);
-
-        if (paymentData.getTipOrConvenienceIndicator() == null) {
+        if (paymentData.getTipType() == null) {
             paymentView.hideTipInformation();
         } else {
             paymentView.showTipInformation();
-            switch (paymentData.getTipOrConvenienceIndicator()) {
-                case PushPaymentData.TipConvenienceIndicator.FLAT_CONVENIENCE_FEE:
-                    tip = paymentData.getValueOfConvenienceFeeFixed();
-
-                    paymentView.setFlatConvenienceFee(tip);
+            switch (paymentData.getTipType()) {
+                case FLAT_CONVENIENCE_FEE:
+                    paymentView.setFlatConvenienceFee(paymentData.getTip());
                     paymentView.disableTipChange();
                     break;
-                case PushPaymentData.TipConvenienceIndicator.PERCENTAGE_CONVENIENCE_FEE:
-                    tip = paymentData.getValueOfConvenienceFeePercentage();
-
-                    paymentView.setPercentageConvenienceFee(tip);
+                case PERCENTAGE_CONVENIENCE_FEE:
+                    paymentView.setPercentageConvenienceFee(paymentData.getTip());
                     paymentView.disableTipChange();
                     break;
-                case PushPaymentData.TipConvenienceIndicator.PROMTED_TO_ENTER_TIP:
-                    tip = 0;
-
-                    paymentView.setPromptToEnterTip(tip);
+                case PROMPTED_TO_ENTER_TIP:
+                    paymentView.setPromptToEnterTip(paymentData.getTip());
                     paymentView.enableTipChange();
                     break;
             }
         }
 
-        currencyCode = CurrencyCode.fromNumericCode(paymentData.getTransactionCurrencyCode());
+        CurrencyCode currencyCode = paymentData.getCurrencyCode();
         if (currencyCode != null) {
             paymentView.setCurrency(currencyCode.toString());
         } else {
@@ -116,7 +87,9 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void setCardId(Long cardId) {
-        paymentInstrument = dataSource.getCard(userId, cardId);
+        paymentData.setCardId(cardId);
+
+        paymentInstrument = dataSource.getCard(paymentData.getUserId(), cardId);
         if (paymentInstrument == null) {
             // TODO: Show error
             return;
@@ -127,57 +100,43 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void setAmount(double amount) {
-        this.amount = amount;
+        paymentData.setTransactionAmount(amount);
 
         updateTotal();
     }
 
     @Override
     public void setTip(double tipAmount) {
-        if (!PushPaymentData.TipConvenienceIndicator.PROMTED_TO_ENTER_TIP.equals(paymentData.getTipOrConvenienceIndicator())) {
+        if (!PaymentData.TipInfo.PROMPTED_TO_ENTER_TIP.equals(paymentData.getTipType())) {
 
             // TODO: Show error as tip change is not allowed
             return;
         }
 
-        tip = tipAmount;
+        paymentData.setTip(tipAmount);
 
         updateTotal();
     }
 
     @Override
     public void setCurrencyCode(String currencyCode) {
-        CurrencyCode currency = CurrencyCode.fromNumericCode(paymentData.getTransactionCurrencyCode());
         if (currencyCode != null) {
-            this.currencyCode = currency;
-
+            paymentData.setTransactionCurrencyCode(currencyCode);
             updateTotal();
         } else {
             // TODO: Show error
         }
     }
 
-    private double getTipAmount() {
-        if (PushPaymentData.TipConvenienceIndicator.PERCENTAGE_CONVENIENCE_FEE.equals(paymentData.getTipOrConvenienceIndicator())) {
-            return amount * tip / 100;
-        } else {
-            return tip;
-        }
-    }
-
-    private double getTotal() {
-        return amount + getTipAmount();
-    }
-
     private void updateTotal() {
-        double total = getTotal();
+        double total = paymentData.getTotal();
 
-        paymentView.setTotalAmount(total, currencyCode.toString());
+        paymentView.setTotalAmount(total, paymentData.getCurrencyCode().toString());
     }
 
     @Override
     public void selectCard() {
-        List<PaymentInstrument> paymentInstruments = dataSource.getCards(userId);
+        List<PaymentInstrument> paymentInstruments = dataSource.getCards(paymentData.getUserId());
         paymentView.showCardSelection(paymentInstruments, paymentInstruments.indexOf(paymentInstrument));
     }
 
@@ -206,11 +165,11 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 PaymentResponse paymentResponse = response.body();
                 if (paymentResponse.isApproved()) {
                     Double tipAmount = null;
-                    if (paymentData.getTipOrConvenienceIndicator() != null) {
-                        tipAmount = getTipAmount();
+                    if (paymentData.getTipType() != null) {
+                        tipAmount = paymentData.getTipAmount();
                     }
 
-                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), amount, tipAmount, getTotal(), currencyCode.toString(), paymentInstrument.getMaskedIdentifier());
+                    Receipt receipt = new Receipt(paymentData.getMerchantName(), paymentData.getMerchantCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier());
 
                     paymentView.showReceipt(receipt);
                 } else {

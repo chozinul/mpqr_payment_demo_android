@@ -2,6 +2,7 @@ package com.mastercard.labs.mpqrpayment.payment;
 
 import com.mastercard.labs.mpqrpayment.BasePresenter;
 import com.mastercard.labs.mpqrpayment.BaseView;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 
@@ -56,7 +57,7 @@ public interface PaymentContract {
 
     interface Presenter extends BasePresenter {
 
-        void setPushPaymentDataString(String pushPaymentDataString);
+        void setPaymentData(PaymentData paymentData);
 
         void setCardId(Long cardId);
 

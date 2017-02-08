@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.MethodType;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
@@ -39,9 +40,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentContract.View {
-    public static String BUNDLE_PP_KEY = "pushPaymentData";
-    public static String BUNDLE_USER_ID_KEY = "userId";
-    public static String BUNDLE_CARD_ID_KEY = "cardId";
+    public static String BUNDLE_PAYMENT_DATA_KEY = "paymentData";
 
     private PaymentContract.Presenter presenter;
 
@@ -75,20 +74,16 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @BindView(R.id.top_border_tip)
     View topBorderTip;
 
-    private String paymentDataString;
-    private Long userId;
-    private Long cardId;
+    private PaymentData paymentData;
 
     private boolean blockAmountTextViewChange;
     private boolean blockTipTextViewChange;
 
     private ProgressDialog progressDialog;
 
-    public static Intent newIntent(Context context, String pushPaymentDataString, Long userId, Long cardId) {
+    public static Intent newIntent(Context context, PaymentData paymentData) {
         Bundle bundle = new Bundle();
-        bundle.putString(PaymentActivity.BUNDLE_PP_KEY, pushPaymentDataString);
-        bundle.putLong(PaymentActivity.BUNDLE_USER_ID_KEY, userId);
-        bundle.putLong(PaymentActivity.BUNDLE_CARD_ID_KEY, cardId);
+        bundle.putParcelable(PaymentActivity.BUNDLE_PAYMENT_DATA_KEY, paymentData);
 
         Intent intent = new Intent(context, PaymentActivity.class);
         intent.putExtras(bundle);
@@ -109,18 +104,13 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
-            paymentDataString = savedInstanceState.getString(BUNDLE_PP_KEY);
-            userId = savedInstanceState.getLong(BUNDLE_USER_ID_KEY);
-            cardId = savedInstanceState.getLong(BUNDLE_CARD_ID_KEY);
+            paymentData = savedInstanceState.getParcelable(BUNDLE_PAYMENT_DATA_KEY);
         } else {
-            paymentDataString = getIntent().getStringExtra(BUNDLE_PP_KEY);
-            userId = getIntent().getLongExtra(BUNDLE_USER_ID_KEY, -1L);
-            cardId = getIntent().getLongExtra(BUNDLE_CARD_ID_KEY, -1L);
+            paymentData = getIntent().getParcelableExtra(BUNDLE_PAYMENT_DATA_KEY);
         }
 
-        presenter = new PaymentPresenter(this, RealmDataSource.getInstance(), userId);
-        presenter.setPushPaymentDataString(paymentDataString);
-        presenter.setCardId(cardId);
+        presenter = new PaymentPresenter(this, RealmDataSource.getInstance(), paymentData);
+        presenter.setPaymentData(paymentData);
 
         amountEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
         tipEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
@@ -130,9 +120,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(BUNDLE_PP_KEY, paymentDataString);
-        outState.putLong(BUNDLE_USER_ID_KEY, userId);
-        outState.putLong(BUNDLE_CARD_ID_KEY, cardId);
+        outState.putParcelable(BUNDLE_PAYMENT_DATA_KEY, paymentData);
     }
 
     @Override

@@ -9,18 +9,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.mastercard.labs.mpqrpayment.MainApplication;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;
-import com.mastercard.labs.mpqrpayment.network.token.TokenInterceptor;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
+import com.mastercard.mpqr.pushpayment.parser.Parser;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
 import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
 
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 if (fragment == null) {
                     fragment = (Fragment) viewPager.getAdapter().instantiateItem(viewPager, 0);
                 }
-                
+
                 if (fragment != null) {
                     ViewCompat.setElevation(fragment.getView(), 8.0f);
                 }
@@ -206,7 +207,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @OnClick(R.id.scan_qr_button)
     public void scanFromCamera() {
         // TODO: For testing only
-        showPaymentActivity("00020101021204154600678934521435204520453033565405100.05502015802US5910Merchant A6009Singapore62280305A600804030000708457843126304534B");
+        try {
+            showPaymentActivity(Parser.parse("00020101021204154600678934521435204520453033565405100.05502015802US5910Merchant A6009Singapore62280305A600804030000708457843126304534B"));
+        } catch (FormatException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Invalid qr code string", Toast.LENGTH_LONG).show();
+        }
 
 //        IntentIntegrator integrator = new PPIntentIntegrator(this);
 //        integrator.setOrientationLocked(false);
@@ -222,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             PushPaymentData pushPaymentData = (PushPaymentData) data.getSerializableExtra(PPIntents.PUSH_PAYMENT_DATA);
             if (pushPaymentData != null) {
                 // TODO: Show UI
-                showPaymentActivity(pushPaymentData.generatePushPaymentString());
+                showPaymentActivity(pushPaymentData);
             } else {
                 // TODO: Show error
             }
@@ -237,11 +243,39 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void showPaymentActivity(String pushPaymentDataString) {
+    private void showPaymentActivity(PushPaymentData pushPaymentData) {
+        PaymentData paymentData = paymentData(pushPaymentData);
+
+        Intent intent = PaymentActivity.newIntent(this, paymentData);
+        startActivity(intent);
+    }
+
+    private PaymentData paymentData(PushPaymentData pushPaymentData) {
+        PaymentData.TipInfo tipInfo = null;
+        double tip = 0;
+        if (pushPaymentData.getTipOrConvenienceIndicator() != null) {
+            switch (pushPaymentData.getTipOrConvenienceIndicator()) {
+                case PushPaymentData.TipConvenienceIndicator.FLAT_CONVENIENCE_FEE:
+                    tipInfo = PaymentData.TipInfo.FLAT_CONVENIENCE_FEE;
+                    tip = pushPaymentData.getValueOfConvenienceFeeFixed();
+
+                    break;
+                case PushPaymentData.TipConvenienceIndicator.PERCENTAGE_CONVENIENCE_FEE:
+                    tipInfo = PaymentData.TipInfo.PERCENTAGE_CONVENIENCE_FEE;
+                    tip = pushPaymentData.getValueOfConvenienceFeePercentage();
+
+                    break;
+                case PushPaymentData.TipConvenienceIndicator.PROMTED_TO_ENTER_TIP:
+                    tipInfo = PaymentData.TipInfo.PROMPTED_TO_ENTER_TIP;
+                    tip = 0;
+
+                    break;
+            }
+        }
+
         Long userId = user.getId();
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
-        Intent intent = PaymentActivity.newIntent(this, pushPaymentDataString, userId, selectedPaymentInstrument.getId());
-        startActivity(intent);
+        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), pushPaymentData.getMerchantName(), pushPaymentData.getMerchantCity());
     }
 }
