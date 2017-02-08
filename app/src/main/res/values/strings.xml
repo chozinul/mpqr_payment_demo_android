@@ -49,5 +49,12 @@
 
     <item name="visible" type="id"/>
     <item name="masked" type="id"/>
+    <string name="title_activity_merchant">MerchantActivity</string>
+    <string name="enter_merchant_code">Please enter 8-digit Merchant Code</string>
+    <string name="what_is_merchant_code">What is Merchant Code?</string>
+    <string name="merchant_code_length">8</string>
+    <string name="merchant_code">Merchant Code</string>
+    <string name="merchant_city">City</string>
+    <string name="action_next">Next</string>
 
 </resources>

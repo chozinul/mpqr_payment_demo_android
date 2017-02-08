@@ -16,6 +16,7 @@ import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
+import com.mastercard.labs.mpqrpayment.merchant.MerchantActivity;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
@@ -207,11 +208,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @OnClick(R.id.scan_qr_button)
     public void scanFromCamera() {
         // TODO: For testing only
-        try {
-            showPaymentActivity(Parser.parse("00020101021204154600678934521435204520453033565405100.05502015802US5910Merchant A6009Singapore62280305A600804030000708457843126304534B"));
-        } catch (FormatException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Invalid qr code string", Toast.LENGTH_LONG).show();
+//        {
+//            try {
+//                showPaymentActivity(Parser.parse("00020101021204154600678934521435204520453033565405100.05502015802US5910Merchant A6009Singapore62280305A600804030000708457843126304534B"));
+//            } catch (FormatException e) {
+//                e.printStackTrace();
+//                Toast.makeText(this, "Invalid qr code string", Toast.LENGTH_LONG).show();
+//            }
+//        }
+        {
+            showMerchantActivity();
         }
 
 //        IntentIntegrator integrator = new PPIntentIntegrator(this);
@@ -247,6 +253,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         PaymentData paymentData = paymentData(pushPaymentData);
 
         Intent intent = PaymentActivity.newIntent(this, paymentData);
+        startActivity(intent);
+    }
+
+    private void showMerchantActivity() {
+        Intent intent = MerchantActivity.newIntent(this);
         startActivity(intent);
     }
 

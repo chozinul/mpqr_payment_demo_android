@@ -21,4 +21,5 @@
     <color name="colorWarmGrey">#7a7a7a</color>
     <color name="colorTextBlack">#282828</color>
     <color name="colorHighlightText">#656565</color>
+    <color name="colorTextBlue">#0082bb</color>
 </resources>
