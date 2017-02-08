@@ -14,8 +14,11 @@
             android:background="@drawable/toolbar_background"
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-    </android.support.v7.widget.Toolbar>
 
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+    </android.support.v7.widget.Toolbar>
 
     <me.crosswall.lib.coverflow.core.PagerContainer
             android:id="@+id/pager_container"
@@ -63,7 +66,8 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/size_32"/>
 
-        <Button android:id="@+id/transaction_history"
+        <Button
+                android:id="@+id/transaction_history"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:text="@string/transaction_history"

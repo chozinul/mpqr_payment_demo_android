@@ -20,6 +20,9 @@ public interface MPQRPaymentService {
     @POST("/consumer/login")
     Call<LoginResponse> login(@Body LoginAccessCodeRequest request);
 
+    @POST("/consumer/logout")
+    Call<Void> logout();
+
     @GET("/consumer")
     Call<User> consumer();
 

@@ -3,14 +3,19 @@ package com.mastercard.labs.mpqrpayment.activity;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ActionMenuView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
@@ -18,13 +23,15 @@ import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
+import com.mastercard.labs.mpqrpayment.login.LoginActivity;
 import com.mastercard.labs.mpqrpayment.merchant.MerchantActivity;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;
+import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
+import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
-import com.mastercard.mpqr.pushpayment.parser.Parser;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
 import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
 
@@ -38,16 +45,24 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import me.crosswall.lib.coverflow.CoverFlow;
 import me.crosswall.lib.coverflow.core.PagerContainer;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     public static String BUNDLE_USER_KEY = "userId";
     public static String BUNDLE_SELECTED_CARD_IDX = "selectedCardIdx";
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.pager_container)
     PagerContainer pagerContainer;
 
     @BindView(R.id.txtAvailableBalanceAmount)
     TextView availableBalanceTextView;
+
+    private ProgressDialog progressDialog;
 
     Realm realm;
 
@@ -61,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         userId = getIntent().getLongExtra(BUNDLE_USER_KEY, -1L);
         // TODO: Only for debugging purposes till Login screen is implemented.
@@ -92,6 +109,24 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
 
         invalidateViews();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -301,5 +336,56 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         merchant.setIdentifierNPCI07(pushPaymentData.getMerchantIdentifierNPCI07());
 
         return merchant;
+    }
+
+    public void showLogoutProgress() {
+        hideLogoutProgress();
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.logging_out));
+        progressDialog.setCancelable(false);
+
+        progressDialog.show();
+    }
+
+    public void hideLogoutProgress() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private void logout() {
+        showLogoutProgress();
+
+        ServiceGenerator.getInstance().mpqrPaymentService().logout().enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                hideLogoutProgress();
+
+                LoginManager.getInstance().logout();
+
+                showLoginActivity();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                hideLogoutProgress();
+
+                if (!call.isCanceled()) {
+                    logoutFailed();
+                }
+            }
+        });
+    }
+
+    private void logoutFailed() {
+        DialogUtils.showErrorDialog(this, 0, R.string.logout_failed);
+    }
+
+    private void showLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        startActivity(intent);
     }
 }

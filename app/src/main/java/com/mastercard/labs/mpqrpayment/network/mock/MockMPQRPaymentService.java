@@ -92,6 +92,11 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     }
 
     @Override
+    public Call<Void> logout() {
+        return delegate.returningResponse(null).logout();
+    }
+
+    @Override
     public Call<User> consumer() {
         String dummyResponse = "{\n" +
                 "  \"id\": 60,\n" +

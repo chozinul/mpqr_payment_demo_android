@@ -27,11 +27,11 @@ public class LoginManager {
         this.preferences = sharedPreferences;
     }
 
-    public Long getLoggedInUserId() {
+    public long getLoggedInUserId() {
         return preferences.getLong(USER_ID_KEY, -1);
     }
 
-    public void setLoggedInUserId(Long userId) {
+    public void setLoggedInUserId(long userId) {
         preferences.edit().putLong(USER_ID_KEY, userId).apply();
     }
 
@@ -45,5 +45,10 @@ public class LoginManager {
 
     public void setToken(String token) {
         preferences.edit().putString(TOKEN_KEY, token).apply();
+    }
+
+    public void logout() {
+        setLoggedInUserId(-1);
+        setToken(null);
     }
 }

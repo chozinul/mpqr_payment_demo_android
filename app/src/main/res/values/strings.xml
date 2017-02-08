@@ -57,5 +57,8 @@
     <string name="merchant_city">City</string>
     <string name="action_next">Next</string>
     <string name="invalid_merchant_error_message">Invalid merchant information. Please try again</string>
+    <string name="logout">Logout</string>
+    <string name="logout_failed">Logout Failed. Please try again.</string>
+    <string name="logging_out">Logging out...</string>
 
 </resources>
