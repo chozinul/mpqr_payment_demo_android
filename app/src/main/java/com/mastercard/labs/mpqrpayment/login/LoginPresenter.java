@@ -64,13 +64,13 @@ public class LoginPresenter implements LoginContract.Presenter {
 
                 if (response.isSuccessful()) {
                     loginSuccess(response.body());
+
+                    mView.startMainFlow();
                 } else {
                     mView.setIncorrectPin();
                 }
 
                 mView.hideProgress();
-
-                mView.startMainFlow();
             }
 
             @Override
