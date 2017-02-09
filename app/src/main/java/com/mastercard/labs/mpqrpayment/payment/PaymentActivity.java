@@ -83,6 +83,8 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     private ProgressDialog progressDialog;
 
+    private AmountInputFilter tipInputFilter = new AmountInputFilter(0, Double.MAX_VALUE);
+
     public static Intent newIntent(Context context, PaymentData paymentData) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(PaymentActivity.BUNDLE_PAYMENT_DATA_KEY, paymentData);
@@ -113,8 +115,8 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
         presenter = new PaymentPresenter(this, RealmDataSource.getInstance(), paymentData);
 
-        amountEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
-        tipEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
+        amountEditText.setFilters(new InputFilter[]{new AmountInputFilter(0, Double.MAX_VALUE)});
+        tipEditText.setFilters(new InputFilter[]{tipInputFilter});
     }
 
     @Override
@@ -212,6 +214,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     private void setTipHasPercentage(boolean hasPercentage) {
         tipEditText.setSuffix(hasPercentage ? " %" : "");
+        tipInputFilter.setMax(hasPercentage ? 100 : Double.MAX_VALUE);
     }
 
     @Override
@@ -440,6 +443,17 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     private class AmountInputFilter implements InputFilter {
+        private double min, max;
+
+        AmountInputFilter(double min, double max) {
+            this.min = min;
+            this.max = max;
+        }
+
+        void setMax(double max) {
+            this.max = max;
+        }
+
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             String result = dest.subSequence(0, dstart) + source.toString() + dest.subSequence(dend, dest.length());
@@ -448,7 +462,15 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
                 return "";
             }
 
+            double input = parseAmount(dest.toString() + source.toString());
+            if (isInRange(min, max, input))
+                return null;
+
             return null;
+        }
+
+        private boolean isInRange(double a, double b, double c) {
+            return b > a ? c >= a && c <= b : c >= b && c <= a;
         }
     }
 }
