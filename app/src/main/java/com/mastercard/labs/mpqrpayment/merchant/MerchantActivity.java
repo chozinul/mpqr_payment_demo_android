@@ -96,6 +96,11 @@ public class MerchantActivity extends AppCompatActivity implements MerchantContr
         outState.putString(BUNDLE_CURRENCY_NUMERIC_CODE_KEY, currencyNumericCode);
     }
 
+    @OnClick(value = R.id.txt_what_is_merchant_code)
+    public void explainMerchantCodeButtonPressed() {
+        presenter.explainMerchantCode();
+    }
+
     @OnClick(value = R.id.next_button)
     public void nextButtonPressed() {
         presenter.moveToNextStep();
@@ -111,7 +116,6 @@ public class MerchantActivity extends AppCompatActivity implements MerchantContr
         merchantCodeEdiText.setError(getString(R.string.invalid_merchant_code));
     }
 
-    @Override
     public void clearCode() {
         hideInfoProgress();
         hideMerchantInfo();
@@ -140,6 +144,11 @@ public class MerchantActivity extends AppCompatActivity implements MerchantContr
         merchantNameEditText.setText(name);
 
         merchantCityEditText.setText(city);
+    }
+
+    @Override
+    public void explainMerchantCode() {
+        DialogUtils.showDialog(this, 0, R.string.explain_merchant_code);
     }
 
     @Override

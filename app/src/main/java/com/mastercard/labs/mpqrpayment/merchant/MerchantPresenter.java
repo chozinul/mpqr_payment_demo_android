@@ -102,6 +102,11 @@ public class MerchantPresenter implements MerchantContract.Presenter {
         });
     }
 
+    @Override
+    public void explainMerchantCode() {
+        mView.explainMerchantCode();
+    }
+
     private boolean isValidCode(String code) {
         return code != null && code.length() == MERCHANT_CODE_LENGTH;
     }

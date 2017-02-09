@@ -32,6 +32,7 @@
                     android:textColor="@color/colorTextBlack"/>
 
             <TextView
+                    android:id="@+id/txt_what_is_merchant_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

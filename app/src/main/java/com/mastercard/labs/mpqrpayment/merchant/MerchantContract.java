@@ -14,8 +14,6 @@ public interface MerchantContract {
 
         void showPaymentActivity(PaymentData paymentData);
 
-        void clearCode();
-
         void hideMerchantInfo();
 
         void showInfoProgress();
@@ -25,6 +23,8 @@ public interface MerchantContract {
         void showNetworkError();
 
         void showMerchantInfo(String name, String city);
+
+        void explainMerchantCode();
     }
 
     interface Presenter extends BasePresenter {
@@ -32,5 +32,7 @@ public interface MerchantContract {
         void moveToNextStep();
 
         void updateMerchantCode(String code);
+
+        void explainMerchantCode();
     }
 }
