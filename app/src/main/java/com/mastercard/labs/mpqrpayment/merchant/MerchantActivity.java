@@ -157,7 +157,7 @@ public class MerchantActivity extends AppCompatActivity implements MerchantContr
 
     @Override
     public void showNetworkError() {
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.unexpected_error);
+        DialogUtils.showDialog(this, R.string.error, R.string.unexpected_error);
     }
 
     @Override

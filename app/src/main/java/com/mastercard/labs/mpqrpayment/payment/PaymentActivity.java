@@ -393,22 +393,22 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void showPaymentFailedError() {
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.payment_failed);
+        DialogUtils.showDialog(this, R.string.error, R.string.payment_failed);
     }
 
     @Override
     public void showInvalidPinError() {
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.invalid_pin);
+        DialogUtils.showDialog(this, R.string.error, R.string.invalid_pin);
     }
 
     @Override
     public void showNetworkError() {
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.unexpected_error);
+        DialogUtils.showDialog(this, R.string.error, R.string.unexpected_error);
     }
 
     @Override
     public void showInvalidDataError() {
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.invalid_payment_data, new DialogInterface.OnDismissListener() {
+        DialogUtils.showDialog(this, R.string.error, R.string.invalid_payment_data, new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 finish();
@@ -418,12 +418,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void showInsufficientBalanceError() {
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.insufficient_balance_error);
+        DialogUtils.showDialog(this, R.string.error, R.string.insufficient_balance_error);
     }
 
     @Override
     public void showTipChangeNotAllowedError() {
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.error_tip_change_not_allowed);
+        DialogUtils.showDialog(this, R.string.error, R.string.error_tip_change_not_allowed);
     }
 
     private class AmountInputFilter implements InputFilter {

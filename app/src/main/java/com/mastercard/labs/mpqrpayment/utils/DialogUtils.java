@@ -15,11 +15,11 @@ import com.mastercard.labs.mpqrpayment.R;
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/2/17
  */
 public class DialogUtils {
-    public static void showErrorDialog(Context context, @StringRes int title, @StringRes int message) {
-        showErrorDialog(context, title, message, null);
+    public static void showDialog(Context context, @StringRes int title, @StringRes int message) {
+        showDialog(context, title, message, null);
     }
 
-    public static void showErrorDialog(Context context, @StringRes int title, @StringRes int message, final DialogInterface.OnDismissListener dismissListener) {
+    public static void showDialog(Context context, @StringRes int title, @StringRes int message, final DialogInterface.OnDismissListener dismissListener) {
         TextView messageTextView = new TextView(context);
         messageTextView.setText(message);
         messageTextView.setGravity(Gravity.CENTER_HORIZONTAL);

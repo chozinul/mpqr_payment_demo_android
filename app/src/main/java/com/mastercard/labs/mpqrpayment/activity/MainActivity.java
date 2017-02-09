@@ -10,7 +10,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -379,7 +378,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void logoutFailed() {
-        DialogUtils.showErrorDialog(this, 0, R.string.logout_failed);
+        DialogUtils.showDialog(this, 0, R.string.logout_failed);
     }
 
     private void showLoginActivity() {
