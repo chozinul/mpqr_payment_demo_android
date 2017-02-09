@@ -30,7 +30,9 @@ import com.mastercard.labs.mpqrpayment.data.model.MethodType;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.receipt.ReceiptActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
+import com.mastercard.labs.mpqrpayment.view.SuffixEditText;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,7 +56,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     TextView tipTitleTextView;
 
     @BindView(R.id.txt_tip_value)
-    EditText tipEditText;
+    SuffixEditText tipEditText;
 
     @BindView(R.id.txt_total_amount)
     TextView totalAmountTextView;
@@ -110,7 +112,6 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         }
 
         presenter = new PaymentPresenter(this, RealmDataSource.getInstance(), paymentData);
-        presenter.setPaymentData(paymentData);
 
         amountEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
         tipEditText.setFilters(new InputFilter[]{new AmountInputFilter()});
@@ -126,6 +127,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     protected void onResume() {
         super.onResume();
+        presenter.setPaymentData(paymentData);
         presenter.start();
     }
 
@@ -137,11 +139,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
         blockAmountTextViewChange = true;
 
-        double amount = validateAmount(amountText);
+        double amount = parseAmount(amountText.toString());
+        updateEditText(amountEditText, amount);
 
         blockAmountTextViewChange = false;
 
-        presenter.setAmount(amount / 100);
+        presenter.setAmount(amount);
     }
 
     @OnTextChanged(value = R.id.txt_tip_value, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -152,11 +155,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
         blockTipTextViewChange = true;
 
-        double tip = validateAmount(tipText);
+        double tip = parseAmount(tipText.toString());
+        updateEditText(tipEditText, tip);
 
         blockTipTextViewChange = false;
 
-        presenter.setTip(tip / 100);
+        presenter.setTip(tip);
     }
 
     @OnClick(value = R.id.rl_payment_card)
@@ -169,23 +173,29 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         presenter.makePayment();
     }
 
-    private double validateAmount(Editable amountText) {
-        double amount = 0;
+    private double parseAmount(String amountText) {
         try {
-            String amountString = amountText.toString();
-            amount = Double.parseDouble(amountString);
-            int count = amountString.length() - amountString.indexOf(".") - 1;
+            double amount = Double.parseDouble(amountText);
+            int count = amountText.length() - amountText.indexOf(".") - 1;
             amount *= Math.pow(10, count);
 
-            amountText.clear();
-
-            amountText.append(String.format(Locale.getDefault(), "%.2f", amount / 100));
+            return amount / 100;
         } catch (Exception ex) {
-            amountText.clear();
-            amountText.append("0.00");
+            return 0;
         }
+    }
 
-        return amount;
+    private void updateEditText(EditText editText, double amount) {
+        editText.getText().clear();
+
+        String text = String.format(Locale.getDefault(), "%.2f", amount);
+        editText.getText().append(text);
+
+        if (amount == 0) {
+            editText.setTextColor(ContextCompat.getColor(this, R.color.colorLightGrey));
+        } else {
+            editText.setTextColor(ContextCompat.getColor(this, R.color.colorTextMainColor));
+        }
     }
 
     @Override
@@ -196,35 +206,38 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void setAmount(double amount) {
         blockAmountTextViewChange = true;
-        amountEditText.setText(String.format(Locale.getDefault(), "%.2f", amount));
+        updateEditText(amountEditText, amount);
         blockAmountTextViewChange = false;
+    }
+
+    private void setTipHasPercentage(boolean hasPercentage) {
+        tipEditText.setSuffix(hasPercentage ? " %" : "");
     }
 
     @Override
     public void setFlatConvenienceFee(double fee) {
         tipTitleTextView.setText(R.string.flat_convenience_fee);
-        tipLayout.setBackgroundResource(R.color.colorPinkishGrey);
-        tipTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDeepSeaBlue));
-        tipEditText.setTextColor(ContextCompat.getColor(this, R.color.colorBlack));
-
-        setTipText(String.format(Locale.getDefault(), "%.2f", fee));
+        setTipHasPercentage(false);
+        setTip(fee);
     }
 
     @Override
     public void setPercentageConvenienceFee(double feePercentage) {
         tipTitleTextView.setText(R.string.percentage_convenience_fee);
-        setTipText(String.format(Locale.getDefault(), "%.2f", feePercentage));
+        setTipHasPercentage(true);
+        setTip(feePercentage);
     }
 
     @Override
     public void setPromptToEnterTip(double tip) {
         tipTitleTextView.setText(R.string.tip);
-        setTipText(String.format(Locale.getDefault(), "%.2f", tip));
+        setTipHasPercentage(false);
+        setTip(tip);
     }
 
-    private void setTipText(String text) {
+    private void setTip(double amount) {
         blockTipTextViewChange = true;
-        tipEditText.setText(text);
+        updateEditText(tipEditText, amount);
         blockTipTextViewChange = false;
     }
 
