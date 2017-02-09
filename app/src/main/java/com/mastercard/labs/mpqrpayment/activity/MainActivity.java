@@ -4,6 +4,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -258,16 +259,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             IntentResult result = PPIntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             PushPaymentData pushPaymentData = (PushPaymentData) data.getSerializableExtra(PPIntents.PUSH_PAYMENT_DATA);
             if (pushPaymentData != null) {
-                // TODO: Show UI
                 showPaymentActivity(pushPaymentData);
             } else {
-                // TODO: Show error
+                cannotScanQR();
             }
         } else if (resultCode == RESULT_CANCELED) {
             if (data != null) {
                 FormatException e = (FormatException) data.getSerializableExtra(PPIntents.PARSE_ERROR);
                 if (e != null) {
-                    // TODO: Show error
+                    cannotScanQR();
                 }
             }
         } else if (resultCode == CustomizedPPCaptureActivity.RESULT_CANNOT_SCAN_QR) {
@@ -275,6 +275,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void cannotScanQR() {
+        DialogUtils.customAlertDialogBuilder(this, R.string.error_cannot_scan_enter_manual).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+                showMerchantActivity();
+            }
+        }).create().show();
     }
 
     private void showPaymentActivity(PushPaymentData pushPaymentData) {
