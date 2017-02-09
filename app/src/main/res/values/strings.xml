@@ -14,7 +14,7 @@
     <string name="change">Change</string>
     <string name="pay_with_card">Pay with %s</string>
     <string name="cancel">Cancel</string>
-    <string name="balance_of_card">Balance: %s</string>
+    <string name="balance_of_card">Balance: %,.2f</string>
     <string name="select">Select</string>
     <string name="pay">Pay</string>
     <string name="dsc_down_arrow">arrow</string>
@@ -60,7 +60,10 @@
     <string name="invalid_merchant_error_message">Invalid merchant information. Please try again</string>
     <string name="logout">Logout</string>
     <string name="logout_failed">Logout Failed. Please try again.</string>
-    <string name="logging_out">Logging out...</string>
+    <string name="logging_out">Logging out…</string>
     <string name="invalid_merchant_code">Invalid merchant code</string>
+    <string name="invalid_payment_data">Invalid payment data. Please try again</string>
+    <string name="insufficient_balance_error">Insufficient balance. Please try with another method.</string>
+    <string name="error_tip_change_not_allowed">Tip change is not allowed</string>
 
 </resources>

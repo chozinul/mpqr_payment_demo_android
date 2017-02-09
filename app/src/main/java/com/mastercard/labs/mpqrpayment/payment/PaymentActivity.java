@@ -401,6 +401,31 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         DialogUtils.showErrorDialog(this, R.string.error, R.string.invalid_pin);
     }
 
+    @Override
+    public void showNetworkError() {
+        DialogUtils.showErrorDialog(this, R.string.error, R.string.unexpected_error);
+    }
+
+    @Override
+    public void showInvalidDataError() {
+        DialogUtils.showErrorDialog(this, R.string.error, R.string.invalid_payment_data, new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void showInsufficientBalanceError() {
+        DialogUtils.showErrorDialog(this, R.string.error, R.string.insufficient_balance_error);
+    }
+
+    @Override
+    public void showTipChangeNotAllowedError() {
+        DialogUtils.showErrorDialog(this, R.string.error, R.string.error_tip_change_not_allowed);
+    }
+
     private class AmountInputFilter implements InputFilter {
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {

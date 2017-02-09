@@ -30,6 +30,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
     private PaymentData paymentData;
     private PaymentInstrument paymentInstrument;
 
+    private Call<PaymentResponse> paymentRequest;
+
     PaymentPresenter(PaymentContract.View paymentView, DataSource dataSource, PaymentData paymentData) {
         this.paymentView = paymentView;
         this.dataSource = dataSource;
@@ -48,6 +50,11 @@ class PaymentPresenter implements PaymentContract.Presenter {
             // TODO: Handle dynamic QR
         } else {
             // TODO: Handle static QR
+        }
+
+        if (paymentData.getMerchant() == null) {
+            paymentView.showInvalidDataError();
+            return;
         }
 
         paymentView.setAmount(paymentData.getTransactionAmount());
@@ -76,7 +83,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
         if (currencyCode != null) {
             paymentView.setCurrency(currencyCode.toString());
         } else {
-            // TODO: Show error
+            paymentView.showInvalidDataError();
+            return;
         }
 
         paymentView.setMerchantName(paymentData.getMerchant().getName());
@@ -91,9 +99,9 @@ class PaymentPresenter implements PaymentContract.Presenter {
     public void setCardId(Long cardId) {
         paymentData.setCardId(cardId);
 
-        paymentInstrument = dataSource.getCard(paymentData.getUserId(), cardId);
+        paymentInstrument = dataSource.getCard(cardId);
         if (paymentInstrument == null) {
-            // TODO: Show error
+            paymentView.showInvalidDataError();
             return;
         }
 
@@ -110,8 +118,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
     @Override
     public void setTip(double tipAmount) {
         if (!PaymentData.TipInfo.PROMPTED_TO_ENTER_TIP.equals(paymentData.getTipType())) {
-
-            // TODO: Show error as tip change is not allowed
+            paymentView.showTipChangeNotAllowedError();
             return;
         }
 
@@ -127,7 +134,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
             paymentData.setCurrencyNumericCode(currencyCode);
             updateTotal();
         } else {
-            // TODO: Show error
+            paymentView.showInvalidDataError();
         }
     }
 
@@ -163,35 +170,68 @@ class PaymentPresenter implements PaymentContract.Presenter {
             return;
         }
 
-        paymentView.showProcessingPaymentLoading();
-
         // TODO: Validate pin on server
 
-        // TODO: Process payment
-        ServiceGenerator.getInstance().mpqrPaymentService().makePayment(new PaymentRequest()).enqueue(new Callback<PaymentResponse>() {
+        requestPayment();
+    }
+
+    private void requestPayment() {
+        if (paymentRequest != null) {
+            paymentRequest.cancel();
+        }
+
+        paymentView.showProcessingPaymentLoading();
+
+        // TODO: Pick correct identifier
+        String receiverIdentifier = paymentData.getMerchant().getIdentifierMastercard04();
+        final PaymentRequest requestData = new PaymentRequest(receiverIdentifier, paymentData.getCardId(), paymentData.getCurrencyNumericCode(), paymentData.getTotal());
+
+        paymentRequest = ServiceGenerator.getInstance().mpqrPaymentService().makePayment(requestData);
+        paymentRequest.enqueue(new Callback<PaymentResponse>() {
             @Override
             public void onResponse(Call<PaymentResponse> call, Response<PaymentResponse> response) {
                 paymentView.hideProcessingPaymentLoading();
-                PaymentResponse paymentResponse = response.body();
-                if (paymentResponse.isApproved()) {
-                    Double tipAmount = null;
-                    if (paymentData.getTipType() != null) {
-                        tipAmount = paymentData.getTipAmount();
-                    }
+                paymentRequest = null;
 
-                    Receipt receipt = new Receipt(paymentData.getMerchant().getName(), paymentData.getMerchant().getCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier());
-
-                    paymentView.showReceipt(receipt);
-                } else {
-                    // TODO: Show error
+                if (!response.isSuccessful()) {
                     paymentView.showPaymentFailedError();
+                    return;
                 }
+
+                PaymentResponse paymentResponse = response.body();
+                if (!paymentResponse.isApproved()) {
+                    if (paymentResponse.isInsufficientBalance()) {
+                        paymentView.showInsufficientBalanceError();
+                    } else {
+                        paymentView.showPaymentFailedError();
+                    }
+                    return;
+                }
+
+                // Update card amount
+                PaymentInstrument paymentInstrument = dataSource.getCard(requestData.getSenderCardId());
+                paymentInstrument.setBalance(paymentInstrument.getBalance() - paymentResponse.getTransactionAmount());
+
+                dataSource.saveCard(paymentInstrument);
+
+                Double tipAmount = null;
+                if (paymentData.getTipType() != null) {
+                    tipAmount = paymentData.getTipAmount();
+                }
+
+                Receipt receipt = new Receipt(paymentData.getMerchant().getName(), paymentData.getMerchant().getCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier());
+
+                paymentView.showReceipt(receipt);
             }
 
             @Override
             public void onFailure(Call<PaymentResponse> call, Throwable t) {
-                // TODO: Show error
-                paymentView.showPaymentFailedError();
+                paymentView.hideProcessingPaymentLoading();
+                paymentRequest = null;
+
+                if (!call.isCanceled()) {
+                    paymentView.showNetworkError();
+                }
             }
         });
     }

@@ -53,6 +53,14 @@ public interface PaymentContract {
         void showPaymentFailedError();
 
         void showInvalidPinError();
+
+        void showNetworkError();
+
+        void showInvalidDataError();
+
+        void showInsufficientBalanceError();
+
+        void showTipChangeNotAllowedError();
     }
 
     interface Presenter extends BasePresenter {

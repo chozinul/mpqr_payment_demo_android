@@ -2,7 +2,9 @@ package com.mastercard.labs.mpqrpayment.network.mock;
 
 import com.google.gson.Gson;
 
+import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Merchant;
+import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
@@ -10,7 +12,6 @@ import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.LoginResponse;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -168,10 +169,17 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     @Override
     public Call<PaymentResponse> makePayment(@Body PaymentRequest request) {
-        PaymentResponse response = new PaymentResponse();
-        response.setApproved(true);
-        response.setTransactionDate(SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date()));
-        response.setTransactionReference(UUID.randomUUID().toString());
+        PaymentInstrument instrument = RealmDataSource.getInstance().getCard(request.getSenderCardId());
+
+        PaymentResponse response;
+        if (instrument == null) {
+            response = new PaymentResponse(false, null, null, "invalid_card", 0);
+        } else if (instrument.getBalance() < request.getTransactionAmount()) {
+            response = new PaymentResponse(false, null, null, "insufficient_balance", 0);
+        } else {
+            String transactionDate = SimpleDateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date());
+            response = new PaymentResponse(true, UUID.randomUUID().toString(), transactionDate, null, request.getTransactionAmount());
+        }
 
         return delegate.returningResponse(response).makePayment(request);
     }

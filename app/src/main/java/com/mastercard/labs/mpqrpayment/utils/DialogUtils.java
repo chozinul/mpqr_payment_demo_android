@@ -16,6 +16,10 @@ import com.mastercard.labs.mpqrpayment.R;
  */
 public class DialogUtils {
     public static void showErrorDialog(Context context, @StringRes int title, @StringRes int message) {
+        showErrorDialog(context, title, message, null);
+    }
+
+    public static void showErrorDialog(Context context, @StringRes int title, @StringRes int message, final DialogInterface.OnDismissListener dismissListener) {
         TextView messageTextView = new TextView(context);
         messageTextView.setText(message);
         messageTextView.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -33,6 +37,9 @@ public class DialogUtils {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        if (dismissListener != null) {
+                            dismissListener.onDismiss(dialog);
+                        }
                     }
                 }).create();
 

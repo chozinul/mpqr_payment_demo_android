@@ -5,9 +5,16 @@ package com.mastercard.labs.mpqrpayment.network.request;
  */
 public class PaymentRequest {
     private String receiverCardNumber;
-    private String senderCardNumber;
+    private Long senderCardId;
     private String currency;
-    private Long amountInCents;
+    private double amountInCents;
+
+    public PaymentRequest(String receiverCardNumber, Long senderCardId, String currency, double amountInCents) {
+        this.receiverCardNumber = receiverCardNumber;
+        this.senderCardId = senderCardId;
+        this.currency = currency;
+        this.amountInCents = amountInCents;
+    }
 
     public String getReceiverCardNumber() {
         return receiverCardNumber;
@@ -17,12 +24,12 @@ public class PaymentRequest {
         this.receiverCardNumber = receiverCardNumber;
     }
 
-    public String getSenderCardNumber() {
-        return senderCardNumber;
+    public Long getSenderCardId() {
+        return senderCardId;
     }
 
-    public void setSenderCardNumber(String senderCardNumber) {
-        this.senderCardNumber = senderCardNumber;
+    public void setSenderCardId(Long senderCardId) {
+        this.senderCardId = senderCardId;
     }
 
     public String getCurrency() {
@@ -33,11 +40,11 @@ public class PaymentRequest {
         this.currency = currency;
     }
 
-    public Long getAmountInCents() {
+    public double getTransactionAmount() {
         return amountInCents;
     }
 
-    public void setAmountInCents(Long amountInCents) {
+    public void setAmountInCents(double amountInCents) {
         this.amountInCents = amountInCents;
     }
 }
