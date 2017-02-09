@@ -18,13 +18,13 @@ public class PaymentData implements Parcelable {
     private String currencyNumericCode;
     private Merchant merchant;
 
-    public PaymentData(long userId, long cardId, boolean isDynamic, double transactionAmount, TipInfo tipType, double tip, String currencyNumericCode, Merchant merchant) {
+    public PaymentData(long userId, long cardId, boolean isDynamic, Double transactionAmount, TipInfo tipType, Double tip, String currencyNumericCode, Merchant merchant) {
         this.userId = userId;
         this.cardId = cardId;
         this.isDynamic = isDynamic;
-        this.transactionAmount = transactionAmount;
+        this.transactionAmount = transactionAmount == null ? 0 : transactionAmount;
         this.tipType = tipType;
-        this.tip = tip;
+        this.tip = tip == null ? 0 : tip;
         this.currencyNumericCode = currencyNumericCode;
         this.merchant = merchant;
     }

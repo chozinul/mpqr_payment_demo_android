@@ -41,7 +41,7 @@ public class MerchantPresenter implements MerchantContract.Presenter {
             return;
         }
 
-        PaymentData paymentData = new PaymentData(userId, cardId, false, 0, null, 0, currencyNumericCode, merchant);
+        PaymentData paymentData = new PaymentData(userId, cardId, false, null, null, null, currencyNumericCode, merchant);
         mView.showPaymentActivity(paymentData);
     }
 
