@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
@@ -246,17 +247,27 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void disableTipChange() {
+        tipLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledDeepSeaBlue));
+        tipTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDeepSeaBlue));
         tipEditText.setEnabled(false);
     }
 
     @Override
     public void enableTipChange() {
+        tipLayout.setBackgroundColor(Color.TRANSPARENT);
+        tipTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWarmGrey));
         tipEditText.setEnabled(true);
     }
 
     @Override
     public void setTotalAmount(double amount, String currencyCode) {
         totalAmountTextView.setText(String.format(Locale.getDefault(), "%s %,.2f", currencyCode, amount));
+
+        if (amount == 0) {
+            totalAmountTextView.setTextColor(ContextCompat.getColor(this, R.color.colorLightGrey));
+        } else {
+            totalAmountTextView.setTextColor(ContextCompat.getColor(this, R.color.colorTextMainColor));
+        }
     }
 
     @Override
