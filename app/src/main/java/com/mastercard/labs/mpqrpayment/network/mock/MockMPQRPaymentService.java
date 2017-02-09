@@ -37,7 +37,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     @Override
     public Call<LoginResponse> login(@Body LoginAccessCodeRequest request) {
-        if (!request.getAccessCode().equals("12345678")) {
+        if (!request.getAccessCode().equals("12345678") || request.getPin().equals("123456")) {
             ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "{\"success\": \"false\"}");
             return delegate.returning(Calls.response(Response.error(404, responseBody))).login(request);
         }
