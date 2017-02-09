@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class PaymentInstrument extends RealmObject {
     @PrimaryKey
-    private Long id;
+    private long id;
     private String acquirerName;
     private String issuerName;
     private String name;
@@ -18,11 +18,11 @@ public class PaymentInstrument extends RealmObject {
     private String currencyNumericCode;
     private Boolean isDefault;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

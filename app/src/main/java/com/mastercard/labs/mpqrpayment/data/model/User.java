@@ -9,19 +9,17 @@ import io.realm.annotations.PrimaryKey;
  */
 public class User extends RealmObject {
     @PrimaryKey
-    private Long id;
+    private long id;
     private String firstName;
     private String lastName;
 
     private RealmList<PaymentInstrument> paymentInstruments;
 
-    private PaymentInstrument defaultPaymentInstrument;
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
