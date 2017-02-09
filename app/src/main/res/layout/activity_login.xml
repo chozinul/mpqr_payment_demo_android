@@ -95,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/masterpassqr_logo"
-                    android:layout_margin="20dp"
+                    android:layout_margin="10dp"
                     android:contentDescription="@string/logo"/>
 
         </LinearLayout>
