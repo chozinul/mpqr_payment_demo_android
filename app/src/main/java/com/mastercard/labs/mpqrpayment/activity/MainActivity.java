@@ -244,11 +244,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @OnClick(R.id.scan_qr_button)
     public void scanFromCamera() {
-        // TODO: For testing only
         IntentIntegrator integrator = new PPIntentIntegrator(this);
         integrator.setOrientationLocked(false);
         integrator.setBeepEnabled(false);
-        integrator.setPrompt("Scan QR Code");
+        integrator.setPrompt(getString(R.string.txt_scan_qr));
         integrator.setCaptureActivity(CustomizedPPCaptureActivity.class);
         integrator.initiateScan();
     }
