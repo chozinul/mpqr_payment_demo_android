@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
+import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
 
 import java.util.List;
@@ -49,7 +50,8 @@ public class CardsArrayAdapter extends ArrayAdapter<PaymentInstrument> {
 
         cardLogo.setImageResource(DrawableUtils.getPaymentMethodLogo(paymentInstrument));
         cardNumber.setText(paymentInstrument.getMaskedIdentifier());
-        balance.setText(getContext().getString(R.string.balance_of_card, paymentInstrument.getBalance()));
+        String balanceText = CurrencyCode.formatAmount(paymentInstrument.getBalance(), paymentInstrument.getCurrencyNumericCode());
+        balance.setText(getContext().getString(R.string.balance_of_card, balanceText));
 
         radioButton.setChecked(selectedIndex == position);
 
