@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     fragment = (Fragment) viewPager.getAdapter().instantiateItem(viewPager, 0);
                 }
 
-                if (fragment != null) {
+                if (fragment != null && fragment.getView() != null) {
                     ViewCompat.setElevation(fragment.getView(), 8.0f);
                 }
             }
