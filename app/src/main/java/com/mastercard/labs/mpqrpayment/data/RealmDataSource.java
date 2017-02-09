@@ -4,7 +4,6 @@ import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 
 import java.util.List;
-import java.util.UUID;
 
 import io.realm.Realm;
 
@@ -67,7 +66,7 @@ public class RealmDataSource implements DataSource {
 
 
     @Override
-    public PaymentInstrument getCard(Long userId, Long cardId) {
+    public PaymentInstrument getCard(Long cardId) {
         if (cardId == null) {
             return null;
         }

@@ -15,7 +15,7 @@ public interface DataSource {
 
     User getUser(Long userId);
 
-    PaymentInstrument getCard(Long userId, Long cardId);
+    PaymentInstrument getCard(Long cardId);
 
     List<PaymentInstrument> getCards(Long userId);
 }
