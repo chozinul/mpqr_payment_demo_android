@@ -1,5 +1,7 @@
 package com.mastercard.labs.mpqrpayment.data.model;
 
+import java.util.Objects;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -88,5 +90,18 @@ public class PaymentInstrument extends RealmObject {
 
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PaymentInstrument that = (PaymentInstrument) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
