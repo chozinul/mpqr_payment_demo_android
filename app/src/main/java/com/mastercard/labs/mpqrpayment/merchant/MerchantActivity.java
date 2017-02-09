@@ -108,9 +108,7 @@ public class MerchantActivity extends AppCompatActivity implements MerchantContr
 
     @Override
     public void showInvalidMerchantError() {
-        clearCode();
-
-        DialogUtils.showErrorDialog(this, R.string.error, R.string.invalid_merchant_error_message);
+        merchantCodeEdiText.setError(getString(R.string.invalid_merchant_code));
     }
 
     @Override
@@ -119,6 +117,7 @@ public class MerchantActivity extends AppCompatActivity implements MerchantContr
         hideMerchantInfo();
 
         merchantCodeEdiText.setText(null);
+        merchantCodeEdiText.setError(null);
         merchantCodeEdiText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
     }
 

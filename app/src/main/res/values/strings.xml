@@ -61,5 +61,6 @@
     <string name="logout">Logout</string>
     <string name="logout_failed">Logout Failed. Please try again.</string>
     <string name="logging_out">Logging out...</string>
+    <string name="invalid_merchant_code">Invalid merchant code</string>
 
 </resources>

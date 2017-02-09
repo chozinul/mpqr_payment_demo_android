@@ -61,7 +61,7 @@ public class MerchantPresenter implements MerchantContract.Presenter {
 
         if (!isValidCode(merchantCode)) {
             merchant = null;
-            showMerchant();
+            mView.hideMerchantInfo();
 
             return;
         }
@@ -77,11 +77,14 @@ public class MerchantPresenter implements MerchantContract.Presenter {
 
                 if (!response.isSuccessful()) {
                     merchant = null;
+
+                    mView.hideMerchantInfo();
+                    mView.showInvalidMerchantError();
                 } else {
                     merchant = response.body();
+                    showMerchant();
                 }
 
-                showMerchant();
             }
 
             @Override
@@ -90,7 +93,7 @@ public class MerchantPresenter implements MerchantContract.Presenter {
 
                 if (!call.isCanceled()) {
                     merchant = null;
-                    showMerchant();
+                    mView.hideMerchantInfo();
                     mView.showNetworkError();
                 }
 
