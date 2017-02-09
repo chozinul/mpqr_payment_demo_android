@@ -33,6 +33,10 @@ public class LoginPresenter implements LoginContract.Presenter {
         return pin != null && pin.length() == 6;
     }
 
+    private boolean isAccessCodeValid(String accessCode) {
+        return accessCode != null && accessCode.length() == 8;
+    }
+
     @Override
     public void login(String accessCode, String pin) {
         if (loginRequest != null) {
@@ -42,15 +46,15 @@ public class LoginPresenter implements LoginContract.Presenter {
         mView.clearAccessCodeError();
         mView.clearPinError();
 
-        // Check for a valid pin, if the user entered one.
-        if (!isPinValid(pin)) {
-            mView.setInvalidPinError();
+        // Check for a valid access codes.
+        if (!isAccessCodeValid(accessCode)) {
+            mView.setInvalidAccessCode();
             return;
         }
 
-        // Check for a valid access codes.
-        if (accessCode == null || accessCode.isEmpty()) {
-            mView.setAccessCodeRequired();
+        // Check for a valid pin, if the user entered one.
+        if (!isPinValid(pin)) {
+            mView.setInvalidPinError();
             return;
         }
 

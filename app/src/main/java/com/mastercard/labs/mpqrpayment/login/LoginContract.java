@@ -15,8 +15,6 @@ public interface LoginContract {
 
         void clearPinError();
 
-        void setAccessCodeRequired();
-
         void showProgress();
 
         void hideProgress();
@@ -26,6 +24,8 @@ public interface LoginContract {
         void setIncorrectPin();
 
         void showNetworkError();
+
+        void setInvalidAccessCode();
     }
 
     interface Presenter extends BasePresenter {

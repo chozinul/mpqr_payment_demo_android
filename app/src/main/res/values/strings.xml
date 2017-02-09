@@ -38,7 +38,8 @@
     <string name="prompt_access_code">Access Code</string>
     <string name="prompt_pin">6 Digit Pin</string>
     <string name="action_sign_in">Sign in</string>
-    <string name="error_invalid_access_code">This access code is invalid</string>
+    <string name="error_invalid_access_code">This access code is invalid. It should be %s digits</string>
+    <string name="access_code_length">6</string>
     <string name="error_invalid_pin">This pin is too short</string>
     <string name="error_incorrect_pin">This pin is incorrect</string>
     <string name="error_field_required">This field is required</string>

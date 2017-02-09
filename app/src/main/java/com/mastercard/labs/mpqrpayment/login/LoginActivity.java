@@ -4,13 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +43,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @BindView(R.id.login_form)
     View mLoginFormView;
 
+    @BindView(R.id.sign_in_btn)
+    Button mSignInButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         presenter.start();
     }
 
-    @OnClick(value = R.id.email_sign_in_button)
+    @OnClick(value = R.id.sign_in_btn)
     public void signInButtonPressed() {
         presenter.login(mAccessCodeEditText.getText().toString(), mPinEditText.getText().toString());
     }
@@ -80,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void focusChanged(View view, boolean hasFocus) {
         if (!hasFocus) {
             // Hide keyboard
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -89,35 +92,27 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
      * Shows the progress UI and hides the login form.
      */
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        mSignInButton.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -130,12 +125,6 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void clearPinError() {
         mPinEditText.setError(null);
         mPinEditText.clearFocus();
-    }
-
-    @Override
-    public void setAccessCodeRequired() {
-        mAccessCodeEditText.setError(getString(R.string.error_field_required));
-        mAccessCodeEditText.requestFocus();
     }
 
     @Override
@@ -171,6 +160,12 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void showNetworkError() {
         Toast.makeText(this, getString(R.string.unexpected_error), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setInvalidAccessCode() {
+        mAccessCodeEditText.setError(getString(R.string.error_invalid_access_code, getString(R.string.access_code_length)));
+        mAccessCodeEditText.requestFocus();
     }
 }
 

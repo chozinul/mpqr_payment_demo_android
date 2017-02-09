@@ -2,6 +2,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:gravity="center_horizontal"
               android:orientation="vertical"
               android:background="@drawable/background_login"
@@ -43,32 +44,32 @@
             <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorDeepSeaBlue">
+                    app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
                 <EditText
                         android:id="@+id/txt_access_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_access_code"
-                        android:textColorHint="@color/colorWhite"
                         android:textColor="@color/colorWhite"
                         android:inputType="numberDecimal"
                         android:digits="0123456789"
-                        android:maxLines="1"/>
+                        android:maxLength="8"
+                        android:maxLines="1"
+                        app:theme="@style/LightEditTextStyle"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorDeepSeaBlue">
+                    app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
                 <EditText
                         android:id="@+id/txt_pin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/prompt_pin"
-                        android:textColorHint="@color/colorWhite"
                         android:textColor="@color/colorWhite"
                         android:imeActionId="@+id/login"
                         android:imeActionLabel="@string/action_sign_in"
@@ -76,7 +77,8 @@
                         android:inputType="numberPassword"
                         android:digits="0123456789"
                         android:maxLength="@string/pin_length"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        app:theme="@style/LightEditTextStyle"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -100,7 +102,7 @@
     </ScrollView>
 
     <Button
-            android:id="@+id/email_sign_in_button"
+            android:id="@+id/sign_in_btn"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="60dp"
