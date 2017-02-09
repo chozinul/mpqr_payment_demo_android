@@ -362,7 +362,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     public void askPin(int pinLength) {
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-        input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(pinLength)});
+        input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(pinLength)});
         int margin = getResources().getDimensionPixelSize(R.dimen.size_10);
         input.setPadding(margin, margin, margin, margin);
 
@@ -435,7 +435,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void showInvalidDataError() {
-        DialogUtils.showDialog(this, R.string.error, R.string.invalid_payment_data, new DialogInterface.OnDismissListener() {
+        DialogUtils.customAlertDialogBuilder(this, R.string.invalid_payment_data).setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 finish();

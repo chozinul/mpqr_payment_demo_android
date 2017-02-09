@@ -16,10 +16,25 @@ import com.mastercard.labs.mpqrpayment.R;
  */
 public class DialogUtils {
     public static void showDialog(Context context, @StringRes int title, @StringRes int message) {
-        showDialog(context, title, message, null);
+        customAlertDialogBuilder(context, message)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create().show();
     }
 
-    public static void showDialog(Context context, @StringRes int title, @StringRes int message, final DialogInterface.OnDismissListener dismissListener) {
+    private static AlertDialog.Builder customAlertDialogBuilder(Context context) {
+        TextView titleEditTextView = new TextView(context);
+        titleEditTextView.setBackgroundResource(R.drawable.alert_title_header);
+
+        return new AlertDialog.Builder(context)
+                .setCustomTitle(titleEditTextView);
+    }
+
+    public static AlertDialog.Builder customAlertDialogBuilder(Context context, @StringRes int message) {
         TextView messageTextView = new TextView(context);
         messageTextView.setText(message);
         messageTextView.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -30,27 +45,6 @@ public class DialogUtils {
         messageTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         messageTextView.setTextColor(ContextCompat.getColor(context, R.color.colorTextMainColor));
 
-        AlertDialog dialog = customAlertDialogBuilder(context)
-                .setView(messageTextView)
-                .setCancelable(true)
-                .setNegativeButton(R.string.dismiss, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        if (dismissListener != null) {
-                            dismissListener.onDismiss(dialog);
-                        }
-                    }
-                }).create();
-
-        dialog.show();
-    }
-
-    private static AlertDialog.Builder customAlertDialogBuilder(Context context) {
-        TextView titleEditTextView = new TextView(context);
-        titleEditTextView.setBackgroundResource(R.drawable.alert_title_header);
-
-        return new AlertDialog.Builder(context)
-                .setCustomTitle(titleEditTextView);
+        return customAlertDialogBuilder(context).setView(messageTextView);
     }
 }
