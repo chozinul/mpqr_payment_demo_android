@@ -175,6 +175,16 @@ class PaymentPresenter implements PaymentContract.Presenter {
         requestPayment();
     }
 
+    @Override
+    public void confirmCancellation() {
+        paymentView.showCancelDialog();
+    }
+
+    @Override
+    public void cancelFlow() {
+        paymentView.close();
+    }
+
     private void requestPayment() {
         if (paymentRequest != null) {
             paymentRequest.cancel();

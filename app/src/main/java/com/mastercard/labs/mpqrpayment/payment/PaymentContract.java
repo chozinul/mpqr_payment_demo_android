@@ -61,6 +61,10 @@ public interface PaymentContract {
         void showInsufficientBalanceError();
 
         void showTipChangeNotAllowedError();
+
+        void close();
+
+        void showCancelDialog();
     }
 
     interface Presenter extends BasePresenter {
@@ -80,5 +84,9 @@ public interface PaymentContract {
         void makePayment();
 
         void pin(String pin);
+
+        void confirmCancellation();
+
+        void cancelFlow();
     }
 }

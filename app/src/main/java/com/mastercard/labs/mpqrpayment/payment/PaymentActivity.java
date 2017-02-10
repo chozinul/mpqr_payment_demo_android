@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -27,14 +28,12 @@ import com.mastercard.labs.mpqrpayment.adapter.CardsArrayAdapter;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
-import com.mastercard.labs.mpqrpayment.data.model.MethodType;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.receipt.ReceiptActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
 import com.mastercard.labs.mpqrpayment.view.SuffixEditText;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -133,6 +132,22 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         super.onResume();
         presenter.setPaymentData(paymentData);
         presenter.start();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                presenter.confirmCancellation();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.confirmCancellation();
     }
 
     @OnTextChanged(value = R.id.txt_amount_value, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
@@ -437,6 +452,27 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void showTipChangeNotAllowedError() {
         DialogUtils.showDialog(this, R.string.error, R.string.error_tip_change_not_allowed);
+    }
+
+    @Override
+    public void showCancelDialog() {
+        DialogUtils.customAlertDialogBuilder(this, R.string.ask_cancel_confirmation).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setPositiveButton(R.string.quit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                presenter.cancelFlow();
+            }
+        }).show();
+    }
+
+    @Override
+    public void close() {
+        finish();
     }
 
     private class AmountInputFilter implements InputFilter {
