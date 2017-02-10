@@ -24,6 +24,10 @@ public interface PaymentContract {
 
         void setPromptToEnterTip(double tip);
 
+        void disableAmountChange();
+
+        void enableAmountChange();
+
         void disableTipChange();
 
         void enableTipChange();

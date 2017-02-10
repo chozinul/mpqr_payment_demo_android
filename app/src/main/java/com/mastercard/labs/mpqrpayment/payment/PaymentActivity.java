@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,6 +50,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @BindView(R.id.txt_currency_value)
     TextView currencyTextView;
+
+    @BindView(R.id.rl_amount)
+    RelativeLayout amountLayout;
+
+    @BindView(R.id.txt_amount)
+    TextView amountTitleTextView;
 
     @BindView(R.id.txt_amount_value)
     EditText amountEditText;
@@ -264,17 +269,35 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     @Override
+    public void disableAmountChange() {
+        toggleLayout(amountLayout, amountTitleTextView, amountEditText, false);
+    }
+
+    @Override
+    public void enableAmountChange() {
+        toggleLayout(amountLayout, amountTitleTextView, amountEditText, true);
+    }
+
+    @Override
     public void disableTipChange() {
-        tipLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledDeepSeaBlue));
-        tipTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDeepSeaBlue));
-        tipEditText.setEnabled(false);
+        toggleLayout(tipLayout, tipTitleTextView, tipEditText, false);
     }
 
     @Override
     public void enableTipChange() {
-        tipLayout.setBackgroundColor(Color.TRANSPARENT);
-        tipTitleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWarmGrey));
-        tipEditText.setEnabled(true);
+        toggleLayout(tipLayout, tipTitleTextView, tipEditText, true);
+    }
+
+    private void toggleLayout(RelativeLayout layout, TextView titleTextView, EditText editText, boolean enabled) {
+        if (enabled) {
+            layout.setBackgroundColor(Color.TRANSPARENT);
+            titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWarmGrey));
+            editText.setEnabled(true);
+        } else {
+            layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledDeepSeaBlue));
+            titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDeepSeaBlue));
+            editText.setEnabled(false);
+        }
     }
 
     @Override
@@ -292,24 +315,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     public void hideTipInformation() {
         topBorderTip.setVisibility(View.GONE);
         tipLayout.setVisibility(View.GONE);
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(currencyTextView.getLayoutParams());
-        layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.txt_currency);
-        currencyTextView.setLayoutParams(layoutParams);
-        currencyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_expand_more, 0);
     }
 
     @Override
     public void showTipInformation() {
         topBorderTip.setVisibility(View.VISIBLE);
         tipLayout.setVisibility(View.VISIBLE);
-
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(currencyTextView.getLayoutParams());
-        layoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.txt_currency);
-        currencyTextView.setLayoutParams(layoutParams);
-        currencyTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, R.drawable.ic_expand_more);
     }
 
     @Override

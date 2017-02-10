@@ -47,15 +47,17 @@ class PaymentPresenter implements PaymentContract.Presenter {
         this.paymentData = paymentData;
 
         if (paymentData.isDynamic()) {
-            // TODO: Handle dynamic QR
+            paymentView.disableAmountChange();
         } else {
-            // TODO: Handle static QR
+            paymentView.enableAmountChange();
         }
 
         if (paymentData.getMerchant() == null) {
             paymentView.showInvalidDataError();
             return;
         }
+
+        // TODO: Validate if merchant has required identifier as the selected card
 
         paymentView.setAmount(paymentData.getTransactionAmount());
 
