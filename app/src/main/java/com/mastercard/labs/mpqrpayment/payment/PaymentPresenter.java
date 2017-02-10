@@ -157,9 +157,11 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void makePayment() {
+        // TODO: Ask for pin before proceeding
         // TODO: Validate payment data before moving forward
+//        paymentView.askPin(PIN_SIZE);
 
-        paymentView.askPin(PIN_SIZE);
+        requestPayment();
     }
 
     @Override

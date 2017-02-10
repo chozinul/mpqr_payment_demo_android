@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.receipt.ReceiptActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
+import com.mastercard.labs.mpqrpayment.utils.KeyboardUtils;
 import com.mastercard.labs.mpqrpayment.view.SuffixEditText;
 
 import java.util.List;
@@ -395,6 +397,8 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void showProcessingPaymentLoading() {
+        KeyboardUtils.hideKeyboard(this);
+
         hideProcessingPaymentLoading();
 
         progressDialog = new ProgressDialog(this);
