@@ -57,6 +57,8 @@ public class ServiceGenerator {
 
         // Build mock retrofit also
         NetworkBehavior networkBehavior = NetworkBehavior.create();
+        networkBehavior.setFailurePercent(0);
+        networkBehavior.setDelay(1, TimeUnit.SECONDS);
         MockRetrofit.Builder mockBuilder = new MockRetrofit.Builder(retrofit)
                 .networkBehavior(networkBehavior);
 
