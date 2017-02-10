@@ -39,7 +39,7 @@
     <string name="prompt_pin">6 Digit Pin</string>
     <string name="action_sign_in">Sign in</string>
     <string name="error_invalid_access_code">This access code is invalid. It should be %s digits</string>
-    <string name="access_code_length">6</string>
+    <string name="access_code_length">8</string>
     <string name="error_invalid_pin">This pin is too short</string>
     <string name="error_incorrect_pin">This pin is incorrect</string>
     <string name="error_field_required">This field is required</string>
@@ -69,5 +69,6 @@
     <string name="error_cannot_scan_enter_manual">Cannot scan QR code successfully. Please try manual entry.</string>
     <string name="quit">Quit</string>
     <string name="ask_cancel_confirmation">Are you sure to quit?</string>
+    <string name="merchant_name">Merchant Name</string>
 
 </resources>

@@ -113,7 +113,7 @@
                             android:id="@+id/txt_merchant_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/merchant_code"
+                            android:text="@string/merchant_name"
                             android:textSize="@dimen/size_small"/>
 
                     <EditText
