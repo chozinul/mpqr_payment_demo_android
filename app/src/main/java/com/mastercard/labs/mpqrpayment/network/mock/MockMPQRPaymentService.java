@@ -100,12 +100,12 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     @Override
     public Call<User> consumer() {
         String dummyResponse = "{\n" +
-                "  \"id\": 60,\n" +
+                "  \"id\": 62,\n" +
                 "  \"firstName\": \"Muhammad\",\n" +
                 "  \"lastName\": \"Azeem\",\n" +
                 "  \"paymentInstruments\": [\n" +
                 "    {\n" +
-                "      \"id\": 178,\n" +
+                "      \"id\": 184,\n" +
                 "      \"acquirerName\": \"Mastercard\",\n" +
                 "      \"issuerName\": \"Ecobank\",\n" +
                 "      \"name\": \"MastercardGold\",\n" +
@@ -116,7 +116,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
                 "      \"isDefault\": true\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"id\": 179,\n" +
+                "      \"id\": 185,\n" +
                 "      \"acquirerName\": \"Mastercard\",\n" +
                 "      \"issuerName\": \"Ecobank\",\n" +
                 "      \"name\": \"MastercardBlack\",\n" +
@@ -127,7 +127,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
                 "      \"isDefault\": false\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"id\": 180,\n" +
+                "      \"id\": 186,\n" +
                 "      \"acquirerName\": \"Mastercard\",\n" +
                 "      \"issuerName\": \"Ecobank\",\n" +
                 "      \"name\": \"MastercardBlack\",\n" +
@@ -156,7 +156,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
         String dummyResponse = "{\n" +
                 "  \"code\": \"12345678\",\n" +
                 "  \"name\": \"FarmtoTable F&B\",\n" +
-                "  \"city\": Singapore,\n" +
+                "  \"city\": \"Delhi\",\n" +
                 "  \"categoryCode\": \"123\",\n" +
                 "  \"identifierMastercard04\": \"5555222233334444\"\n" +
                 "}";
