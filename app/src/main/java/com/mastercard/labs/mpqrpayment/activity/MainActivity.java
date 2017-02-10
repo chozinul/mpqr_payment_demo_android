@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.adapter.CardPagerAdapter;
+import com.mastercard.labs.mpqrpayment.data.DataSource;
+import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
@@ -41,8 +43,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import me.crosswall.lib.coverflow.CoverFlow;
 import me.crosswall.lib.coverflow.core.PagerContainer;
 import retrofit2.Call;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private ProgressDialog progressDialog;
 
-    Realm realm;
+    DataSource dataSource;
 
     private Long userId;
     private User user;
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             return;
         }
 
-        realm = Realm.getDefaultInstance();
+        dataSource = RealmDataSource.getInstance();
 
         pagerContainer.setOverlapEnabled(true);
 
@@ -107,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (savedInstanceState != null) {
             selectedCardIdx = savedInstanceState.getInt(BUNDLE_SELECTED_CARD_IDX, -1);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         invalidateViews();
     }
@@ -136,17 +141,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         outState.putInt(BUNDLE_SELECTED_CARD_IDX, selectedCardIdx);
     }
 
-    @Override
-    protected void onDestroy() {
-        if (user != null) {
-            user.removeChangeListeners();
-        }
-
-        realm.close();
-
-        super.onDestroy();
-    }
-
     // Page listener methods
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -173,22 +167,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void invalidateViews() {
-        if (user != null) {
-            user.removeChangeListeners();
-        }
-
-        user = realm.where(User.class).equalTo("id", userId).findFirst();
+        user = dataSource.getUser(userId);
         if (user == null) {
             // TODO: Show error
             return;
         }
-
-        user.addChangeListener(new RealmChangeListener<User>() {
-            @Override
-            public void onChange(User result) {
-                refreshCards(result);
-            }
-        });
 
         refreshCards(user);
     }
