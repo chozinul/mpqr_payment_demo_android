@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
           package="com.mastercard.labs.mpqrpayment">
 
     <application
@@ -24,11 +23,6 @@
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name="com.mastercard.mpqr.pushpayment.scan.activity.PPCaptureActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/CustomizeScanTheme"
-                tools:replace="screenOrientation, theme"/>
         <activity
                 android:name=".payment.PaymentActivity"
                 android:label="@string/title_activity_payment"
@@ -65,7 +59,7 @@
         <activity
                 android:name=".activity.CustomizedPPCaptureActivity"
                 android:screenOrientation="portrait"
-                android:theme="@style/ppscan_CaptureTheme" />
+                android:theme="@style/CustomizeScanTheme" />
     </application>
 
 </manifest>
