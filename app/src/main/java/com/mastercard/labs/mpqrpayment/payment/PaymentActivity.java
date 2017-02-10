@@ -294,6 +294,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
             titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWarmGrey));
             editText.setEnabled(true);
         } else {
+            // TODO: Remove line below edit text
             layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledDeepSeaBlue));
             titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDeepSeaBlue));
             editText.setEnabled(false);
@@ -471,12 +472,12 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void showCancelDialog() {
-        DialogUtils.customAlertDialogBuilder(this, R.string.ask_cancel_confirmation).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        DialogUtils.customAlertDialogBuilder(this, R.string.ask_cancel_confirmation).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        }).setPositiveButton(R.string.quit, new DialogInterface.OnClickListener() {
+        }).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
