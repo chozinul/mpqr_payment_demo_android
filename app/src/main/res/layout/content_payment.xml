@@ -97,7 +97,6 @@
                             android:id="@+id/rl_amount"
                             android:layout_width="match_parent"
                             android:layout_height="75dp"
-                            android:orientation="vertical"
                             android:paddingTop="10dp"
                             android:paddingStart="15dp"
                             android:paddingEnd="15dp">
@@ -131,7 +130,6 @@
                             android:id="@+id/rl_tip"
                             android:layout_width="match_parent"
                             android:layout_height="75dp"
-                            android:orientation="vertical"
                             android:paddingTop="10dp"
                             android:paddingStart="15dp"
                             android:paddingEnd="15dp">
@@ -184,12 +182,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/rectangle_border_width"
                         android:layout_alignTop="@id/txt_total_amount"
-                        android:background="@color/colorPinkishGrey"/>
-
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/rectangle_border_width"
-                        android:layout_alignBottom="@id/txt_total_amount"
                         android:background="@color/colorPinkishGrey"/>
 
             </RelativeLayout>
