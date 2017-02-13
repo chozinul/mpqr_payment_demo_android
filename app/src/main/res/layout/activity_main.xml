@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@+id/pager_container"
-            android:paddingBottom="12dp"
+            android:paddingBottom="30dp"
             android:paddingTop="16dp">
 
         <TextView
@@ -75,12 +75,12 @@
                 android:textColor="@color/colorWhite"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:textSize="@dimen/size_small"
                 android:textAllCaps="false"
-                android:background="@drawable/btn_rounded_corners">
+                android:background="@drawable/btn_rounded_corners"
+                android:visibility="gone">
         </Button>
 
     </LinearLayout>
