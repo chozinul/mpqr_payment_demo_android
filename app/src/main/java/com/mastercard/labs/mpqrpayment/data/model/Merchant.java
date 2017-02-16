@@ -17,6 +17,8 @@ public class Merchant implements Parcelable {
     private String identifierMastercard05;
     private String identifierNPCI06;
     private String identifierNPCI07;
+    private String terminalNumber;
+    private String storeId;
 
     public String getCode() {
         return code;
@@ -98,6 +100,22 @@ public class Merchant implements Parcelable {
         this.identifierNPCI07 = identifierNPCI07;
     }
 
+    public String getTerminalNumber() {
+        return terminalNumber;
+    }
+
+    public void setTerminalNumber(String terminalNumber) {
+        this.terminalNumber = terminalNumber;
+    }
+
+    public String getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(String storeId) {
+        this.storeId = storeId;
+    }
+    
     @Override
     public int describeContents() {
         return 0;
@@ -115,6 +133,8 @@ public class Merchant implements Parcelable {
         dest.writeString(this.identifierMastercard05);
         dest.writeString(this.identifierNPCI06);
         dest.writeString(this.identifierNPCI07);
+        dest.writeString(this.terminalNumber);
+        dest.writeString(this.storeId);
     }
 
     public Merchant() {
@@ -131,6 +151,8 @@ public class Merchant implements Parcelable {
         this.identifierMastercard05 = in.readString();
         this.identifierNPCI06 = in.readString();
         this.identifierNPCI07 = in.readString();
+        this.terminalNumber = in.readString();
+        this.storeId = in.readString();
     }
 
     public static final Creator<Merchant> CREATOR = new Creator<Merchant>() {
