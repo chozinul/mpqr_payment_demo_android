@@ -1,21 +1,25 @@
 package com.mastercard.labs.mpqrpayment.network.response;
 
+import java.util.Date;
+
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/2/17
  */
 public class PaymentResponse {
     private boolean approved;
     private String transactionReference;
-    private String transactionDate;
+    private Date transactionDate;
+    private String invoiceNumber;
     private String message;
-    private double transactionAmount;
+    private double totalAmount;
 
-    public PaymentResponse(boolean approved, String transactionReference, String transactionDate, String message, double transactionAmount) {
+    public PaymentResponse(boolean approved, String transactionReference, Date transactionDate, String invoiceNumber, String message, double totalAmount) {
         this.approved = approved;
         this.transactionReference = transactionReference;
         this.transactionDate = transactionDate;
+        this.invoiceNumber = invoiceNumber;
         this.message = message;
-        this.transactionAmount = transactionAmount;
+        this.totalAmount = totalAmount;
     }
 
     public boolean isApproved() {
@@ -34,12 +38,20 @@ public class PaymentResponse {
         this.transactionReference = transactionReference;
     }
 
-    public String getTransactionDate() {
+    public Date getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(String transactionDate) {
+    public void setTransactionDate(Date transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public String getMessage() {
@@ -50,12 +62,12 @@ public class PaymentResponse {
         this.message = message;
     }
 
-    public double getTransactionAmount() {
-        return transactionAmount;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setTransactionAmount(double transactionAmount) {
-        this.transactionAmount = transactionAmount;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public boolean isInsufficientBalance() {

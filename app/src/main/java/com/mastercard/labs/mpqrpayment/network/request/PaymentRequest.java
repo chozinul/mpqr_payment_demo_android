@@ -7,13 +7,17 @@ public class PaymentRequest {
     private String receiverCardNumber;
     private Long senderCardId;
     private String currency;
-    private double amountInCents;
+    private double transactionAmount;
+    private double tip;
+    private String terminalNumber;
 
-    public PaymentRequest(String receiverCardNumber, Long senderCardId, String currency, double amountInCents) {
+    public PaymentRequest(String receiverCardNumber, Long senderCardId, String currency, double transactionAmount, double tip, String terminalNumber) {
         this.receiverCardNumber = receiverCardNumber;
         this.senderCardId = senderCardId;
         this.currency = currency;
-        this.amountInCents = amountInCents;
+        this.transactionAmount = transactionAmount;
+        this.tip = tip;
+        this.terminalNumber = terminalNumber;
     }
 
     public String getReceiverCardNumber() {
@@ -41,10 +45,30 @@ public class PaymentRequest {
     }
 
     public double getTransactionAmount() {
-        return amountInCents;
+        return transactionAmount;
     }
 
-    public void setAmountInCents(double amountInCents) {
-        this.amountInCents = amountInCents;
+    public void setTransactionAmount(double transactionAmount) {
+        this.transactionAmount = transactionAmount;
+    }
+
+    public double getTip() {
+        return tip;
+    }
+
+    public void setTip(double tip) {
+        this.tip = tip;
+    }
+
+    public double getTotal() {
+        return getTransactionAmount() + getTip();
+    }
+
+    public String getTerminalNumber() {
+        return terminalNumber;
+    }
+
+    public void setTerminalNumber(String terminalNumber) {
+        this.terminalNumber = terminalNumber;
     }
 }

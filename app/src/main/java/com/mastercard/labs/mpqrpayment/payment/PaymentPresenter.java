@@ -198,7 +198,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
         // TODO: Pick correct identifier
         String receiverIdentifier = paymentData.getMerchant().getIdentifierMastercard04();
-        final PaymentRequest requestData = new PaymentRequest(receiverIdentifier, paymentData.getCardId(), paymentData.getCurrencyNumericCode(), paymentData.getTotal());
+        final PaymentRequest requestData = new PaymentRequest(receiverIdentifier, paymentData.getCardId(), paymentData.getCurrencyNumericCode(), paymentData.getTransactionAmount(), paymentData.getTipAmount(), paymentData.getMerchant().getTerminalNumber());
 
         paymentRequest = ServiceGenerator.getInstance().mpqrPaymentService().makePayment(requestData);
         paymentRequest.enqueue(new Callback<PaymentResponse>() {
@@ -224,7 +224,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
                 // Update card amount
                 PaymentInstrument paymentInstrument = dataSource.getCard(requestData.getSenderCardId());
-                paymentInstrument.setBalance(paymentInstrument.getBalance() - paymentResponse.getTransactionAmount());
+                paymentInstrument.setBalance(paymentInstrument.getBalance() - paymentResponse.getTotalAmount());
 
                 dataSource.saveCard(paymentInstrument);
 
