@@ -40,10 +40,7 @@
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="30dp"
-                android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:paddingBottom="50dp"
+                android:padding="30dp"
                 android:orientation="vertical">
 
             <TextView
