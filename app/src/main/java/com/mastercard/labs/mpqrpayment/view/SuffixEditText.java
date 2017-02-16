@@ -14,7 +14,7 @@ import com.mastercard.labs.mpqrpayment.R;
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/9/17
  */
 public class SuffixEditText extends EditText {
-    TextPaint textPaint = new TextPaint();
+    private TextPaint textPaint = new TextPaint();
     private String suffix = "";
     private float suffixPadding;
     private int suffixColor;
