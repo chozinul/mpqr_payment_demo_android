@@ -2,6 +2,8 @@ package com.mastercard.labs.mpqrpayment.network;
 
 import android.content.SharedPreferences;
 
+import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
+
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/8/17
  */
@@ -48,6 +50,8 @@ public class LoginManager {
     }
 
     public void logout() {
+        RealmDataSource.getInstance().deleteUser(getLoggedInUserId());
+
         setLoggedInUserId(-1);
         setToken(null);
     }

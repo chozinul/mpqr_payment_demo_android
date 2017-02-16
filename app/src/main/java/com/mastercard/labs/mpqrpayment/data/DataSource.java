@@ -18,4 +18,6 @@ public interface DataSource {
     PaymentInstrument getCard(Long cardId);
 
     List<PaymentInstrument> getCards(Long userId);
+
+    boolean deleteUser(long userId);
 }
