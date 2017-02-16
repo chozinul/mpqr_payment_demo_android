@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             if (data != null) {
                 FormatException e = (FormatException) data.getSerializableExtra(PPIntents.PARSE_ERROR);
                 if (e != null) {
+                    e.printStackTrace();
                     cannotScanQR();
                 }
             }
@@ -331,6 +332,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         merchant.setIdentifierMastercard05(pushPaymentData.getMerchantIdentifierMastercard05());
         merchant.setIdentifierNPCI06(pushPaymentData.getMerchantIdentifierNPCI06());
         merchant.setIdentifierNPCI07(pushPaymentData.getMerchantIdentifierNPCI07());
+        if (pushPaymentData.getAdditionalData() != null) {
+            merchant.setTerminalNumber(pushPaymentData.getAdditionalData().getTerminalId());
+            merchant.setStoreId(pushPaymentData.getAdditionalData().getStoreId());
+        }
 
         return merchant;
     }

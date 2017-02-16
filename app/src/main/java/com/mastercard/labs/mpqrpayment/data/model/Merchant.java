@@ -115,7 +115,7 @@ public class Merchant implements Parcelable {
     public void setStoreId(String storeId) {
         this.storeId = storeId;
     }
-    
+
     @Override
     public int describeContents() {
         return 0;
