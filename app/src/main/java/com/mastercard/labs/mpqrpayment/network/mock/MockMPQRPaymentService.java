@@ -174,7 +174,6 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
         }
 
         String dummyResponse = "{\n" +
-                "  \"code\": \"12345678\",\n" +
                 "  \"name\": \"FarmtoTable F&B\",\n" +
                 "  \"city\": \"Delhi\",\n" +
                 "  \"countryCode\": \"IN\",\n" +
