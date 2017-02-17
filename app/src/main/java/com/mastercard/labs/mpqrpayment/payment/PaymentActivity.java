@@ -15,10 +15,12 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,6 +43,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
 import butterknife.OnTextChanged;
 
 public class PaymentActivity extends AppCompatActivity implements PaymentContract.View {
@@ -196,6 +199,23 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @OnClick(value = R.id.btn_pay)
     public void payBtnPressed() {
+        pay();
+    }
+
+    @OnEditorAction(value = {R.id.txt_amount_value, R.id.txt_tip_value})
+    public boolean onEditorAction(EditText editText, int id, KeyEvent event) {
+        if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
+            return false;
+        }
+
+        if (id == R.id.action_pay || id == EditorInfo.IME_NULL) {
+            pay();
+            return true;
+        }
+        return false;
+    }
+
+    private void pay() {
         presenter.makePayment();
     }
 
@@ -281,11 +301,15 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void disableTipChange() {
         toggleLayout(tipLayout, tipTitleTextView, tipEditText, false);
+        amountEditText.setImeActionLabel(getString(R.string.pay), R.id.action_pay);
+        amountEditText.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
     }
 
     @Override
     public void enableTipChange() {
         toggleLayout(tipLayout, tipTitleTextView, tipEditText, true);
+        amountEditText.setImeActionLabel(getString(R.string.action_next), 0);
+        amountEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     }
 
     private void toggleLayout(RelativeLayout layout, TextView titleTextView, EditText editText, boolean enabled) {
@@ -316,12 +340,16 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     public void hideTipInformation() {
         topBorderTip.setVisibility(View.GONE);
         tipLayout.setVisibility(View.GONE);
+        amountEditText.setImeActionLabel(getString(R.string.pay), R.id.action_pay);
+        amountEditText.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
     }
 
     @Override
     public void showTipInformation() {
         topBorderTip.setVisibility(View.VISIBLE);
         tipLayout.setVisibility(View.VISIBLE);
+        amountEditText.setImeActionLabel(getString(R.string.action_next), 0);
+        amountEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
     }
 
     @Override

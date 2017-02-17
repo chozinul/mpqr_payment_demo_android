@@ -116,6 +116,8 @@
                                 android:inputType="numberDecimal"
                                 android:digits="0123456789.,"
                                 android:textSize="@dimen/size_24"
+                                android:imeOptions="actionNext"
+                                android:maxLines="1"
                                 tools:text="20.00"/>
                     </RelativeLayout>
 
@@ -149,6 +151,9 @@
                                 android:digits="0123456789.,"
                                 android:textSize="@dimen/size_24"
                                 tools:text="20.00"
+                                android:imeActionLabel="@string/pay"
+                                android:imeActionId="@+id/action_pay"
+                                android:imeOptions="actionUnspecified"
                                 android:layout_below="@+id/txt_tip"
                                 android:layout_alignParentStart="true"
                                 app:suffixColor="@color/colorWarmGrey"/>
