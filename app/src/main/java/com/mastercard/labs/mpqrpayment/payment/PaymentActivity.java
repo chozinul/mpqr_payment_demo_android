@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,7 +36,7 @@ import com.mastercard.labs.mpqrpayment.receipt.ReceiptActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
 import com.mastercard.labs.mpqrpayment.utils.KeyboardUtils;
-import com.mastercard.labs.mpqrpayment.view.SuffixEditText;
+import com.mastercard.labs.mpqrpayment.view.AmountEditText;
 
 import java.util.List;
 import java.util.Locale;
@@ -44,9 +45,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
-import butterknife.OnTextChanged;
 
-public class PaymentActivity extends AppCompatActivity implements PaymentContract.View {
+public class PaymentActivity extends AppCompatActivity implements PaymentContract.View, AmountEditText.AmountListener {
     public static String BUNDLE_PAYMENT_DATA_KEY = "paymentData";
 
     private PaymentContract.Presenter presenter;
@@ -61,13 +61,13 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     TextView amountTitleTextView;
 
     @BindView(R.id.txt_amount_value)
-    EditText amountEditText;
+    AmountEditText amountEditText;
 
     @BindView(R.id.txt_tip)
     TextView tipTitleTextView;
 
     @BindView(R.id.txt_tip_value)
-    SuffixEditText tipEditText;
+    AmountEditText tipEditText;
 
     @BindView(R.id.txt_total_amount)
     TextView totalAmountTextView;
@@ -89,12 +89,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     private PaymentData paymentData;
 
-    private boolean blockAmountTextViewChange;
-    private boolean blockTipTextViewChange;
-
     private ProgressDialog progressDialog;
-
-    private AmountInputFilter tipInputFilter = new AmountInputFilter(0, Double.MAX_VALUE);
 
     public static Intent newIntent(Context context, PaymentData paymentData) {
         Bundle bundle = new Bundle();
@@ -126,8 +121,8 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
         presenter = new PaymentPresenter(this, RealmDataSource.getInstance(), paymentData);
 
-        amountEditText.setFilters(new InputFilter[]{new AmountInputFilter(0, Double.MAX_VALUE)});
-        tipEditText.setFilters(new InputFilter[]{tipInputFilter});
+        amountEditText.setListener(this);
+        tipEditText.setListener(this);
     }
 
     @Override
@@ -160,36 +155,13 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         presenter.confirmCancellation();
     }
 
-    @OnTextChanged(value = R.id.txt_amount_value, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    public void onAmountChanged(Editable amountText) {
-        if (blockAmountTextViewChange) {
-            return;
+    @Override
+    public void amountChanged(AmountEditText editText, double amount) {
+        if (editText == amountEditText) {
+            presenter.setAmount(amount);
+        } else if (editText == tipEditText) {
+            presenter.setTip(amount);
         }
-
-        blockAmountTextViewChange = true;
-
-        double amount = parseAmount(amountText.toString());
-        updateEditText(amountEditText, amount);
-
-        blockAmountTextViewChange = false;
-
-        presenter.setAmount(amount);
-    }
-
-    @OnTextChanged(value = R.id.txt_tip_value, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    public void onTipChanged(Editable tipText) {
-        if (blockTipTextViewChange) {
-            return;
-        }
-
-        blockTipTextViewChange = true;
-
-        double tip = parseAmount(tipText.toString());
-        updateEditText(tipEditText, tip);
-
-        blockTipTextViewChange = false;
-
-        presenter.setTip(tip);
     }
 
     @OnClick(value = R.id.rl_payment_card)
@@ -219,31 +191,6 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         presenter.makePayment();
     }
 
-    private double parseAmount(String amountText) {
-        try {
-            double amount = Double.parseDouble(amountText);
-            int count = amountText.length() - amountText.indexOf(".") - 1;
-            amount *= Math.pow(10, count);
-
-            return amount / 100;
-        } catch (Exception ex) {
-            return 0;
-        }
-    }
-
-    private void updateEditText(EditText editText, double amount) {
-        editText.getText().clear();
-
-        String text = String.format(Locale.getDefault(), "%.2f", amount);
-        editText.getText().append(text);
-
-        if (amount == 0) {
-            editText.setTextColor(ContextCompat.getColor(this, R.color.colorLightGrey));
-        } else {
-            editText.setTextColor(ContextCompat.getColor(this, R.color.colorTextMainColor));
-        }
-    }
-
     @Override
     public void setCurrency(String currency) {
         currencyTextView.setText(currency);
@@ -251,14 +198,13 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void setAmount(double amount) {
-        blockAmountTextViewChange = true;
-        updateEditText(amountEditText, amount);
-        blockAmountTextViewChange = false;
+        amountEditText.setAmount(amount);
     }
 
     private void setTipHasPercentage(boolean hasPercentage) {
         tipEditText.setSuffix(hasPercentage ? " %" : "");
-        tipInputFilter.setMax(hasPercentage ? 100 : Double.MAX_VALUE);
+        tipEditText.setIntegerOnly(hasPercentage);
+        tipEditText.setMinMax(new Pair<>(0.0, hasPercentage ? 100 : Double.MAX_VALUE));
     }
 
     @Override
@@ -283,9 +229,7 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     private void setTip(double amount) {
-        blockTipTextViewChange = true;
-        updateEditText(tipEditText, amount);
-        blockTipTextViewChange = false;
+        tipEditText.setAmount(amount);
     }
 
     @Override
@@ -517,37 +461,5 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void close() {
         finish();
-    }
-
-    private class AmountInputFilter implements InputFilter {
-        private double min, max;
-
-        AmountInputFilter(double min, double max) {
-            this.min = min;
-            this.max = max;
-        }
-
-        void setMax(double max) {
-            this.max = max;
-        }
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            String result = dest.subSequence(0, dstart) + source.toString() + dest.subSequence(dend, dest.length());
-
-            if (result.indexOf(".") != result.lastIndexOf(".")) {
-                return "";
-            }
-
-            double input = parseAmount(dest.toString() + source.toString());
-            if (isInRange(min, max, input))
-                return null;
-
-            return null;
-        }
-
-        private boolean isInRange(double a, double b, double c) {
-            return b > a ? c >= a && c <= b : c >= b && c <= a;
-        }
     }
 }

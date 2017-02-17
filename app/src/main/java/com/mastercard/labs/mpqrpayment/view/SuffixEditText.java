@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.support.annotation.ColorInt;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.widget.EditText;
@@ -17,7 +18,7 @@ public class SuffixEditText extends EditText {
     private TextPaint textPaint = new TextPaint();
     private String suffix = "";
     private float suffixPadding;
-    private int suffixColor;
+    private @ColorInt int suffixColor;
 
     public SuffixEditText(Context context) {
         super(context);
@@ -81,11 +82,11 @@ public class SuffixEditText extends EditText {
         requestLayout();
     }
 
-    public int getSuffixColor() {
+    public @ColorInt int getSuffixColor() {
         return suffixColor;
     }
 
-    public void setSuffixColor(int suffixColor) {
+    public void setSuffixColor(@ColorInt int suffixColor) {
         this.suffixColor = suffixColor;
         invalidate();
         requestLayout();
