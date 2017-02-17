@@ -50,10 +50,10 @@
                 android:layout_height="wrap_content"
                 android:text="@string/txt_available_balance"
                 android:gravity="center"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorLightWhite"
                 android:textAllCaps="true"
-                android:fontFamily="sans-serif"
-                android:textSize="@dimen/size_xx"/>
+                android:fontFamily="@string/font_family_regular"
+                android:textSize="@dimen/size_x"/>
 
         <TextView
                 android:id="@+id/txtAvailableBalanceAmount"
@@ -62,9 +62,9 @@
                 android:layout_marginTop="5dp"
                 tools:text="@string/placeholder_available_balance"
                 android:gravity="center"
-                android:fontFamily="sans-serif-thin"
+                android:fontFamily="@string/font_family_thin"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/size_32"/>
+                android:textSize="@dimen/size_34"/>
 
         <Button
                 android:id="@+id/transaction_history"
@@ -124,6 +124,7 @@
                     android:text="@string/txt_scan_qr"
                     android:layout_weight=".4"
                     android:gravity="center"
+                    android:textColor="@color/colorWarmGrey"
                     android:textSize="@dimen/size_x"/>
 
             <View

@@ -90,6 +90,7 @@
                     android:layout_gravity="end"
                     android:gravity="center"
                     android:textColor="@color/colorLightGreen"
+                    android:fontFamily="@string/font_family_medium"
                     android:visibility="invisible"
                     tools:visibility="visible"/>
 
@@ -111,7 +112,8 @@
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:text="@string/action_sign_in"
-            android:textStyle="bold"
             android:textColor="@color/colorWhite"
+            android:textSize="@dimen/size_x"
+            android:textAllCaps="false"
             android:background="@color/colorDeepSeaBlue"/>
 </LinearLayout>

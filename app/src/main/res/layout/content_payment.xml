@@ -66,9 +66,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:textSize="@dimen/size_x"
+                            android:textSize="@dimen/size_small"
                             android:layout_marginTop="10dp"
                             android:text="@string/currency"
+                            android:textColor="@color/colorWarmGrey"
+                            android:fontFamily="@string/font_family_light"
                             android:layout_alignParentTop="true"/>
 
                     <TextView
@@ -76,6 +78,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:textSize="@dimen/size_24"
+                            android:fontFamily="@string/font_family_medium"
                             android:textColor="@color/colorDeepSeaBlue"
                             android:layout_below="@id/txt_currency"
                             android:gravity="center"
@@ -106,6 +109,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/amount"
+                                android:fontFamily="@string/font_family_light"
                                 android:textSize="@dimen/size_small"/>
 
                         <com.mastercard.labs.mpqrpayment.view.AmountEditText
@@ -118,6 +122,7 @@
                                 android:textSize="@dimen/size_24"
                                 android:imeOptions="actionNext"
                                 android:maxLines="1"
+                                android:fontFamily="@string/font_family_medium"
                                 app:zeroColor="@color/colorLightGrey"
                                 app:nonZeroColor="@color/colorTextMainColor"
                                 tools:text="20.00"/>
@@ -143,6 +148,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/flat_convenience_fee"
+                                android:fontFamily="@string/font_family_light"
                                 android:textSize="@dimen/size_small"/>
 
                         <com.mastercard.labs.mpqrpayment.view.AmountEditText
@@ -158,6 +164,7 @@
                                 android:imeOptions="actionUnspecified"
                                 android:layout_below="@+id/txt_tip"
                                 android:layout_alignParentStart="true"
+                                android:fontFamily="@string/font_family_medium"
                                 app:zeroColor="@color/colorLightGrey"
                                 app:nonZeroColor="@color/colorTextMainColor"
                                 app:suffixColor="@color/colorWarmGrey"/>
@@ -173,7 +180,7 @@
                         android:layout_marginEnd="25dp"
                         android:layout_below="@id/ll_amount_tip_container"
                         android:gravity="end|center_horizontal"
-                        android:textSize="@dimen/size_24"
+                        android:textSize="@dimen/size_18"
                         android:textStyle="italic"
                         android:textColor="@color/colorTextBlack"
                         tools:text="INR 0.00"/>
@@ -210,7 +217,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:drawablePadding="15dp"
-                        android:textSize="@dimen/size_x"
+                        android:textSize="@dimen/size_small"
+                        android:gravity="center"
+                        android:paddingEnd="15dp"
                         tools:drawableLeft="@drawable/mastercard_logo"
                         tools:text="Pay with ****4410"/>
 
@@ -223,6 +232,7 @@
                         android:gravity="center"
                         android:background="@color/colorTransparent"
                         android:textColor="@color/colorDeepSeaBlue"
+                        android:fontFamily="@string/font_family_medium"
                         android:layout_alignTop="@id/txt_payment_card"
                         android:layout_alignBottom="@id/txt_payment_card"
                         android:layout_toEndOf="@id/txt_payment_card"
@@ -238,6 +248,9 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="@string/pay"
+            android:textAllCaps="false"
+            android:fontFamily="@string/font_family_medium"
+            android:textSize="@dimen/size_x"
             android:textColor="@color/colorWhite"
             android:background="@color/colorDeepSeaBlue"/>
 

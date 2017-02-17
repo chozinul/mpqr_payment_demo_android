@@ -29,7 +29,7 @@
                     android:text="@string/enter_merchant_code"
                     android:gravity="center"
                     android:textSize="@dimen/size_x"
-                    android:textColor="@color/colorTextBlack"/>
+                    android:textColor="@color/colorTextMainColor"/>
 
             <TextView
                     android:id="@+id/txt_what_is_merchant_code"
@@ -39,7 +39,8 @@
                     android:padding="10dp"
                     android:text="@string/what_is_merchant_code"
                     android:textColor="@color/colorTextBlue"
-                    android:textStyle="bold"
+                    android:fontFamily="@string/font_family_medium"
+                    android:textSize="@dimen/size_14"
                     android:gravity="center"/>
 
             <View
@@ -62,6 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/merchant_code"
+                        android:fontFamily="@string/font_family_light"
                         android:textSize="@dimen/size_small"/>
 
                 <EditText
@@ -71,8 +73,9 @@
                         android:layout_below="@id/txt_merchant_code"
                         android:inputType="numberDecimal"
                         android:digits="0123456789"
-                        android:textSize="@dimen/size_24"
                         android:layout_toStartOf="@+id/pb_merchant_info"
+                        android:textSize="@dimen/size_xx"
+                        android:fontFamily="@string/font_family_medium"
                         tools:drawableEnd="@drawable/success_tick"
                         tools:text="12345678"/>
 
@@ -114,6 +117,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/merchant_name"
+                            android:fontFamily="@string/font_family_light"
                             android:textSize="@dimen/size_small"/>
 
                     <EditText
@@ -121,10 +125,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/txt_merchant_name"
-                            android:inputType="numberDecimal"
-                            android:digits="0123456789."
-                            android:textSize="@dimen/size_24"
-                            android:editable="false"
+                            android:inputType="none"
+                            android:textSize="@dimen/size_xx"
+                            android:fontFamily="@string/font_family_medium"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             tools:text="FarmToTable F&amp;B"/>
@@ -150,17 +153,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/merchant_city"
-                            android:textSize="@dimen/size_small"/>
+                            android:textSize="@dimen/size_small"
+                            android:fontFamily="@string/font_family_light"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentStart="true"/>
 
                     <EditText
                             android:id="@+id/txt_merchant_city_value"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/txt_merchant_city"
-                            android:inputType="numberDecimal"
-                            android:digits="0123456789."
-                            android:textSize="@dimen/size_24"
-                            android:editable="false"
+                            android:inputType="none"
+                            android:textSize="@dimen/size_xx"
+                            android:fontFamily="@string/font_family_medium"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             tools:text="Singapore"/>

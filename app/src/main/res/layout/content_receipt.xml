@@ -48,8 +48,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textColor="@color/colorTextBlack"
+                    android:textColor="@color/colorTextMainColor"
                     android:textSize="@dimen/size_24"
+                    android:fontFamily="@string/font_family_medium"
                     android:layout_alignParentTop="true"
                     tools:text="INR 120.90"/>
 
@@ -160,6 +161,8 @@
             android:layout_alignParentBottom="true"
             android:background="@color/colorDeepSeaBlue"
             android:textColor="@color/colorWhite"
+            android:textAllCaps="false"
+            android:fontFamily="@string/font_family_medium"
             android:textSize="@dimen/size_x"
             android:text="@string/txt_return"/>
 
