@@ -43,8 +43,10 @@ import retrofit2.mock.Calls;
 public class MockMPQRPaymentService implements MPQRPaymentService {
     private final static String TAG = MockMPQRPaymentService.class.getName();
     private final static int RANDOM_STRING_LENGTH = 8;
+    private final static String MERCHANT_CODE = "87654321";
+    private final static String MERCHANT_NAME = "Go Go Transport";
 
-    private final String RANDOM_STRING_CHARS = "0123456789ABCDEDGHIJKLMNOPQRSTUVWXYZ";
+    private final static String RANDOM_STRING_CHARS = "0123456789ABCDEDGHIJKLMNOPQRSTUVWXYZ";
 
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final BehaviorDelegate<MPQRPaymentService> delegate;
@@ -65,46 +67,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
         }
 
         String dummyResponse = "{\n" +
-                "  \"user\": {\n" +
-                "    \"id\": 62,\n" +
-                "    \"firstName\": \"Muhammad\",\n" +
-                "    \"lastName\": \"Azeem\",\n" +
-                "    \"paymentInstruments\": [\n" +
-                "      {\n" +
-                "        \"id\": 184,\n" +
-                "        \"acquirerName\": \"Mastercard\",\n" +
-                "        \"issuerName\": \"Ecobank\",\n" +
-                "        \"name\": \"MastercardGold\",\n" +
-                "        \"methodType\": \"DebitCard\",\n" +
-                "        \"balance\": \"5100.20\",\n" +
-                "        \"maskedIdentifier\": \"**** 0006\",\n" +
-                "        \"currencyNumericCode\": 356,\n" +
-                "        \"isDefault\": true\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"id\": 185,\n" +
-                "        \"acquirerName\": \"Mastercard\",\n" +
-                "        \"issuerName\": \"Ecobank\",\n" +
-                "        \"name\": \"MastercardBlack\",\n" +
-                "        \"methodType\": \"CreditCard\",\n" +
-                "        \"balance\": \"120.90\",\n" +
-                "        \"maskedIdentifier\": \"**** 5101\",\n" +
-                "        \"currencyNumericCode\": 356,\n" +
-                "        \"isDefault\": false\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"id\": 186,\n" +
-                "        \"acquirerName\": \"Mastercard\",\n" +
-                "        \"issuerName\": \"Ecobank\",\n" +
-                "        \"name\": \"MastercardBlack\",\n" +
-                "        \"methodType\": \"SavingsAccount\",\n" +
-                "        \"balance\": \"21370.00\",\n" +
-                "        \"maskedIdentifier\": \"**** 5102\",\n" +
-                "        \"currencyNumericCode\": 356,\n" +
-                "        \"isDefault\": false\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
+                "  \"user\": " + USER_JSON + "\n," +
                 "  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsInR5cGUiOiJjb25zdW1lciIsImlhdCI6MTQ4NjUyNTcwOSwiZXhwIjoxNDg3ODIxNzA5fQ.QbRK_RG1yr40iKK2GKmnMoBKuLxLg-X2gsKPnolyJ7w\"\n" +
                 "}";
 
@@ -120,46 +83,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     @Override
     public Call<User> consumer() {
-        String dummyResponse = "{\n" +
-                "  \"id\": 62,\n" +
-                "  \"firstName\": \"Muhammad\",\n" +
-                "  \"lastName\": \"Azeem\",\n" +
-                "  \"paymentInstruments\": [\n" +
-                "    {\n" +
-                "      \"id\": 184,\n" +
-                "      \"acquirerName\": \"Mastercard\",\n" +
-                "      \"issuerName\": \"Ecobank\",\n" +
-                "      \"name\": \"MastercardGold\",\n" +
-                "      \"methodType\": \"DebitCard\",\n" +
-                "      \"balance\": \"5100.20\",\n" +
-                "      \"maskedIdentifier\": \"**** 0006\",\n" +
-                "      \"currencyNumericCode\": 356,\n" +
-                "      \"isDefault\": true\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 185,\n" +
-                "      \"acquirerName\": \"Mastercard\",\n" +
-                "      \"issuerName\": \"Ecobank\",\n" +
-                "      \"name\": \"MastercardBlack\",\n" +
-                "      \"methodType\": \"CreditCard\",\n" +
-                "      \"balance\": \"120.90\",\n" +
-                "      \"maskedIdentifier\": \"**** 5101\",\n" +
-                "      \"currencyNumericCode\": 356,\n" +
-                "      \"isDefault\": false\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 186,\n" +
-                "      \"acquirerName\": \"Mastercard\",\n" +
-                "      \"issuerName\": \"Ecobank\",\n" +
-                "      \"name\": \"MastercardBlack\",\n" +
-                "      \"methodType\": \"SavingsAccount\",\n" +
-                "      \"balance\": \"21370.00\",\n" +
-                "      \"maskedIdentifier\": \"**** 5102\",\n" +
-                "      \"currencyNumericCode\": 356,\n" +
-                "      \"isDefault\": false\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";
+        String dummyResponse = USER_JSON;
 
         User response = gson.fromJson(dummyResponse, User.class);
 
@@ -168,20 +92,20 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     @Override
     public Call<Merchant> merchant(String identifier) {
-        if (!identifier.equals("12345678")) {
+        if (!identifier.equals(MERCHANT_CODE)) {
             ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "{\"success\": \"false\"}");
             return delegate.returning(Calls.response(Response.error(404, responseBody))).merchant(identifier);
         }
 
         String dummyResponse = "{\n" +
-                "  \"name\": \"FarmtoTable F&B\",\n" +
+                "  \"name\": \"" + MERCHANT_NAME + "\",\n" +
                 "  \"city\": \"Delhi\",\n" +
                 "  \"countryCode\": \"IN\",\n" +
                 "  \"categoryCode\": \"1234\",\n" +
                 "  \"currencyNumericCode\": \"356\",\n" +
                 "  \"storeId\": \"87654321\",\n" +
                 "  \"terminalNumber\": \"3124652125\",\n" +
-                "  \"identifierMastercard04\": \"5555222233334444\",\n" +
+                "  \"identifierMastercard04\": \"5555222233334444\"\n" +
                 "}";
 
         Merchant response = gson.fromJson(dummyResponse, Merchant.class);
@@ -214,14 +138,14 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     private void sendNotification(PaymentRequest request, PaymentResponse response) {
         final String API_KEY = "AAAAWVlC7eo:APA91bFAAT4qSLOaL2J2wYj5RjynW9-tRSf2HLkdd6wpeQE5qNwJzA3v2kk0vZGXZPU0lsvLIivawCUJ1kG8oUnRJ8jvYihg7IjSn-nd8JhQciJe9ImfaBaCJRdopyJCj7kECJxo9zGw";
-        final String merchantCode = request.getReceiverCardNumber();
+        final String merchantIdentifier = request.getReceiverCardNumber();
 
         GCMMessage message = new GCMMessage(request.getTransactionAmount(), request.getTip(), request.getCurrency(), response.getTransactionDate(), response.getTransactionReference(), request.getTerminalNumber(), response.getInvoiceNumber());
 
         try {
             // Prepare JSON containing the GCM message content. What to send and where to send.
             Map<String, Object> data = new HashMap<>();
-            data.put("to", "/topics/" + merchantCode);
+            data.put("to", "/topics/" + merchantIdentifier);
             data.put("data", message);
 
             // Create connection to send GCM Message request.
@@ -268,4 +192,45 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
             this.invoiceNumber = invoiceNumber;
         }
     }
+
+    private final static String USER_JSON = "{\n" +
+            "  \"id\": 62,\n" +
+            "  \"firstName\": \"Muhammad\",\n" +
+            "  \"lastName\": \"Azeem\",\n" +
+            "  \"paymentInstruments\": [\n" +
+            "    {\n" +
+            "      \"id\": 184,\n" +
+            "      \"acquirerName\": \"Mastercard\",\n" +
+            "      \"issuerName\": \"Ecobank\",\n" +
+            "      \"name\": \"MastercardGold\",\n" +
+            "      \"methodType\": \"DebitCard\",\n" +
+            "      \"balance\": \"5100.20\",\n" +
+            "      \"maskedIdentifier\": \"**** 0006\",\n" +
+            "      \"currencyNumericCode\": 356,\n" +
+            "      \"isDefault\": true\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": 185,\n" +
+            "      \"acquirerName\": \"Mastercard\",\n" +
+            "      \"issuerName\": \"Ecobank\",\n" +
+            "      \"name\": \"MastercardBlack\",\n" +
+            "      \"methodType\": \"CreditCard\",\n" +
+            "      \"balance\": \"120.90\",\n" +
+            "      \"maskedIdentifier\": \"**** 5101\",\n" +
+            "      \"currencyNumericCode\": 356,\n" +
+            "      \"isDefault\": false\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": 186,\n" +
+            "      \"acquirerName\": \"Mastercard\",\n" +
+            "      \"issuerName\": \"Ecobank\",\n" +
+            "      \"name\": \"MastercardBlack\",\n" +
+            "      \"methodType\": \"SavingsAccount\",\n" +
+            "      \"balance\": \"21370.00\",\n" +
+            "      \"maskedIdentifier\": \"**** 5102\",\n" +
+            "      \"currencyNumericCode\": 356,\n" +
+            "      \"isDefault\": false\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}";
 }
