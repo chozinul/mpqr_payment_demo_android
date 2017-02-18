@@ -55,4 +55,8 @@ public class LoginManager {
         setLoggedInUserId(-1);
         setToken(null);
     }
+
+    public String lastAccessToken() {
+        return "12345678";
+    }
 }
