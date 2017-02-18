@@ -36,6 +36,11 @@ public class MerchantPresenter implements MerchantContract.Presenter {
 
     @Override
     public void moveToNextStep() {
+        // Ignore if loading
+        if (merchantRequest != null) {
+            return;
+        }
+
         if (merchant == null) {
             mView.showInvalidMerchantError();
             return;
