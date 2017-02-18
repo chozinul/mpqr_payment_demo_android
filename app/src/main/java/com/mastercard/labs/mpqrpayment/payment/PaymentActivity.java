@@ -12,10 +12,8 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,9 +42,9 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnEditorAction;
 
-public class PaymentActivity extends AppCompatActivity implements PaymentContract.View, AmountEditText.AmountListener {
+public class PaymentActivity extends AppCompatActivity implements PaymentContract.View, AmountEditText.AmountListener,
+        TextView.OnEditorActionListener {
     public static String BUNDLE_PAYMENT_DATA_KEY = "paymentData";
 
     private PaymentContract.Presenter presenter;
@@ -174,19 +172,6 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
         pay();
     }
 
-    @OnEditorAction(value = {R.id.txt_amount_value, R.id.txt_tip_value})
-    public boolean onEditorAction(EditText editText, int id, KeyEvent event) {
-        if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
-            return false;
-        }
-
-        if (id == R.id.action_pay || id == EditorInfo.IME_NULL) {
-            pay();
-            return true;
-        }
-        return false;
-    }
-
     private void pay() {
         presenter.makePayment();
     }
@@ -245,15 +230,13 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void disableTipChange() {
         toggleLayout(tipLayout, tipTitleTextView, tipEditText, false);
-        amountEditText.setImeActionLabel(getString(R.string.pay), R.id.action_pay);
-        amountEditText.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
+        toggleTipEditable(false);
     }
 
     @Override
     public void enableTipChange() {
         toggleLayout(tipLayout, tipTitleTextView, tipEditText, true);
-        amountEditText.setImeActionLabel(getString(R.string.action_next), 0);
-        amountEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        toggleTipEditable(true);
     }
 
     private void toggleLayout(RelativeLayout layout, TextView titleTextView, EditText editText, boolean enabled) {
@@ -284,16 +267,30 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     public void hideTipInformation() {
         topBorderTip.setVisibility(View.GONE);
         tipLayout.setVisibility(View.GONE);
-        amountEditText.setImeActionLabel(getString(R.string.pay), R.id.action_pay);
-        amountEditText.setImeOptions(EditorInfo.IME_ACTION_UNSPECIFIED);
+        toggleTipEditable(false);
     }
 
     @Override
     public void showTipInformation() {
         topBorderTip.setVisibility(View.VISIBLE);
         tipLayout.setVisibility(View.VISIBLE);
-        amountEditText.setImeActionLabel(getString(R.string.action_next), 0);
-        amountEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+        toggleTipEditable(true);
+    }
+
+    private void toggleTipEditable(boolean isEditable) {
+        if (isEditable) {
+            amountEditText.setImeActionLabel(getString(R.string.action_next), EditorInfo.IME_ACTION_NEXT);
+            amountEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+            amountEditText.setOnEditorActionListener(null);
+            tipEditText.setOnEditorActionListener(this);
+        } else {
+            amountEditText.setImeActionLabel(getString(R.string.pay), EditorInfo.IME_ACTION_GO);
+            amountEditText.setImeOptions(EditorInfo.IME_ACTION_GO);
+
+            amountEditText.setOnEditorActionListener(this);
+            tipEditText.setOnEditorActionListener(null);
+        }
     }
 
     @Override
@@ -461,5 +458,19 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void close() {
         finish();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+        if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
+            return false;
+        }
+
+        if (actionId == R.id.action_pay || actionId == EditorInfo.IME_NULL) {
+            KeyboardUtils.hideKeyboard(this);
+            pay();
+            return true;
+        }
+        return false;
     }
 }
