@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mastercard.labs.mpqrpayment.MainApplication;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.activity.MainActivity;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
@@ -41,6 +42,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @BindView(R.id.login_form)
     View mLoginFormView;
 
+    @BindView(R.id.txt_app_version)
+    TextView mAppVersionTextView;
+
     @BindView(R.id.sign_in_btn)
     Button mSignInButton;
 
@@ -52,6 +56,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         ButterKnife.bind(this);
 
         getWindow().setBackgroundDrawableResource(R.drawable.background_login);
+
+        mAppVersionTextView.setText(MainApplication.APP_VERSION);
 
         mPinEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
