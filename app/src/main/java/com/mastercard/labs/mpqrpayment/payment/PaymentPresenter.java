@@ -7,9 +7,14 @@ import com.mastercard.labs.mpqrpayment.data.model.Receipt;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
+import com.mastercard.labs.mpqrpayment.service.NotificationService;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +31,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     private PaymentContract.View paymentView;
     private DataSource dataSource;
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
     private PaymentData paymentData;
     private PaymentInstrument paymentInstrument;
@@ -197,7 +203,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
         paymentView.showProcessingPaymentLoading();
 
         // TODO: Pick correct identifier
-        String receiverIdentifier = paymentData.getMerchant().getIdentifierMastercard04();
+        final String receiverIdentifier = paymentData.getMerchant().getIdentifierMastercard04();
         final PaymentRequest requestData = new PaymentRequest(receiverIdentifier, paymentData.getCardId(), paymentData.getCurrencyNumericCode(), paymentData.getTransactionAmount(), paymentData.getTipAmount(), paymentData.getMerchant().getTerminalNumber());
 
         paymentRequest = ServiceGenerator.getInstance().mpqrPaymentService().makePayment(requestData);
@@ -221,6 +227,23 @@ class PaymentPresenter implements PaymentContract.Presenter {
                     }
                     return;
                 }
+
+                // Send notification
+                final Map<String, Object> message = new HashMap<>();
+                message.put("transactionAmount", requestData.getTransactionAmount());
+                message.put("tipAmount", requestData.getTip());
+                message.put("currencyNumericCode", requestData.getCurrency());
+                message.put("terminalNumber", requestData.getTerminalNumber());
+                message.put("transactionDate", paymentResponse.getTransactionDate());
+                message.put("referenceId", paymentResponse.getTransactionReference());
+                message.put("invoiceNumber", paymentResponse.getInvoiceNumber());
+
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        NotificationService.getInstance().sendNotification(receiverIdentifier, message);
+                    }
+                });
 
                 // Update card amount
                 PaymentInstrument paymentInstrument = dataSource.getCard(requestData.getSenderCardId());
