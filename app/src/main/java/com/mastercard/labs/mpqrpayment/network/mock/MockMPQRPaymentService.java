@@ -46,6 +46,15 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     private final static String MERCHANT_CODE = "87654321";
     private final static String MERCHANT_NAME = "Go Go Transport";
 
+    private static final String MERCHANT_IDENTIFIER;
+    static {
+        if (BuildConfig.FLAVOR.equals("india")) {
+            MERCHANT_IDENTIFIER = "5555666677778888";
+        } else {
+            MERCHANT_IDENTIFIER = "5555222233334444";
+        }
+    }
+
     private final static String RANDOM_STRING_CHARS = "0123456789ABCDEDGHIJKLMNOPQRSTUVWXYZ";
 
     private final Executor executor = Executors.newSingleThreadExecutor();
@@ -106,6 +115,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
                 "  \"storeId\": \"87654321\",\n" +
                 "  \"terminalNumber\": \"3124652125\",\n" +
                 "  \"identifierMastercard04\": \"5555222233334444\"\n" +
+                "  \"identifierMastercard04\": \"" + MERCHANT_IDENTIFIER + "\"\n" +
                 "}";
 
         Merchant response = gson.fromJson(dummyResponse, Merchant.class);
