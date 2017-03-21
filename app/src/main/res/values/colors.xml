@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#282828</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#E8B406</color>
 
     <color name="colorTextMainColor">#393939</color>
     <color name="colorGrey">#737373</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorYellow">#e8b406</color>
+    <color name="colorDisabledYellowColor">#1fe8b406</color>
     <color name="colorBlackGrey">#343434</color>
     <color name="colorDarkYellow">#C99B22</color>
     <color name="colorLightGrey">#dbdbdb</color>
@@ -24,4 +25,13 @@
     <color name="colorTextBlue">#0082bb</color>
     <color name="colorDisabledDeepSeaBlue">#1F00567e</color>
     <color name="colorLightWhite">#AFFFFFFF</color>
+
+    <color name="colorForgotPin">@color/colorYellow</color>
+
+    <color name="colorButtonColor">@color/colorYellow</color>
+    <color name="colorScannerColor">@color/colorYellow</color>
+    <color name="colorEmphasisTextColor">@color/colorYellow</color>
+
+    <color name="colorEnabledLayoutColor">@color/colorYellow</color>
+    <color name="colorDisabledLayoutColor">@color/colorDisabledYellowColor</color>
 </resources>

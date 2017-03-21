@@ -61,7 +61,7 @@
             android:background="@color/zxing_transparent"
             android:fontFamily="sans-serif-thin"
             android:text="@string/string_cannot_scan"
-            android:textColor="@color/colorLightGreen"
+            android:textColor="@color/colorScannerColor"
             android:textStyle="bold"
             android:textSize="@dimen/size_x"/>
 

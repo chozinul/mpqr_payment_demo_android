@@ -91,7 +91,7 @@
                     android:text="@string/forgot_pin"
                     android:layout_gravity="end"
                     android:gravity="center"
-                    android:textColor="@color/colorLightGreen"
+                    android:textColor="@color/colorForgotPin"
                     android:fontFamily="@string/font_family_medium"
                     android:visibility="invisible"
                     tools:visibility="visible"/>
@@ -125,5 +125,5 @@
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/size_x"
             android:textAllCaps="false"
-            android:background="@color/colorDeepSeaBlue"/>
+            android:background="@color/colorButtonColor"/>
 </LinearLayout>

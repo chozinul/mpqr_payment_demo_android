@@ -79,7 +79,7 @@
                             android:layout_height="match_parent"
                             android:textSize="@dimen/size_24"
                             android:fontFamily="@string/font_family_medium"
-                            android:textColor="@color/colorDeepSeaBlue"
+                            android:textColor="@color/colorEmphasisTextColor"
                             android:layout_below="@id/txt_currency"
                             android:gravity="center"
                             android:paddingStart="10dp"
@@ -231,7 +231,7 @@
                         android:textSize="@dimen/size_small"
                         android:gravity="center"
                         android:background="@color/colorTransparent"
-                        android:textColor="@color/colorDeepSeaBlue"
+                        android:textColor="@color/colorEmphasisTextColor"
                         android:fontFamily="@string/font_family_medium"
                         android:layout_alignTop="@id/txt_payment_card"
                         android:layout_alignBottom="@id/txt_payment_card"
@@ -252,6 +252,6 @@
             android:fontFamily="@string/font_family_medium"
             android:textSize="@dimen/size_x"
             android:textColor="@color/colorWhite"
-            android:background="@color/colorDeepSeaBlue"/>
+            android:background="@color/colorButtonColor"/>
 
 </LinearLayout>

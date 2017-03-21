@@ -38,7 +38,7 @@
                     android:layout_margin="10dp"
                     android:padding="10dp"
                     android:text="@string/what_is_merchant_code"
-                    android:textColor="@color/colorTextBlue"
+                    android:textColor="@color/colorEmphasisTextColor"
                     android:fontFamily="@string/font_family_medium"
                     android:textSize="@dimen/size_14"
                     android:gravity="center"/>
@@ -189,6 +189,6 @@
             android:text="@string/action_next"
             android:textStyle="bold"
             android:textColor="@color/colorWhite"
-            android:background="@color/colorDeepSeaBlue"/>
+            android:background="@color/colorButtonColor"/>
 
 </LinearLayout>
