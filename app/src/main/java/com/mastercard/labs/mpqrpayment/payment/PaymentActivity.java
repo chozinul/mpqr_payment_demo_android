@@ -246,8 +246,8 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
             editText.setEnabled(true);
         } else {
             // TODO: Remove line below edit text
-            layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledDeepSeaBlue));
-            titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorDeepSeaBlue));
+            layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledLayoutColor));
+            titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorEnabledLayoutColor));
             editText.setEnabled(false);
         }
     }
