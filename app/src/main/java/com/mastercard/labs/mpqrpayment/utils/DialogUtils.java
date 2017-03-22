@@ -2,11 +2,15 @@ package com.mastercard.labs.mpqrpayment.utils;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
@@ -27,11 +31,28 @@ public class DialogUtils {
     }
 
     private static AlertDialog.Builder customAlertDialogBuilder(Context context) {
-        TextView titleEditTextView = new TextView(context);
-        titleEditTextView.setBackgroundResource(R.drawable.alert_title_header);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.alert_title_header, options);
+
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        ImageView titleImageView = new ImageView(context);
+        titleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        titleImageView.setImageResource(R.drawable.alert_title_header);
+        titleImageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, options.outHeight));
+
+        View borderView = new View(context);
+        borderView.setBackgroundResource(R.drawable.drawable_divider);
+        borderView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, context.getResources().getDimensionPixelSize(R.dimen.divider_height)));
+
+        layout.addView(titleImageView);
+        layout.addView(borderView);
 
         return new AlertDialog.Builder(context)
-                .setCustomTitle(titleEditTextView);
+                .setCustomTitle(layout);
     }
 
     public static AlertDialog.Builder customAlertDialogBuilder(Context context, @StringRes int message) {

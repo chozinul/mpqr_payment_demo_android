@@ -15,9 +15,11 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-        <View
+        <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="48dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/main_header"/>
     </android.support.v7.widget.Toolbar>
 
     <me.crosswall.lib.coverflow.core.PagerContainer
