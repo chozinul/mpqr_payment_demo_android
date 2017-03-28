@@ -1,5 +1,7 @@
 package com.mastercard.labs.mpqrpayment.merchant;
 
+import android.content.Context;
+
 import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
@@ -19,17 +21,18 @@ public class MerchantPresenter implements MerchantContract.Presenter {
     private final long cardId;
     private final String currencyNumericCode;
 
+    private Context mContext;
     private Merchant merchant;
     private Call<Merchant> merchantRequest;
 
-    public MerchantPresenter(long userId, long cardId, String currencyNumericCode, MerchantContract.View view) {
+    public MerchantPresenter(long userId, long cardId, String currencyNumericCode, MerchantContract.View view, Context context) {
         this.userId = userId;
         this.cardId = cardId;
         this.currencyNumericCode = currencyNumericCode;
         this.mView = view;
+        this.mContext = context;
     }
 
-    @Override
     public void start() {
         showMerchant();
     }
@@ -73,7 +76,7 @@ public class MerchantPresenter implements MerchantContract.Presenter {
 
         mView.showInfoProgress();
 
-        merchantRequest = ServiceGenerator.getInstance().mpqrPaymentService().merchant(merchantCode);
+        merchantRequest = ServiceGenerator.getInstance().mpqrPaymentService().merchant(merchantCode, mContext);
         merchantRequest.enqueue(new Callback<Merchant>() {
             @Override
             public void onResponse(Call<Merchant> call, Response<Merchant> response) {

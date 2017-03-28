@@ -77,7 +77,7 @@ public class MerchantActivity extends AppCompatActivity implements MerchantContr
             currencyNumericCode = getIntent().getStringExtra(BUNDLE_CURRENCY_NUMERIC_CODE_KEY);
         }
 
-        presenter = new MerchantPresenter(userId, selectedCardId, currencyNumericCode, this);
+        presenter = new MerchantPresenter(userId, selectedCardId, currencyNumericCode, this, this.getBaseContext());
     }
 
     @Override

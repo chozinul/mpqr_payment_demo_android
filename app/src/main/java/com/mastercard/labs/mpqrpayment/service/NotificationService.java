@@ -52,6 +52,7 @@ public class NotificationService {
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
 
+
             // Send GCM message content.
             OutputStream outputStream = conn.getOutputStream();
             outputStream.write(gson.toJson(data).getBytes());

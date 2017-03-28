@@ -3,6 +3,8 @@ package com.mastercard.labs.mpqrpayment.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mastercard.labs.mpqrpayment.utils.CalculateCode;
+
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/8/17
  */
@@ -18,6 +20,7 @@ public class Merchant implements Parcelable {
     private String identifierNPCI07;
     private String terminalNumber;
     private String storeId;
+    private String merchantId;
 
     public String getName() {
         return name;
@@ -65,6 +68,7 @@ public class Merchant implements Parcelable {
 
     public void setIdentifierMastercard04(String identifierMastercard04) {
         this.identifierMastercard04 = identifierMastercard04;
+        this.merchantId = CalculateCode.calculate8digit(identifierMastercard04);
     }
 
     public String getIdentifierMastercard05() {
@@ -107,6 +111,9 @@ public class Merchant implements Parcelable {
         this.storeId = storeId;
     }
 
+    public String getMerchantCode() {
+        return this.merchantId;
+    }
     @Override
     public int describeContents() {
         return 0;
@@ -142,6 +149,7 @@ public class Merchant implements Parcelable {
         this.identifierNPCI07 = in.readString();
         this.terminalNumber = in.readString();
         this.storeId = in.readString();
+        this.merchantId = CalculateCode.calculate8digit(identifierMastercard04);
     }
 
     public static final Creator<Merchant> CREATOR = new Creator<Merchant>() {

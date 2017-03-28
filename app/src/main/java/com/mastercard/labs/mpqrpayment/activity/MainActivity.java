@@ -4,14 +4,18 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +36,7 @@ import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
+import com.mastercard.labs.mpqrpayment.settings.SettingsActivity;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
@@ -39,6 +44,7 @@ import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private Long userId;
     private User user;
     private int selectedCardIdx = -1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +111,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         if (savedInstanceState != null) {
             selectedCardIdx = savedInstanceState.getInt(BUNDLE_SELECTED_CARD_IDX, -1);
+
+
         }
+
     }
 
     @Override
@@ -114,24 +122,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onResume();
 
         invalidateViews();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout:
-                logout();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -356,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
     }
 
-    private void logout() {
+    @OnClick(value = R.id.btn_logout)
+    public void logout() {
         showLogoutProgress();
 
         ServiceGenerator.getInstance().mpqrPaymentService().logout().enqueue(new Callback<Void>() {
@@ -387,6 +378,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void showLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        startActivity(intent);
+    }
+
+
+    @OnClick(value = R.id.img_settings)
+    public void showSettings() {
+        Intent intent = SettingsActivity.newIntent(this);
 
         startActivity(intent);
     }

@@ -51,6 +51,8 @@
     <item name="visible" type="id"/>
     <item name="masked" type="id"/>
     <string name="title_activity_merchant">Merchant Account</string>
+    <string name = "title_activity_settings"> Settings</string>
+    <string name="enter_merchant_card">Please enter 16-digit Merchant Code</string>
     <string name="enter_merchant_code">Please enter 8-digit Merchant Code</string>
     <string name="what_is_merchant_code">What is Merchant Code?</string>
     <string name="merchant_code_length">8</string>
@@ -58,6 +60,7 @@
     <string name="merchant_city">City</string>
     <string name="action_next">Next</string>
     <string name="invalid_merchant_error_message">Invalid merchant information. Please try again</string>
+    <string name="settings">Settings</string>
     <string name="logout">Logout</string>
     <string name="logout_failed">Logout Failed. Please try again.</string>
     <string name="logging_out">Logging out…</string>
@@ -70,7 +73,16 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ask_cancel_confirmation">Do you want to cancel?</string>
+
+    <string name="card_number">Card Number</string>
+    <string name="enter_card_number">Enter card number</string>
+    <string name="error_invalid_card_number">Invalid card number</string>
+    <string name="enter_merchant_name">Please enter name</string>
+
+    <string name="edit_merchant">Edit Merchant</string>
     <string name="merchant_name">Merchant Name</string>
+    <string name="preference_file_key">merchantList</string>
+    <string name="delete">Delete</string>
 
     <!--Fonts-->
     <string name="font_family_light">sans-serif-light</string>

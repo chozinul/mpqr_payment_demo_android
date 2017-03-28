@@ -1,5 +1,7 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
+import android.util.Log;
+
 import com.mastercard.labs.mpqrpayment.data.DataSource;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
@@ -196,6 +198,8 @@ class PaymentPresenter implements PaymentContract.Presenter {
     }
 
     private void requestPayment() {
+
+
         if (paymentRequest != null) {
             paymentRequest.cancel();
         }
@@ -205,6 +209,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
         // TODO: Pick correct identifier
         final String receiverIdentifier = paymentData.getMerchant().getIdentifierMastercard04();
         final PaymentRequest requestData = new PaymentRequest(receiverIdentifier, paymentData.getCardId(), paymentData.getCurrencyNumericCode(), paymentData.getTransactionAmount(), paymentData.getTipAmount(), paymentData.getMerchant().getTerminalNumber());
+        final String merchantCode =  paymentData.getMerchant().getMerchantCode();
 
         paymentRequest = ServiceGenerator.getInstance().mpqrPaymentService().makePayment(requestData);
         paymentRequest.enqueue(new Callback<PaymentResponse>() {
@@ -241,7 +246,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 executor.execute(new Runnable() {
                     @Override
                     public void run() {
-                        NotificationService.getInstance().sendNotification(receiverIdentifier, message);
+                        NotificationService.getInstance().sendNotification(merchantCode, message);
                     }
                 });
 

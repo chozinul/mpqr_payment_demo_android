@@ -1,9 +1,14 @@
 package com.mastercard.labs.mpqrpayment.network.mock;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import com.mastercard.labs.mpqrpayment.BuildConfig;
+import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
@@ -13,10 +18,12 @@ import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.LoginResponse;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
+import com.mastercard.labs.mpqrpayment.settings.SettingsPresenter;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Date;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
@@ -32,17 +39,15 @@ import retrofit2.mock.Calls;
 public class MockMPQRPaymentService implements MPQRPaymentService {
     private final static String TAG = MockMPQRPaymentService.class.getName();
     private final static int RANDOM_STRING_LENGTH = 8;
-    private final static String MERCHANT_CODE = "87654321";
-    private final static String MERCHANT_NAME = "Go Go Transport";
 
-    private static final String MERCHANT_IDENTIFIER;
-    static {
-        if (BuildConfig.FLAVOR.equals("india")) {
-            MERCHANT_IDENTIFIER = "5555666677778888";
-        } else {
-            MERCHANT_IDENTIFIER = "5555222233334444";
-        }
-    }
+//    private static final String MERCHANT_IDENTIFIER;
+//    static {
+//        if (BuildConfig.FLAVOR.equals("india")) {
+//            MERCHANT_IDENTIFIER = "5555666677778888";
+//        } else {
+//            MERCHANT_IDENTIFIER = "5555222233334444";
+//        }
+//    }
 
     private final static String RANDOM_STRING_CHARS = "0123456789ABCDEDGHIJKLMNOPQRSTUVWXYZ";
 
@@ -87,26 +92,33 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     }
 
     @Override
-    public Call<Merchant> merchant(String identifier) {
-        if (!identifier.equals(MERCHANT_CODE)) {
+    public Call<Merchant> merchant(String identifier, Context mContext) {
+
+        SharedPreferences sharedPref = mContext.getSharedPreferences(mContext.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        if (!sharedPref.contains(identifier))
+        {
             ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "{\"success\": \"false\"}");
-            return delegate.returning(Calls.response(Response.error(404, responseBody))).merchant(identifier);
+            return delegate.returning(Calls.response(Response.error(404, responseBody))).merchant(identifier, mContext);
         }
 
+        String[] merchant;
+        sharedPref.getString(identifier, "");
+
+        merchant = sharedPref.getString(identifier, "").split("\\|");
         String dummyResponse = "{\n" +
-                "  \"name\": \"" + MERCHANT_NAME + "\",\n" +
+                "  \"name\": \"" + merchant[0] + "\",\n" +
                 "  \"city\": \"Delhi\",\n" +
                 "  \"countryCode\": \"IN\",\n" +
                 "  \"categoryCode\": \"1234\",\n" +
                 "  \"currencyNumericCode\": \"356\",\n" +
                 "  \"storeId\": \"87654321\",\n" +
                 "  \"terminalNumber\": \"3124652125\",\n" +
-                "  \"identifierMastercard04\": \"" + MERCHANT_IDENTIFIER + "\"\n" +
+                "  \"identifierMastercard04\": \"" + merchant[1] + "\"\n" +
                 "}";
 
         Merchant response = gson.fromJson(dummyResponse, Merchant.class);
 
-        return delegate.returningResponse(response).merchant(identifier);
+        return delegate.returningResponse(response).merchant(identifier, mContext);
     }
 
     @Override

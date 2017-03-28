@@ -61,6 +61,15 @@
                 android:name=".activity.CustomizedPPCaptureActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/CustomizeScanTheme" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

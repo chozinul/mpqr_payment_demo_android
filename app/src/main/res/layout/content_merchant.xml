@@ -70,14 +70,14 @@
                         android:id="@+id/txt_merchant_code_value"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/txt_merchant_code"
-                        android:inputType="numberDecimal"
+                    android:inputType="numberDecimal"
                         android:digits="0123456789"
-                        android:layout_toStartOf="@+id/pb_merchant_info"
-                        android:textSize="@dimen/size_xx"
+                    android:textSize="@dimen/size_xx"
                         android:fontFamily="@string/font_family_medium"
                         tools:drawableEnd="@drawable/success_tick"
-                        tools:text="12345678"/>
+                        tools:text="12345678"
+                    android:layout_below="@+id/txt_merchant_code"
+                    android:layout_alignParentStart="true" />
 
                 <ProgressBar
                         android:id="@+id/pb_merchant_info"

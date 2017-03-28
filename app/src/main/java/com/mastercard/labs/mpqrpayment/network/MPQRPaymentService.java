@@ -1,5 +1,7 @@
 package com.mastercard.labs.mpqrpayment.network;
 
+import android.content.Context;
+
 import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
@@ -27,7 +29,7 @@ public interface MPQRPaymentService {
     Call<User> consumer();
 
     @GET("/merchant/{id}")
-    Call<Merchant> merchant(@Path("id") String identifier);
+    Call<Merchant> merchant(@Path("id") String identifier, Context mContext);
 
     @POST("/qr-pay")
     Call<PaymentResponse> makePayment(@Body PaymentRequest request);
