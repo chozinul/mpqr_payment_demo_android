@@ -6,8 +6,8 @@
         android:id="@+id/zxing_barcode_surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:zxing_framing_rect_width="200dp"
-        app:zxing_framing_rect_height="200dp"/>
+        app:zxing_framing_rect_width="@dimen/view_finder_width"
+        app:zxing_framing_rect_height="@dimen/view_finder_height"/>
 
     <com.mastercard.mpqr.pushpayment.scan.view.PPQrFinderIndicatorView
         android:id="@+id/zxing_viewfinder_view"
