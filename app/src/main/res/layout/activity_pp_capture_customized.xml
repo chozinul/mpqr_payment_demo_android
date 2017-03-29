@@ -51,18 +51,4 @@
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/size_x"/>
 
-    <TextView
-            android:id="@+id/txt_cannot_scan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/spacer2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="@color/zxing_transparent"
-            android:fontFamily="sans-serif-thin"
-            android:text="@string/string_cannot_scan"
-            android:textColor="@color/colorScannerColor"
-            android:textStyle="bold"
-            android:textSize="@dimen/size_x"/>
-
 </RelativeLayout>

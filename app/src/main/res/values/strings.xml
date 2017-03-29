@@ -66,7 +66,7 @@
     <string name="insufficient_balance_error">Insufficient balance. Please try with another method.</string>
     <string name="error_tip_change_not_allowed">Tip change is not allowed</string>
     <string name="explain_merchant_code">It is a unique ID formatted of 8 digit number that assigned to identify a merchant once enrolled into Masterpass QR platform.  You can always inquire Merchant Code from merchant owner.</string>
-    <string name="error_cannot_scan_enter_manual">Cannot scan QR code successfully. Please try manual entry.</string>
+    <string name="error_cannot_scan_qr">Cannot scan QR code successfully. Please try again.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="ask_cancel_confirmation">Do you want to cancel?</string>

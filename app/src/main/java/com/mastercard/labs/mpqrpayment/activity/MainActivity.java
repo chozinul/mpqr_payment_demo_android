@@ -26,7 +26,6 @@ import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.login.LoginActivity;
-import com.mastercard.labs.mpqrpayment.merchant.MerchantActivity;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
@@ -253,25 +252,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     cannotScanQR();
                 }
             }
-        } else if (resultCode == CustomizedPPCaptureActivity.RESULT_CANNOT_SCAN_QR) {
-            showMerchantActivity();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void cannotScanQR() {
-        DialogUtils.customAlertDialogBuilder(this, R.string.error_cannot_scan_enter_manual).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        DialogUtils.customAlertDialogBuilder(this, R.string.error_cannot_scan_qr).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-            }
-        }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
-                showMerchantActivity();
             }
         }).create().show();
     }
@@ -280,14 +270,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         PaymentData paymentData = paymentData(pushPaymentData);
 
         Intent intent = PaymentActivity.newIntent(this, paymentData);
-        startActivity(intent);
-    }
-
-    private void showMerchantActivity() {
-        Long userId = user.getId();
-        PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
-
-        Intent intent = MerchantActivity.newIntent(this, userId, selectedPaymentInstrument.getId(), "356");
         startActivity(intent);
     }
 

@@ -3,9 +3,7 @@ package com.mastercard.labs.mpqrpayment.network.mock;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import com.mastercard.labs.mpqrpayment.BuildConfig;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
-import com.mastercard.labs.mpqrpayment.data.model.Merchant;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
@@ -32,17 +30,6 @@ import retrofit2.mock.Calls;
 public class MockMPQRPaymentService implements MPQRPaymentService {
     private final static String TAG = MockMPQRPaymentService.class.getName();
     private final static int RANDOM_STRING_LENGTH = 8;
-    private final static String MERCHANT_CODE = "87654321";
-    private final static String MERCHANT_NAME = "Go Go Transport";
-
-    private static final String MERCHANT_IDENTIFIER;
-    static {
-        if (BuildConfig.FLAVOR.equals("india")) {
-            MERCHANT_IDENTIFIER = "5555666677778888";
-        } else {
-            MERCHANT_IDENTIFIER = "5555222233334444";
-        }
-    }
 
     private final static String RANDOM_STRING_CHARS = "0123456789ABCDEDGHIJKLMNOPQRSTUVWXYZ";
 
@@ -84,29 +71,6 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
         User response = gson.fromJson(dummyResponse, User.class);
 
         return delegate.returningResponse(response).consumer();
-    }
-
-    @Override
-    public Call<Merchant> merchant(String identifier) {
-        if (!identifier.equals(MERCHANT_CODE)) {
-            ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "{\"success\": \"false\"}");
-            return delegate.returning(Calls.response(Response.error(404, responseBody))).merchant(identifier);
-        }
-
-        String dummyResponse = "{\n" +
-                "  \"name\": \"" + MERCHANT_NAME + "\",\n" +
-                "  \"city\": \"Delhi\",\n" +
-                "  \"countryCode\": \"IN\",\n" +
-                "  \"categoryCode\": \"1234\",\n" +
-                "  \"currencyNumericCode\": \"356\",\n" +
-                "  \"storeId\": \"87654321\",\n" +
-                "  \"terminalNumber\": \"3124652125\",\n" +
-                "  \"identifierMastercard04\": \"" + MERCHANT_IDENTIFIER + "\"\n" +
-                "}";
-
-        Merchant response = gson.fromJson(dummyResponse, Merchant.class);
-
-        return delegate.returningResponse(response).merchant(identifier);
     }
 
     @Override
