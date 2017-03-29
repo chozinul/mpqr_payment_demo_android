@@ -12,4 +12,7 @@
 
     <color name="colorEditTextActivated">@color/colorWhite</color>
     <color name="colorEditTextHighlighted">@color/colorWhite</color>
+
+    <color name="colorTextInputLayout">@color/colorWhite</color>
+    <color name="colorTextHint">@color/colorGrey</color>
 </resources>

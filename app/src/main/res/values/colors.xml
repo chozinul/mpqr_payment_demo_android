@@ -37,4 +37,7 @@
 
     <color name="colorEditTextActivated">@color/colorYellow</color>
     <color name="colorEditTextHighlighted">@color/colorYellow</color>
+
+    <color name="colorTextInputLayout">@color/colorYellow</color>
+    <color name="colorTextHint">@color/colorWhite</color>
 </resources>
