@@ -21,7 +21,6 @@
 
     <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorYellow</item>
-
     </style>
 
     <style name="LightEditTextStyle" parent="AppTheme">
