@@ -9,4 +9,7 @@
     <color name="colorButtonColor">@color/colorDeepSeaBlue</color>
     <color name="colorScannerColor">@color/colorLightGreen</color>
     <color name="colorEmphasisTextColor">@color/colorDeepSeaBlue</color>
+
+    <color name="colorEditTextActivated">@color/colorWhite</color>
+    <color name="colorEditTextHighlighted">@color/colorWhite</color>
 </resources>

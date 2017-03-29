@@ -34,4 +34,7 @@
 
     <color name="colorEnabledLayoutColor">@color/colorYellow</color>
     <color name="colorDisabledLayoutColor">@color/colorDisabledYellowColor</color>
+
+    <color name="colorEditTextActivated">@color/colorYellow</color>
+    <color name="colorEditTextHighlighted">@color/colorYellow</color>
 </resources>
