@@ -1,5 +1,6 @@
 package com.mastercard.labs.mpqrpayment.data.model;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import io.realm.RealmObject;
@@ -90,6 +91,10 @@ public class PaymentInstrument extends RealmObject {
 
     public void setDefault(Boolean aDefault) {
         isDefault = aDefault;
+    }
+
+    public String getFormattedAmount() {
+        return String.format(Locale.getDefault(), "%,.2f", getBalance());
     }
 
     @Override

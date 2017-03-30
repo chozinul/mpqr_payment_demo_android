@@ -221,7 +221,7 @@ public enum CurrencyCode {
 
     public static String formatAmount(Double amount, String currencyNumericCode) {
         CurrencyCode currencyCode = CurrencyCode.fromNumericCode(currencyNumericCode);
-        String balanceAmount = String.format(Locale.getDefault(), "%.2f", amount);;
+        String balanceAmount = String.format(Locale.getDefault(), "%.2f", amount);
         if (currencyCode != null) {
             try {
                 Currency currency = Currency.getInstance(currencyCode.toString());

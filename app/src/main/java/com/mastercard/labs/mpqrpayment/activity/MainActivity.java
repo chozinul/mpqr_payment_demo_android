@@ -155,9 +155,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void updateBalance() {
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
-        String balanceAmount = CurrencyCode.formatAmount(selectedPaymentInstrument.getBalance(), selectedPaymentInstrument.getCurrencyNumericCode());
-
-        availableBalanceTextView.setText(balanceAmount);
+        availableBalanceTextView.setText(selectedPaymentInstrument.getFormattedAmount());
     }
 
     @Override

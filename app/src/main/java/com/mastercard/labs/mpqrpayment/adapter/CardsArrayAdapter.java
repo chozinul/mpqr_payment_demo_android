@@ -50,7 +50,7 @@ public class CardsArrayAdapter extends ArrayAdapter<PaymentInstrument> {
 
         cardLogo.setImageResource(DrawableUtils.getPaymentMethodLogo(paymentInstrument));
         cardNumber.setText(paymentInstrument.getMaskedIdentifier());
-        String balanceText = CurrencyCode.formatAmount(paymentInstrument.getBalance(), paymentInstrument.getCurrencyNumericCode());
+        String balanceText = paymentInstrument.getFormattedAmount();
         balance.setText(getContext().getString(R.string.balance_of_card, balanceText));
 
         radioButton.setChecked(selectedIndex == position);
