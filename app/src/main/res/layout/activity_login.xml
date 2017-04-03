@@ -36,7 +36,7 @@
 
             <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/bank_logo"
                     android:contentDescription="@string/logo"
                     android:layout_marginBottom="40dp"/>
@@ -123,7 +123,6 @@
             android:layout_gravity="bottom"
             android:text="@string/action_sign_in"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/size_x"
-            android:textAllCaps="false"
+            android:textStyle="bold"
             android:background="@color/colorButtonColor"/>
 </LinearLayout>
