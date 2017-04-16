@@ -1,14 +1,9 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+.idea
 .DS_Store
 /build
 /captures
 .externalNativeBuild
-.idea/dictionaries
 *.apk
-.idea/markdown-exported-files.xml
-.idea/markdown-navigator.xml
-.idea/markdown-navigator/profiles_settings.xml
