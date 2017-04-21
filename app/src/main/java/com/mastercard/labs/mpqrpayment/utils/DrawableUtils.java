@@ -11,7 +11,11 @@ import com.mastercard.labs.mpqrpayment.data.model.MethodType;
  */
 public class DrawableUtils {
     public static @DrawableRes int getPaymentMethodLogo(PaymentInstrument paymentInstrument) {
-        MethodType methodType = MethodType.fromString(paymentInstrument.getMethodType());
+        return getPaymentMethodLogo(paymentInstrument.getMethodType());
+    }
+
+    public static @DrawableRes int getPaymentMethodLogo(String methodTypeString) {
+        MethodType methodType = MethodType.fromString(methodTypeString);
 
         @DrawableRes int imageId = 0;
         switch (methodType) {

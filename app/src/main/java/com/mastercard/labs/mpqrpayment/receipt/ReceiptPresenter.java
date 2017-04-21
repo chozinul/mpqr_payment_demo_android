@@ -32,5 +32,6 @@ public class ReceiptPresenter implements ReceiptContract.Presenter {
         }
 
         view.setMaskedPan(receipt.getMaskedPan());
+        view.setMethodType(receipt.getMethodType());
     }
 }
