@@ -36,7 +36,7 @@ public class NotificationService {
     }
 
     public void sendNotification(String identifier, Map<String, Object> message) {
-        final String API_KEY = "AAAAWVlC7eo:APA91bFAAT4qSLOaL2J2wYj5RjynW9-tRSf2HLkdd6wpeQE5qNwJzA3v2kk0vZGXZPU0lsvLIivawCUJ1kG8oUnRJ8jvYihg7IjSn-nd8JhQciJe9ImfaBaCJRdopyJCj7kECJxo9zGw";
+        final String API_KEY = "AAAAsTfNkdg:APA91bGpXB7bx0_-rhZccZi8rQehp6YBNA74TfXYuQ_9h7iB4r7ZX3OHkKpdvS4UbzZ2DPIWVxzFJ8cMVfZn494dAg8KWg00ClUL1MHnK9nhJFSjKTURQRdRzL8Gg39uaNbcDcHMrnto";
 
         try {
             // Prepare JSON containing the GCM message content. What to send and where to send.

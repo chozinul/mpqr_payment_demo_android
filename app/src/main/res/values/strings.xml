@@ -26,7 +26,7 @@
     <string name="invalid_pin">Invalid PIN</string>
     <string name="payment_failed">Payment failed</string>
     <string name="city">City</string>
-    <string name="payment_card_used">Payment card used</string>
+    <string name="payment_card_used">Payment with</string>
     <string name="tick">tick</string>
     <string name="receipt_success_payment">You have made a successful payment!</string>
     <string name="title_activity_receipt">Completion</string>

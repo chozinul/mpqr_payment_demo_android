@@ -14,8 +14,9 @@ public class Receipt implements Parcelable {
     private Double totalAmount;
     private String currencyCode;
     private String maskedPan;
+    private String methodType;
 
-    public Receipt(String merchantName, String merchantCity, Double amount, Double tipAmount, Double totalAmount, String currencyCode, String maskedPan) {
+    public Receipt(String merchantName, String merchantCity, Double amount, Double tipAmount, Double totalAmount, String currencyCode, String maskedPan, String methodType) {
         this.merchantName = merchantName;
         this.merchantCity = merchantCity;
         this.amount = amount;
@@ -23,6 +24,7 @@ public class Receipt implements Parcelable {
         this.totalAmount = totalAmount;
         this.currencyCode = currencyCode;
         this.maskedPan = maskedPan;
+        this.methodType = methodType;
     }
 
     public String getMerchantName() {
@@ -81,6 +83,13 @@ public class Receipt implements Parcelable {
         this.totalAmount = totalAmount;
     }
 
+    public String getMethodType() {
+        return methodType;
+    }
+
+    public void setMethodType(String methodType) {
+        this.methodType = methodType;
+    }
 
     @Override
     public int describeContents() {
@@ -96,6 +105,7 @@ public class Receipt implements Parcelable {
         dest.writeValue(this.totalAmount);
         dest.writeString(this.currencyCode);
         dest.writeString(this.maskedPan);
+        dest.writeString(this.methodType);
     }
 
     protected Receipt(Parcel in) {
@@ -106,6 +116,7 @@ public class Receipt implements Parcelable {
         this.totalAmount = (Double) in.readValue(Double.class.getClassLoader());
         this.currencyCode = in.readString();
         this.maskedPan = in.readString();
+        this.methodType = in.readString();
     }
 
     public static final Parcelable.Creator<Receipt> CREATOR = new Parcelable.Creator<Receipt>() {
