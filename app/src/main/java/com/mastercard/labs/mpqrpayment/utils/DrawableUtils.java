@@ -16,13 +16,13 @@ public class DrawableUtils {
         @DrawableRes int imageId = 0;
         switch (methodType) {
             case CreditCard:
+                imageId = R.drawable.method_credit_card_logo;
+                break;
             case DebitCard:
-                if (paymentInstrument.getName().toLowerCase().contains("mastercard")) {
-                    imageId = R.drawable.mastercard_logo;
-                }
+                imageId = R.drawable.method_debit_card_logo;
                 break;
             case SavingsAccount:
-                imageId = R.drawable.savings_account_logo;
+                imageId = R.drawable.method_savings_account_logo;
             default:
                 // TODO: Add default paymentInstrument logo
                 break;
