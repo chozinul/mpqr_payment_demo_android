@@ -2,17 +2,17 @@ package com.mastercard.labs.mpqrpayment.receipt;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mastercard.labs.mpqrpayment.R;
-import com.mastercard.labs.mpqrpayment.activity.MainActivity;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
+import com.mastercard.labs.mpqrpayment.utils.DrawableUtils;
 
 import java.util.Locale;
 
@@ -46,6 +46,9 @@ public class ReceiptActivity extends AppCompatActivity implements ReceiptContrac
 
     @BindView(R.id.txt_payment_card_value)
     TextView paymentCardTextView;
+
+    @BindView(R.id.img_card_logo)
+    ImageView imageCardLogo;
 
     public static Intent newIntent(Context context, Receipt receipt) {
         Bundle bundle = new Bundle();
@@ -125,6 +128,11 @@ public class ReceiptActivity extends AppCompatActivity implements ReceiptContrac
     @Override
     public void setMaskedPan(String maskedPan) {
         paymentCardTextView.setText(maskedPan);
+    }
+
+    @Override
+    public void setMethodType(String methodType) {
+        imageCardLogo.setImageResource(DrawableUtils.getPaymentMethodLogo(receipt.getMethodType()));
     }
 
     @Override
