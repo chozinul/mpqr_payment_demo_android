@@ -44,7 +44,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     @Override
     public Call<LoginResponse> login(@Body LoginAccessCodeRequest request) {
-        if (!request.getAccessCode().equals("12345678") || !request.getPin().equals("123456")) {
+        if (request.getAccessCode().length() == 0 || !request.getPin().equals("123456")) {
             ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "{\"success\": \"false\"}");
             return delegate.returning(Calls.response(Response.error(404, responseBody))).login(request);
         }
@@ -111,7 +111,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
             "      \"issuerName\": \"Ecobank\",\n" +
             "      \"name\": \"MastercardBlack\",\n" +
             "      \"methodType\": \"CreditCard\",\n" +
-            "      \"balance\": \"120.90\",\n" +
+            "      \"balance\": \"2500.90\",\n" +
             "      \"maskedIdentifier\": \"**** 5101\",\n" +
             "      \"currencyNumericCode\": 356,\n" +
             "      \"isDefault\": false\n" +
@@ -122,7 +122,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
             "      \"issuerName\": \"Ecobank\",\n" +
             "      \"name\": \"MastercardBlack\",\n" +
             "      \"methodType\": \"SavingsAccount\",\n" +
-            "      \"balance\": \"21370.00\",\n" +
+            "      \"balance\": \"2800.00\",\n" +
             "      \"maskedIdentifier\": \"**** 5102\",\n" +
             "      \"currencyNumericCode\": 356,\n" +
             "      \"isDefault\": false\n" +

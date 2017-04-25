@@ -8,8 +8,8 @@ android {
         applicationId "com.mastercard.labs.mpqrpayment"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 9
-        versionName "1.0.8"
+        versionCode 10
+        versionName "1.0.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -42,7 +42,6 @@ android {
             res.srcDirs = ['src/brands/ecobank/res']
         }
         thailand {
-            java.srcDirs = ['src/brands/thailand/java']
             res.srcDirs = ['src/brands/thailand/res']
         }
         india {
