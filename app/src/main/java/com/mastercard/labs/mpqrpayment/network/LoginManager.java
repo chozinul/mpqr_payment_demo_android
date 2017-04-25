@@ -57,6 +57,6 @@ public class LoginManager {
     }
 
     public String lastAccessToken() {
-        return "12345678";
+        return "jerry";
     }
 }

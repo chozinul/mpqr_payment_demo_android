@@ -42,7 +42,6 @@ android {
             res.srcDirs = ['src/brands/ecobank/res']
         }
         thailand {
-            java.srcDirs = ['src/brands/thailand/java']
             res.srcDirs = ['src/brands/thailand/res']
         }
         india {
