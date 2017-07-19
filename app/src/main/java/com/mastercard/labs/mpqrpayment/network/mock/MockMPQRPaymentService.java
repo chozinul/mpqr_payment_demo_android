@@ -5,17 +5,25 @@ import com.google.gson.GsonBuilder;
 
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
+import com.mastercard.labs.mpqrpayment.data.model.Transaction;
 import com.mastercard.labs.mpqrpayment.data.model.User;
+import com.mastercard.labs.mpqrpayment.network.LoginManager;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.LoginResponse;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
+import com.mastercard.labs.mpqrpayment.utils.PreferenceManager;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import io.realm.RealmList;
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -32,6 +40,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
     private final static int RANDOM_STRING_LENGTH = 8;
 
     private final static String RANDOM_STRING_CHARS = "0123456789ABCDEDGHIJKLMNOPQRSTUVWXYZ";
+    private static final String TRANSACTIONS_LIST_KEY = "merchantTransactions";
 
     private final BehaviorDelegate<MPQRPaymentService> delegate;
 
@@ -49,18 +58,42 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
             return delegate.returning(Calls.response(Response.error(404, responseBody))).login(request);
         }
 
+        // TODO: Handle version updates because that might invalidate stored data in preferences and cause exceptions while parsing as JSON
+        // Parse stored transactions
+        Set<String> transactions = PreferenceManager.getInstance().getStringSet(TRANSACTIONS_LIST_KEY, new HashSet<String>());
+        List<Transaction> transactionList = new ArrayList<>(transactions.size());
+        for (String transaction : transactions) {
+            transactionList.add(gson.fromJson(transaction, Transaction.class));
+        }
+
         String dummyResponse = "{\n" +
                 "  \"user\": " + USER_JSON + "\n," +
                 "  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsInR5cGUiOiJjb25zdW1lciIsImlhdCI6MTQ4NjUyNTcwOSwiZXhwIjoxNDg3ODIxNzA5fQ.QbRK_RG1yr40iKK2GKmnMoBKuLxLg-X2gsKPnolyJ7w\"\n" +
                 "}";
 
         LoginResponse response = gson.fromJson(dummyResponse, LoginResponse.class);
+        response.getUser().setTransactions(new RealmList<>(transactionList.toArray(new Transaction[]{})));
 
         return delegate.returningResponse(response).login(request);
     }
 
     @Override
     public Call<Void> logout() {
+        List<Transaction> transactions = RealmDataSource.getInstance().getAllTransactions(LoginManager.getInstance().getLoggedInUserId());
+        if (transactions != null) {
+            Set<String> jsonTransactions = new HashSet<>(transactions.size());
+            for (Transaction transaction : transactions) {
+                try {
+                    jsonTransactions.add(gson.toJson(transaction));
+                } catch (Exception ex) {
+                    // Ignore exception
+                    ex.printStackTrace();
+                }
+            }
+
+            PreferenceManager.getInstance().putStringSet(TRANSACTIONS_LIST_KEY, jsonTransactions);
+        }
+
         return delegate.returningResponse(null).logout();
     }
 

@@ -1,145 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/background_main"
-                tools:context="com.mastercard.labs.mpqrpayment.activity.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main"
+    tools:context="com.mastercard.labs.mpqrpayment.activity.MainActivity">
+
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/toolbar_background"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/toolbar_background"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginTop="9dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/main_header"
-                android:contentDescription="@string/logo"/>
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="9dp"
+            android:contentDescription="@string/logo"
+            android:scaleType="fitCenter"
+            android:src="@drawable/main_header" />
     </android.support.v7.widget.Toolbar>
 
-    <me.crosswall.lib.coverflow.core.PagerContainer
+    <RelativeLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <me.crosswall.lib.coverflow.core.PagerContainer
             android:id="@+id/pager_container"
-            android:layout_below="@id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/layout_available_balance"
             android:layout_alignParentStart="true">
 
-        <android.support.v4.view.ViewPager
+
+            <android.support.v4.view.ViewPager
                 android:id="@+id/overlap_pager"
                 android:layout_width="320dp"
-                android:layout_height="180dp"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_height="160dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp" />
 
-    </me.crosswall.lib.coverflow.core.PagerContainer>
+        </me.crosswall.lib.coverflow.core.PagerContainer>
 
-    <LinearLayout
+        <LinearLayout
             android:id="@+id/layout_available_balance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/pager_container"
             android:orientation="vertical"
-            android:layout_above="@+id/cards_divider"
-            android:paddingBottom="30dp"
+            android:paddingBottom="25dp"
             android:paddingTop="16dp">
 
-        <TextView
+            <TextView
                 android:id="@+id/txtAvailableBalance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_available_balance"
-                android:gravity="center"
-                android:textColor="@color/colorLightWhite"
-                android:textAllCaps="true"
                 android:fontFamily="@string/font_family_regular"
-                android:textSize="@dimen/size_x"/>
+                android:gravity="center"
+                android:text="@string/txt_available_balance"
+                android:textAllCaps="true"
+                android:textColor="@color/colorLightWhite"
+                android:textSize="@dimen/size_x" />
 
-        <TextView
+            <TextView
                 android:id="@+id/txtAvailableBalanceAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                tools:text="@string/placeholder_available_balance"
-                android:gravity="center"
                 android:fontFamily="@string/font_family_thin"
+                android:gravity="center"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/size_34"/>
+                android:textSize="@dimen/size_34"
+                tools:text="@string/placeholder_available_balance" />
 
-        <Button
+            <Button
                 android:id="@+id/transaction_history"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:text="@string/transaction_history"
-                android:fontFamily="sans-serif"
-                android:textColor="@color/colorWhite"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:textSize="@dimen/size_small"
-                android:textAllCaps="false"
                 android:background="@drawable/btn_rounded_corners"
-                android:visibility="gone">
-        </Button>
+                android:fontFamily="sans-serif"
+                android:paddingLeft="20dp"
 
-    </LinearLayout>
+                android:paddingRight="20dp"
+                android:text="@string/transaction_history"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/size_14" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:id="@+id/cards_divider"
-            android:layout_above="@+id/layout_card_content"
-            android:background="@drawable/drawable_divider"/>
+        android:id="@+id/cards_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:layout_below="@id/layout_top"
+        android:background="@drawable/drawable_divider" />
 
     <LinearLayout
-            android:id="@+id/layout_card_content"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:background="@color/colorWhite"
-            android:paddingLeft="@dimen/card_det_padding"
-            android:paddingRight="@dimen/card_det_padding"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true">
+        android:id="@+id/layout_card_content"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/cards_divider"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/card_det_padding"
+        android:paddingRight="@dimen/card_det_padding"
+        android:paddingTop="10dp">
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_weight=".3"
-                    android:layout_gravity="center"
-                    android:background="@color/colorLightGrey">
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_weight=".3"
+                android:background="@color/colorLightGrey">
 
             </View>
 
             <TextView
-                    android:id="@+id/txt_last_transaction"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/txt_scan_qr"
-                    android:layout_weight=".4"
-                    android:gravity="center"
-                    android:textColor="@color/colorWarmGrey"
-                    android:textSize="@dimen/size_x"/>
+                android:id="@+id/txt_last_transaction"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:gravity="center"
+                android:text="@string/txt_scan_qr"
+                android:textColor="@color/colorWarmGrey"
+                android:textSize="@dimen/size_x" />
 
             <View
-                    android:layout_width="0dp"
-                    android:layout_height="2dp"
-                    android:layout_weight=".3"
-                    android:layout_gravity="center"
-                    android:background="@color/colorLightGrey">
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_weight=".3"
+                android:background="@color/colorLightGrey">
 
             </View>
 
@@ -147,14 +156,14 @@
         </LinearLayout>
 
         <ImageButton
-                android:id="@+id/scan_qr_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:src="@drawable/scan_qr_button"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@color/colorTransparent"
-                android:contentDescription="@string/txt_scan_qr"/>
+            android:id="@+id/scan_qr_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/colorTransparent"
+            android:contentDescription="@string/txt_scan_qr"
+            android:src="@drawable/scan_qr_button" />
 
     </LinearLayout>
 

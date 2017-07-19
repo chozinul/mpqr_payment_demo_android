@@ -4,6 +4,7 @@ import com.mastercard.labs.mpqrpayment.data.DataSource;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
+import com.mastercard.labs.mpqrpayment.data.model.Transaction;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
@@ -229,6 +230,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 }
 
                 // Send notification
+
                 final Map<String, Object> message = new HashMap<>();
                 message.put("transactionAmount", requestData.getTransactionAmount());
                 message.put("tipAmount", requestData.getTip());
@@ -255,6 +257,19 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 if (paymentData.getTipType() != null) {
                     tipAmount = paymentData.getTipAmount();
                 }
+
+                //save transaction
+                Transaction transaction = new Transaction();
+                transaction.setReferenceId(paymentResponse.getTransactionReference());
+                transaction.setCurrencyNumericCode(requestData.getCurrency());
+                transaction.setInvoiceNumber(paymentResponse.getInvoiceNumber());
+                transaction.setMaskedIdentifier(paymentInstrument.getMaskedIdentifier());
+                transaction.setMerchantName(paymentData.getMerchant().getName());
+                transaction.setTipAmount(requestData.getTip());
+                transaction.setTransactionAmount(requestData.getTransactionAmount());
+                transaction.setTransactionDate(paymentResponse.getTransactionDate());
+
+                dataSource.saveTransaction(paymentData.getUserId(), transaction);
 
                 Receipt receipt = new Receipt(paymentData.getMerchant().getName(), paymentData.getMerchant().getCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier(), paymentInstrument.getMethodType());
 
