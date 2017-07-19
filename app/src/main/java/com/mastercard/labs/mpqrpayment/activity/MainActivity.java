@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +30,6 @@ import com.mastercard.labs.mpqrpayment.login.LoginActivity;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
-import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
@@ -47,6 +47,8 @@ import me.crosswall.lib.coverflow.core.PagerContainer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import com.mastercard.labs.mpqrpayment.transaction.list.TransactionListActivity;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     public static String BUNDLE_USER_KEY = "userId";
@@ -230,6 +232,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         integrator.setPrompt(getString(R.string.txt_scan_qr));
         integrator.setCaptureActivity(CustomizedPPCaptureActivity.class);
         integrator.initiateScan();
+    }
+
+    @OnClick(R.id.transaction_history)
+    public void viewTransactionHistory() {
+        Intent intent = TransactionListActivity.newIntent(this, userId, selectedCardIdx);
+        startActivity(intent);
     }
 
     @Override

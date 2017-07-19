@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_transaction_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.mastercard.labs.mpqrpayment.transaction.detail.TransactionDetailActivity"
+    tools:showIn="@layout/activity_transaction_detail">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorVeryLightGrey"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
+
+        <ImageView
+            android:id="@+id/img_tick"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_tick" />
+
+        <TextView
+            android:id="@+id/txt_paid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_tick"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:text="Paid"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/size_x" />
+
+        <TextView
+            android:id="@+id/txt_amount_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_paid"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:textColor="@color/colorTextMainColor"
+            android:textSize="@dimen/size_32"
+            tools:text="INR 102.90" />
+
+        <TextView
+            android:id="@+id/txt_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_amount_value"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/total_tip_inclusive"
+            android:textAllCaps="true"
+            android:textSize="@dimen/size_x" />
+
+        <TextView
+            android:id="@+id/txt_tip_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_amount"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:textColor="@color/colorTextMainColor"
+            android:textSize="@dimen/size_32"
+            tools:text="INR 15.10" />
+
+        <TextView
+            android:id="@+id/txt_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_tip_value"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="@string/tip"
+            android:textAllCaps="true"
+            android:textSize="@dimen/size_x" />
+
+        <TextView
+            android:id="@+id/txt_transaction_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_tip"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textSize="@dimen/size_x"
+            tools:text="15/2/17 11:54 AM" />
+
+        <RelativeLayout
+            android:id="@+id/rl_merchant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_transaction_date"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/txt_merchant_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/txt_merchant_name"
+                android:text="@string/merchant_name_title"
+                android:textAllCaps="true"
+                android:textSize="@dimen/size_x" />
+
+            <TextView
+                android:id="@+id/txt_merchant_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_merchant_title"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorTextMainColor"
+                android:textSize="@dimen/size_x"
+                tools:text="Name" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_invoice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_merchant"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/txt_invoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/txt_invoice_value"
+                android:text="@string/invoice_number"
+                android:textAllCaps="true"
+                android:textSize="@dimen/size_x" />
+
+            <TextView
+                android:id="@+id/txt_invoice_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_invoice"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorTextMainColor"
+                android:textSize="@dimen/size_x"
+                tools:text="12345678" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_reference_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rl_invoice"
+            android:layout_marginTop="2dp"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/txt_reference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/txt_reference_value"
+                android:text="@string/reference_id"
+                android:textAllCaps="true"
+                android:textSize="@dimen/size_x" />
+
+            <TextView
+                android:id="@+id/txt_reference_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_reference"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/colorTextMainColor"
+                android:textSize="@dimen/size_x"
+                tools:text="12345678" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</ScrollView>

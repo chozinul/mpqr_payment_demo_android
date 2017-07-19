@@ -1,6 +1,7 @@
 package com.mastercard.labs.mpqrpayment.data;
 
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
+import com.mastercard.labs.mpqrpayment.data.model.Transaction;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 
 import java.util.List;
@@ -20,4 +21,10 @@ public interface DataSource {
     List<PaymentInstrument> getCards(Long userId);
 
     boolean deleteUser(long userId);
+
+    Transaction getTransaction(String referenceId);
+
+    List<Transaction> getTransactions(long userId, String maskedIdentifier);
+
+    Transaction saveTransaction(long userId, Transaction transaction);
 }
