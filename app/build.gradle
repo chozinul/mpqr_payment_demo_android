@@ -32,6 +32,9 @@ android {
         india {
             applicationId "com.mastercard.labs.mpqrpayment.ecobank"
         }
+        sbi {
+            applicationId "com.mastercard.labs.mpqrpayment.sbi"
+        }
     }
 
     sourceSets {
@@ -46,6 +49,9 @@ android {
         }
         india {
             res.srcDirs = ['src/brands/ecobank/res']
+        }
+        sbi {
+            res.srcDirs = ['src/brands/sbi/res']
         }
     }
     compileOptions {
