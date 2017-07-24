@@ -17,5 +17,6 @@
     <color name="colorEditTextHighlighted">@color/colorAccent</color>
 
     <color name="colorTextInputLayout">@color/colorAccent</color>
-    <color name="colorTextHint">@color/colorGrey</color>
+    <color name="colorTextHint">@color/colorWhite</color>
+
 </resources>
