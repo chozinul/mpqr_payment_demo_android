@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +30,7 @@ import com.mastercard.labs.mpqrpayment.login.LoginActivity;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
-import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
+import com.mastercard.labs.mpqrpayment.settings.SettingsActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (savedInstanceState != null) {
             selectedCardIdx = savedInstanceState.getInt(BUNDLE_SELECTED_CARD_IDX, -1);
         }
+
     }
 
     @Override
@@ -127,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         switch (item.getItemId()) {
             case R.id.logout:
                 logout();
+                return true;
+            case R.id.settings:
+                settings();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -267,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void showPaymentActivity(PushPaymentData pushPaymentData) {
         PaymentData paymentData = paymentData(pushPaymentData);
 
+
         Intent intent = PaymentActivity.newIntent(this, paymentData);
         startActivity(intent);
     }
@@ -297,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         Long userId = user.getId();
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
-        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), merchant(pushPaymentData));
+        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), pushPaymentData.getAdditionalData().getMobileNumber(), merchant(pushPaymentData));
     }
 
     private Merchant merchant(PushPaymentData pushPaymentData) {
@@ -368,6 +374,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
+        startActivity(intent);
+    }
+
+    private void settings() {
+        Intent intent = SettingsActivity.newIntent(this, userId);
         startActivity(intent);
     }
 }
