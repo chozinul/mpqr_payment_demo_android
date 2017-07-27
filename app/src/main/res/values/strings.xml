@@ -72,6 +72,12 @@
     <string name="ask_cancel_confirmation">Do you want to cancel?</string>
     <string name="merchant_name">Merchant Name</string>
 
+    <!-- Strings related to transaction -->
+    <string name="card_acquirer_txt">Card Issuer</string>
+    <string name="title_activity_transaction_list">Transactions</string>
+    <string name="no_transactions">No transactions for this card yet</string>
+    <string name="title_activity_transaction_detail">Transaction Detail</string>
+
     <!--Fonts-->
     <string name="font_family_light">sans-serif-light</string>
     <string name="font_family_medium">sans-serif-medium</string>
@@ -79,4 +85,8 @@
     <string name="font_family_condensed">sans-serif-condensed</string>
     <string name="font_family_black">sans-serif-black</string>
     <string name="font_family_thin">sans-serif-thin</string>
+    <string name="merchant_name_title">Merchant Name</string>
+    <string name="invoice_number">Invoice Number</string>
+    <string name="total_tip_inclusive">Total (Tip Inclusive)</string>
+    <string name="reference_id">Reference Id</string>
 </resources>
