@@ -28,6 +28,7 @@ import retrofit2.Response;
  */
 class PaymentPresenter implements PaymentContract.Presenter {
     private static int PIN_SIZE = 6;
+    private static String pinValue = "123456";
     private static Pattern pinPattern = Pattern.compile("[0-9]{" + PIN_SIZE + "}");
 
     private PaymentContract.View paymentView;
@@ -166,17 +167,14 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void makePayment() {
-        // TODO: Ask for pin before proceeding
         // TODO: Validate payment data before moving forward
-//        paymentView.askPin(PIN_SIZE);
-
-        requestPayment();
+        paymentView.askPin(PIN_SIZE);
     }
 
     @Override
     public void pin(String pin) {
         Matcher matcher = pinPattern.matcher(pin);
-        if (!matcher.matches()) {
+        if (!matcher.matches() || !pin.equals(pinValue)) {
             paymentView.showInvalidPinError();
             return;
         }
