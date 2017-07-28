@@ -89,4 +89,11 @@
     <string name="invoice_number">Invoice Number</string>
     <string name="total_tip_inclusive">Total (Tip Inclusive)</string>
     <string name="reference_id">Reference Id</string>
+    <string name="settings">Settings</string>
+    <string name="transaction_detail">Transaction Detail</string>
+    <string name="enter_merchant_mobile">Enter merchant phone number</string>
+    <string name="merchant_mobile">Merchant Number</string>
+    <string name="mobile">Merchant Phone</string>
+    <string name="sms">Merchant Notification</string>
+    <string name="smsMessage">Send merchant SMS instead of push notification upon payment</string>
 </resources>

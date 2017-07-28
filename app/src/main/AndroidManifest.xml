@@ -54,6 +54,15 @@
                 android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
         </activity>
         <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/settings"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mastercard.labs.mpqrpayment.activity.MainActivity"/>
+        </activity>
+        <activity
             android:name=".transaction.list.TransactionListActivity"
             android:label="@string/title_activity_transaction_list"
             android:launchMode="singleTop"
