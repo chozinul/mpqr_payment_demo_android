@@ -302,9 +302,10 @@ class PaymentPresenter implements PaymentContract.Presenter {
         if (merchantQRMobile != null && !merchantQRMobile.isEmpty() && isSMS) {
             final String stringMessage =
                     String.format("You have just received %1$s %2$.2f.", paymentData.getCurrencyCode().toString(), paymentData.getTotal());
-            final String mobileNumber = storedMobile.isEmpty() ?
+            String mobileNumber = storedMobile.isEmpty() ?
                     merchantQRMobile : storedMobile;
-
+            //replace 00 mode to + mode, since twilio only accept that
+            mobileNumber = mobileNumber.replaceAll("^00", "+");
             sendSMSViaTwilio(mobileNumber, stringMessage);
         }
 
