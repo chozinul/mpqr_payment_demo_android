@@ -22,6 +22,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -345,16 +346,24 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
 
     @Override
     public void askPin(int pinLength) {
+        LinearLayout layout = new LinearLayout(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(params);
+
+        int padding = getResources().getDimensionPixelSize(R.dimen.size_14);
+        layout.setPadding(padding, 0, padding, 0);
+
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
         input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(pinLength)});
-        int margin = getResources().getDimensionPixelSize(R.dimen.size_10);
-        input.setPadding(margin, margin, margin, margin);
+
+        layout.addView(input, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.enter_pin_title)
                 .setMessage(R.string.enter_pin_message)
-                .setView(input)
+                .setView(layout)
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
