@@ -1,15 +1,21 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
+import android.app.Activity;
+import android.util.Log;
+
 import com.mastercard.labs.mpqrpayment.data.DataSource;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
+import com.mastercard.labs.mpqrpayment.data.model.Transaction;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
 import com.mastercard.labs.mpqrpayment.service.NotificationService;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
+import com.mastercard.labs.mpqrpayment.utils.PreferenceManager;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +24,22 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.mastercard.labs.mpqrpayment.R.string.amount;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/1/17
  */
 class PaymentPresenter implements PaymentContract.Presenter {
     private static int PIN_SIZE = 6;
+    private static String pinValue = "123456";
     private static Pattern pinPattern = Pattern.compile("[0-9]{" + PIN_SIZE + "}");
 
     private PaymentContract.View paymentView;
@@ -165,17 +178,14 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void makePayment() {
-        // TODO: Ask for pin before proceeding
         // TODO: Validate payment data before moving forward
-//        paymentView.askPin(PIN_SIZE);
-
-        requestPayment();
+        paymentView.askPin(PIN_SIZE);
     }
 
     @Override
     public void pin(String pin) {
         Matcher matcher = pinPattern.matcher(pin);
-        if (!matcher.matches()) {
+        if (!matcher.matches() || !pin.equals(pinValue)) {
             paymentView.showInvalidPinError();
             return;
         }
@@ -196,6 +206,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
     }
 
     private void requestPayment() {
+
         if (paymentRequest != null) {
             paymentRequest.cancel();
         }
@@ -229,6 +240,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 }
 
                 // Send notification
+
                 final Map<String, Object> message = new HashMap<>();
                 message.put("transactionAmount", requestData.getTransactionAmount());
                 message.put("tipAmount", requestData.getTip());
@@ -238,12 +250,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 message.put("referenceId", paymentResponse.getTransactionReference());
                 message.put("invoiceNumber", paymentResponse.getInvoiceNumber());
 
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        NotificationService.getInstance().sendNotification(receiverIdentifier, message);
-                    }
-                });
+                notifyMerchant(paymentData.getMobile(), message, receiverIdentifier);
 
                 // Update card amount
                 PaymentInstrument paymentInstrument = dataSource.getCard(requestData.getSenderCardId());
@@ -255,6 +262,19 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 if (paymentData.getTipType() != null) {
                     tipAmount = paymentData.getTipAmount();
                 }
+
+                //save transaction
+                Transaction transaction = new Transaction();
+                transaction.setReferenceId(paymentResponse.getTransactionReference());
+                transaction.setCurrencyNumericCode(requestData.getCurrency());
+                transaction.setInvoiceNumber(paymentResponse.getInvoiceNumber());
+                transaction.setMaskedIdentifier(paymentInstrument.getMaskedIdentifier());
+                transaction.setMerchantName(paymentData.getMerchant().getName());
+                transaction.setTipAmount(requestData.getTip());
+                transaction.setTransactionAmount(requestData.getTransactionAmount());
+                transaction.setTransactionDate(paymentResponse.getTransactionDate());
+
+                dataSource.saveTransaction(paymentData.getUserId(), transaction);
 
                 Receipt receipt = new Receipt(paymentData.getMerchant().getName(), paymentData.getMerchant().getCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier(), paymentInstrument.getMethodType());
 
@@ -272,4 +292,58 @@ class PaymentPresenter implements PaymentContract.Presenter {
             }
         });
     }
+
+    private void notifyMerchant(final String merchantQRMobile, final Map<String, Object> message, final String receiverIdentifier) {
+        boolean isSMS = PreferenceManager.getInstance().getNotificationPreference();
+        String storedMobile = PreferenceManager.getInstance().getMobileValue();
+
+        message.put("isSMS", isSMS);
+
+        if (merchantQRMobile != null && !merchantQRMobile.isEmpty() && isSMS) {
+            final String stringMessage =
+                    String.format("You have just received %1$s %2$.2f.", paymentData.getCurrencyCode().toString(), paymentData.getTotal());
+            final String mobileNumber = storedMobile.isEmpty() ?
+                    merchantQRMobile : storedMobile;
+
+            sendSMSViaTwilio(mobileNumber, stringMessage);
+        }
+
+        //we will always send push notification to the receiverIdentifier
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NotificationService.getInstance().sendNotification(receiverIdentifier, message);
+            }
+        });
+    }
+
+    private void sendSMSViaTwilio(final String merchantMobileNumber, final String message) {
+        okhttp3.Callback callback = new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+            }
+
+        };
+
+        RequestBody formBody = new FormBody.Builder()
+                .add("To", merchantMobileNumber)
+                .add("Body", message)
+                .build();
+        Request request = new Request.Builder()
+                .url("https://serene-temple-92756.herokuapp.com/sms")
+                .post(formBody)
+                .build();
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        okhttp3.Call response = okHttpClient.newCall(request);
+        response.enqueue(callback);
+    }
+
+
 }

@@ -2,6 +2,7 @@ package com.mastercard.labs.mpqrpayment.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
 
@@ -16,9 +17,10 @@ public class PaymentData implements Parcelable {
     private TipInfo tipType;
     private double tip;
     private String currencyNumericCode;
+    private String mobile;
     private Merchant merchant;
 
-    public PaymentData(long userId, long cardId, boolean isDynamic, Double transactionAmount, TipInfo tipType, Double tip, String currencyNumericCode, Merchant merchant) {
+    public PaymentData(long userId, long cardId, boolean isDynamic, Double transactionAmount, TipInfo tipType, Double tip, String currencyNumericCode, String mobile, Merchant merchant) {
         this.userId = userId;
         this.cardId = cardId;
         this.isDynamic = isDynamic;
@@ -27,6 +29,7 @@ public class PaymentData implements Parcelable {
         this.tip = tip == null ? 0 : tip;
         this.currencyNumericCode = currencyNumericCode;
         this.merchant = merchant;
+        this.mobile = mobile;
     }
 
     public long getUserId() {
@@ -85,6 +88,14 @@ public class PaymentData implements Parcelable {
         this.currencyNumericCode = transactionCurrencyCode;
     }
 
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
     public Merchant getMerchant() {
         return merchant;
     }
@@ -129,6 +140,7 @@ public class PaymentData implements Parcelable {
         dest.writeInt(this.tipType == null ? -1 : this.tipType.ordinal());
         dest.writeDouble(this.tip);
         dest.writeString(this.currencyNumericCode);
+        dest.writeString(this.mobile);
         dest.writeParcelable(this.merchant, flags);
     }
 
@@ -141,6 +153,7 @@ public class PaymentData implements Parcelable {
         this.tipType = tmpTipType == -1 ? null : TipInfo.values()[tmpTipType];
         this.tip = in.readDouble();
         this.currencyNumericCode = in.readString();
+        this.mobile =  in.readString();
         this.merchant = in.readParcelable(Merchant.class.getClassLoader());
     }
 
