@@ -299,24 +299,22 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
         message.put("isSMS", isSMS);
 
-        if (merchantQRMobile != null && isSMS) {
-            if (!merchantQRMobile.isEmpty()) {
-                final String stringMessage = "You have just received " + paymentData.getTotal() + ".";
-                final String mobileNumber = storedMobile.isEmpty() ?
-                        merchantQRMobile : storedMobile;
+        if (merchantQRMobile != null && !merchantQRMobile.isEmpty() && isSMS) {
+            final String stringMessage =
+                    String.format("You have just received %1$s %2$.2f.", paymentData.getCurrencyCode().toString(), paymentData.getTotal());
+            final String mobileNumber = storedMobile.isEmpty() ?
+                    merchantQRMobile : storedMobile;
 
-                sendSMSViaTwilio(mobileNumber, stringMessage);
-            }
-        } else {
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    NotificationService.getInstance().sendNotification(receiverIdentifier, message);
-                }
-            });
+            sendSMSViaTwilio(mobileNumber, stringMessage);
         }
 
-
+        //we will always send push notification to the receiverIdentifier
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                NotificationService.getInstance().sendNotification(receiverIdentifier, message);
+            }
+        });
     }
 
     private void sendSMSViaTwilio(final String merchantMobileNumber, final String message) {

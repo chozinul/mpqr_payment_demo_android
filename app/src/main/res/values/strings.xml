@@ -95,5 +95,5 @@
     <string name="merchant_mobile">Merchant Number</string>
     <string name="mobile">Merchant Phone</string>
     <string name="sms">Merchant Notification</string>
-    <string name="smsMessage">Send merchant SMS instead of push notification upon payment</string>
+    <string name="smsMessage">Send merchant SMS together with push notification upon payment</string>
 </resources>
