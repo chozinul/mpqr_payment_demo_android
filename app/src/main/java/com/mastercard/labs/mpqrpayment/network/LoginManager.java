@@ -13,6 +13,8 @@ public class LoginManager {
 
     private static final String USER_ID_KEY = "userId";
     private static final String TOKEN_KEY = "token";
+    private static final String LAST_ACCESS_CODE_KEY = "lastAccessCode";
+    private static String DEFAULT_LAST_ACCESS_CODE = "jerry";
 
     public static void init(SharedPreferences sharedPreferences) {
         INSTANCE = new LoginManager(sharedPreferences);
@@ -57,6 +59,10 @@ public class LoginManager {
     }
 
     public String lastAccessToken() {
-        return "jerry";
+        return preferences.getString(LAST_ACCESS_CODE_KEY, DEFAULT_LAST_ACCESS_CODE);
+    }
+
+    public void setLastAccessToken(String accessToken) {
+        preferences.edit().putString(LAST_ACCESS_CODE_KEY, accessToken).apply();
     }
 }
