@@ -246,11 +246,14 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
             layout.setBackgroundColor(Color.TRANSPARENT);
             titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorWarmGrey));
             editText.setEnabled(true);
+            editText.setFocusable(true);
         } else {
             // TODO: Remove line below edit text
             layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledLayoutColor));
             titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorEnabledLayoutColor));
             editText.setEnabled(false);
+            editText.setFocusable(false);
+            editText.clearFocus();
         }
     }
 

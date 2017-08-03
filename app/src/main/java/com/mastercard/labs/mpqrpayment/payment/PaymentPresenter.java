@@ -65,12 +65,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
     public void setPaymentData(PaymentData paymentData) {
         this.paymentData = paymentData;
 
-        if (paymentData.isDynamic()) {
-            paymentView.disableAmountChange();
-        } else {
-            paymentView.enableAmountChange();
-        }
-
         if (paymentData.getMerchant() == null) {
             paymentView.showInvalidDataError();
             return;
@@ -98,6 +92,12 @@ class PaymentPresenter implements PaymentContract.Presenter {
                     paymentView.enableTipChange();
                     break;
             }
+        }
+
+        if (paymentData.isDynamic()) {
+            paymentView.disableAmountChange();
+        } else {
+            paymentView.enableAmountChange();
         }
 
         CurrencyCode currencyCode = paymentData.getCurrencyCode();
