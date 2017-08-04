@@ -65,12 +65,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
     public void setPaymentData(PaymentData paymentData) {
         this.paymentData = paymentData;
 
-        if (paymentData.isDynamic()) {
-            paymentView.disableAmountChange();
-        } else {
-            paymentView.enableAmountChange();
-        }
-
         if (paymentData.getMerchant() == null) {
             paymentView.showInvalidDataError();
             return;
@@ -98,6 +92,12 @@ class PaymentPresenter implements PaymentContract.Presenter {
                     paymentView.enableTipChange();
                     break;
             }
+        }
+
+        if (paymentData.isDynamic()) {
+            paymentView.disableAmountChange();
+        } else {
+            paymentView.enableAmountChange();
         }
 
         CurrencyCode currencyCode = paymentData.getCurrencyCode();
@@ -301,7 +301,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
         if (merchantQRMobile != null && !merchantQRMobile.isEmpty() && isSMS) {
             final String stringMessage =
-                    String.format("You have just received %1$s %2$.2f.", paymentData.getCurrencyCode().toString(), paymentData.getTotal());
+                    String.format("Transaction completed of amount: %1$s %2$,.2f", paymentData.getCurrencyCode().toString(), paymentData.getTotal());
             String mobileNumber = storedMobile.isEmpty() ?
                     merchantQRMobile : storedMobile;
             //replace 00 mode to + mode, since twilio only accept that

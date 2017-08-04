@@ -8,8 +8,8 @@ android {
         applicationId "com.mastercard.labs.mpqrpayment"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 13
-        versionName "1.0.13"
+        versionCode 14
+        versionName "1.0.14"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -40,6 +40,7 @@ android {
     sourceSets {
         main.java.srcDirs = ['src/main/java']
         main.res.srcDirs = ['src/main/res']
+        main.assets.srcDirs = ['src/main/assets']
 
         ecobank {
             res.srcDirs = ['src/brands/ecobank/res']
@@ -52,6 +53,7 @@ android {
         }
         sbi {
             res.srcDirs = ['src/brands/sbi/res']
+            assets.srcDirs = ['src/brands/sbi/assets']
         }
     }
     compileOptions {

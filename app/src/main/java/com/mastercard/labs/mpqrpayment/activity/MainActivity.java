@@ -351,27 +351,40 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void logout() {
-        showLogoutProgress();
+        DialogUtils.customAlertDialogBuilder(this, R.string.logout_confirmation)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        showLogoutProgress();
 
-        ServiceGenerator.getInstance().mpqrPaymentService().logout().enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                hideLogoutProgress();
+                        ServiceGenerator.getInstance().mpqrPaymentService().logout().enqueue(new Callback<Void>() {
+                            @Override
+                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                hideLogoutProgress();
 
-                LoginManager.getInstance().logout();
+                                LoginManager.getInstance().logout();
 
-                showLoginActivity();
-            }
+                                showLoginActivity();
+                            }
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                hideLogoutProgress();
+                            @Override
+                            public void onFailure(Call<Void> call, Throwable t) {
+                                hideLogoutProgress();
 
-                if (!call.isCanceled()) {
-                    logoutFailed();
-                }
-            }
-        });
+                                if (!call.isCanceled()) {
+                                    logoutFailed();
+                                }
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     private void logoutFailed() {
