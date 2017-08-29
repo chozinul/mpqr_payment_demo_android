@@ -33,6 +33,7 @@ import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
 import com.mastercard.labs.mpqrpayment.settings.SettingsActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
+import com.mastercard.mpqr.pushpayment.model.AdditionalData;
 import com.mastercard.mpqr.pushpayment.model.PushPaymentData;
 import com.mastercard.mpqr.pushpayment.scan.PPIntentIntegrator;
 import com.mastercard.mpqr.pushpayment.scan.constant.PPIntents;
@@ -310,8 +311,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         Long userId = user.getId();
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
+        AdditionalData additionalData = pushPaymentData.getAdditionalData();
 
-        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), pushPaymentData.getAdditionalData().getMobileNumber(), merchant(pushPaymentData));
+        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), additionalData == null ? null : additionalData.getMobileNumber(), merchant(pushPaymentData));
     }
 
     private Merchant merchant(PushPaymentData pushPaymentData) {
