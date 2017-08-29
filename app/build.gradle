@@ -35,6 +35,9 @@ android {
         sbi {
             applicationId "com.mastercard.labs.mpqrpayment.sbi"
         }
+        itmx {
+            applicationId "com.mastercard.labs.mpqrpayment.itmx"
+        }
     }
 
     sourceSets {
@@ -54,6 +57,9 @@ android {
         sbi {
             res.srcDirs = ['src/brands/sbi/res']
             assets.srcDirs = ['src/brands/sbi/assets']
+        }
+        itmx {
+            res.srcDirs = ['src/brands/itmx/res']
         }
     }
     compileOptions {
