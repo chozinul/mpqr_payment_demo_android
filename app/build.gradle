@@ -23,44 +23,12 @@ android {
         demo {
             applicationId "com.mastercard.labs.mpqrpayment.demo"
         }
-        ecobank {
-            applicationId "com.mastercard.labs.mpqrpayment.ecobank"
-        }
-        thailand {
-            applicationId "com.mastercard.labs.mpqrpayment.thailand"
-        }
-        india {
-            applicationId "com.mastercard.labs.mpqrpayment.ecobank"
-        }
-        sbi {
-            applicationId "com.mastercard.labs.mpqrpayment.sbi"
-        }
-        itmx {
-            applicationId "com.mastercard.labs.mpqrpayment.itmx"
-        }
     }
 
     sourceSets {
         main.java.srcDirs = ['src/main/java']
         main.res.srcDirs = ['src/main/res']
         main.assets.srcDirs = ['src/main/assets']
-
-        ecobank {
-            res.srcDirs = ['src/brands/ecobank/res']
-        }
-        thailand {
-            res.srcDirs = ['src/brands/thailand/res']
-        }
-        india {
-            res.srcDirs = ['src/brands/ecobank/res']
-        }
-        sbi {
-            res.srcDirs = ['src/brands/sbi/res']
-            assets.srcDirs = ['src/brands/sbi/assets']
-        }
-        itmx {
-            res.srcDirs = ['src/brands/itmx/res']
-        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7

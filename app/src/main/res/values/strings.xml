@@ -4,7 +4,6 @@
     <string name="placeholder_available_balance">$120.90</string>
     <string name="txt_scan_qr">Scan QR Code</string>
     <string name="paymentInstrument">Card</string>
-    <string name="transaction_history">Transaction History</string>
     <string name="title_activity_payment">QR Code Payment</string>
     <string name="flat_convenience_fee">Flat Tip</string>
     <string name="percentage_convenience_fee">Tip %</string>
@@ -73,12 +72,6 @@
     <string name="ask_cancel_confirmation">Do you want to cancel?</string>
     <string name="merchant_name">Merchant Name</string>
 
-    <!-- Strings related to transaction -->
-    <string name="card_acquirer_txt">Card Issuer</string>
-    <string name="title_activity_transaction_list">Transactions</string>
-    <string name="no_transactions">No transactions for this card yet</string>
-    <string name="title_activity_transaction_detail">Transaction Detail</string>
-
     <!--Fonts-->
     <string name="font_family_light">sans-serif-light</string>
     <string name="font_family_medium">sans-serif-medium</string>
@@ -90,11 +83,4 @@
     <string name="invoice_number">Invoice Number</string>
     <string name="total_tip_inclusive">Total (Tip Inclusive)</string>
     <string name="reference_id">Reference Id</string>
-    <string name="settings">Settings</string>
-    <string name="transaction_detail">Transaction Detail</string>
-    <string name="enter_merchant_mobile">Enter merchant phone number</string>
-    <string name="merchant_mobile">Merchant Number</string>
-    <string name="mobile">Merchant Phone</string>
-    <string name="sms">Merchant Notification</string>
-    <string name="smsMessage">Send merchant SMS together with push notification upon payment</string>
 </resources>
