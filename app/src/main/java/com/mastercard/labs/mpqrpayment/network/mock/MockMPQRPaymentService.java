@@ -8,26 +8,18 @@ import com.google.gson.GsonBuilder;
 import com.mastercard.labs.mpqrpayment.MainApplication;
 import com.mastercard.labs.mpqrpayment.data.RealmDataSource;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
-import com.mastercard.labs.mpqrpayment.data.model.Transaction;
 import com.mastercard.labs.mpqrpayment.data.model.User;
-import com.mastercard.labs.mpqrpayment.network.LoginManager;
 import com.mastercard.labs.mpqrpayment.network.MPQRPaymentService;
 import com.mastercard.labs.mpqrpayment.network.request.LoginAccessCodeRequest;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.LoginResponse;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
-import com.mastercard.labs.mpqrpayment.utils.PreferenceManager;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import io.realm.RealmList;
 import okhttp3.MediaType;
@@ -42,11 +34,9 @@ import retrofit2.mock.Calls;
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/3/17
  */
 public class MockMPQRPaymentService implements MPQRPaymentService {
-    private final static String TAG = MockMPQRPaymentService.class.getName();
     private final static int RANDOM_STRING_LENGTH = 8;
 
     private final static String RANDOM_STRING_CHARS = "0123456789ABCDEDGHIJKLMNOPQRSTUVWXYZ";
-    private static final String TRANSACTIONS_LIST_KEY = "merchantTransactions";
 
     private static final String NUMBER_OF_CARDS_KEY = "numberOfCards";
 
@@ -63,7 +53,6 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
                 DEFAULT_NUMBER_OF_CARDS = 3;
             }
         } catch (Exception e) {
-            //swallow it
             DEFAULT_NUMBER_OF_CARDS = 3;
         }
     }
@@ -79,17 +68,10 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     @Override
     public Call<LoginResponse> login(@Body LoginAccessCodeRequest request) {
+
         if (request.getAccessCode().length() == 0 || !request.getPin().equals("123456")) {
             ResponseBody responseBody = ResponseBody.create(MediaType.parse("application/json"), "{\"success\": \"false\"}");
             return delegate.returning(Calls.response(Response.error(404, responseBody))).login(request);
-        }
-
-        // TODO: Handle version updates because that might invalidate stored data in preferences and cause exceptions while parsing as JSON
-        // Parse stored transactions
-        Set<String> transactions = PreferenceManager.getInstance().getStringSet(TRANSACTIONS_LIST_KEY, new HashSet<String>());
-        List<Transaction> transactionList = new ArrayList<>(transactions.size());
-        for (String transaction : transactions) {
-            transactionList.add(gson.fromJson(transaction, Transaction.class));
         }
 
         String dummyResponse = "{\n" +
@@ -98,7 +80,6 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
                 "}";
 
         LoginResponse response = gson.fromJson(dummyResponse, LoginResponse.class);
-        response.getUser().setTransactions(new RealmList<>(transactionList.toArray(new Transaction[]{})));
 
         PaymentInstrument[] instruments = response.getUser().getPaymentInstruments().toArray(new PaymentInstrument[0]);
         RealmList<PaymentInstrument> shortListedInstruments = new RealmList<>(ArrayUtils.subarray(instruments, 0, DEFAULT_NUMBER_OF_CARDS));
@@ -109,21 +90,6 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
 
     @Override
     public Call<Void> logout() {
-        List<Transaction> transactions = RealmDataSource.getInstance().getAllTransactions(LoginManager.getInstance().getLoggedInUserId());
-        if (transactions != null) {
-            Set<String> jsonTransactions = new HashSet<>(transactions.size());
-            for (Transaction transaction : transactions) {
-                try {
-                    jsonTransactions.add(gson.toJson(transaction));
-                } catch (Exception ex) {
-                    // Ignore exception
-                    ex.printStackTrace();
-                }
-            }
-
-            PreferenceManager.getInstance().putStringSet(TRANSACTIONS_LIST_KEY, jsonTransactions);
-        }
-
         return delegate.returningResponse(null).logout();
     }
 
@@ -160,7 +126,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
             "    {\n" +
             "      \"id\": 184,\n" +
             "      \"acquirerName\": \"Mastercard\",\n" +
-            "      \"issuerName\": \"Ecobank\",\n" +
+            "      \"issuerName\": \"Partnerbank\",\n" +
             "      \"name\": \"MastercardGold\",\n" +
             "      \"methodType\": \"DebitCard\",\n" +
             "      \"balance\": \"5100.20\",\n" +
@@ -171,7 +137,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
             "    {\n" +
             "      \"id\": 185,\n" +
             "      \"acquirerName\": \"Mastercard\",\n" +
-            "      \"issuerName\": \"Ecobank\",\n" +
+            "      \"issuerName\": \"Partnerbank\",\n" +
             "      \"name\": \"MastercardBlack\",\n" +
             "      \"methodType\": \"CreditCard\",\n" +
             "      \"balance\": \"2500.90\",\n" +
@@ -182,7 +148,7 @@ public class MockMPQRPaymentService implements MPQRPaymentService {
             "    {\n" +
             "      \"id\": 186,\n" +
             "      \"acquirerName\": \"Mastercard\",\n" +
-            "      \"issuerName\": \"Ecobank\",\n" +
+            "      \"issuerName\": \"Partnerbank\",\n" +
             "      \"name\": \"MastercardBlack\",\n" +
             "      \"methodType\": \"SavingsAccount\",\n" +
             "      \"balance\": \"2800.00\",\n" +

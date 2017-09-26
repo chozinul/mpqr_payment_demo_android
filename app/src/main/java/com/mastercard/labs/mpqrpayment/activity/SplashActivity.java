@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.mastercard.labs.mpqrpayment.MainApplication;
 import com.mastercard.labs.mpqrpayment.R;
 import com.mastercard.labs.mpqrpayment.login.LoginActivity;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;

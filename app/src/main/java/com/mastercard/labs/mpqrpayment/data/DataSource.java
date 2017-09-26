@@ -1,15 +1,16 @@
 package com.mastercard.labs.mpqrpayment.data;
 
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
-import com.mastercard.labs.mpqrpayment.data.model.Transaction;
 import com.mastercard.labs.mpqrpayment.data.model.User;
 
 import java.util.List;
 
 /**
+ * Simulates a database using Realm
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/2/17
  */
 public interface DataSource {
+
     User saveUser(User user);
 
     PaymentInstrument saveCard(PaymentInstrument paymentInstrument);
@@ -22,9 +23,4 @@ public interface DataSource {
 
     boolean deleteUser(long userId);
 
-    Transaction getTransaction(String referenceId);
-
-    List<Transaction> getTransactions(long userId, String maskedIdentifier);
-
-    Transaction saveTransaction(long userId, Transaction transaction);
 }

@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,7 +29,6 @@ import com.mastercard.labs.mpqrpayment.login.LoginActivity;
 import com.mastercard.labs.mpqrpayment.network.LoginManager;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.payment.PaymentActivity;
-import com.mastercard.labs.mpqrpayment.settings.SettingsActivity;
 import com.mastercard.labs.mpqrpayment.utils.DialogUtils;
 import com.mastercard.mpqr.pushpayment.exception.FormatException;
 import com.mastercard.mpqr.pushpayment.model.AdditionalData;
@@ -50,10 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.mastercard.labs.mpqrpayment.transaction.list.TransactionListActivity;
-
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
-    public static String BUNDLE_USER_KEY = "userId";
     public static String BUNDLE_SELECTED_CARD_IDX = "selectedCardIdx";
 
     @BindView(R.id.toolbar)
@@ -82,12 +77,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         setSupportActionBar(toolbar);
 
-        userId = getIntent().getLongExtra(BUNDLE_USER_KEY, -1L);
-        // TODO: Only for debugging purposes till Login screen is implemented.
         userId = LoginManager.getInstance().getLoggedInUserId();
 
         if (userId == -1) {
-            // TODO: Show error
             return;
         }
 
@@ -116,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     protected void onResume() {
         super.onResume();
-
         invalidateViews();
     }
 
@@ -132,9 +123,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         switch (item.getItemId()) {
             case R.id.logout:
                 logout();
-                return true;
-            case R.id.settings:
-                settings();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -160,17 +148,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         updateBalance();
     }
 
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    /**
+     * Updates balance of card.
+     */
     private void updateBalance() {
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
 
         availableBalanceTextView.setText(selectedPaymentInstrument.getFormattedAmount());
     }
 
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
+    /**
+     * Updates cards accordingly to current user.
+     */
     private void invalidateViews() {
         user = dataSource.getUser(userId);
         if (user == null) {
@@ -181,12 +175,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         refreshCards(user);
     }
 
+    /**
+     * Refreshes cards in viewPager.
+     */
     private void refreshCards(User user) {
         if (user.getPaymentInstruments().isEmpty()) {
-            // TODO: Show error
             return;
         }
 
+        //if no card is currently selected. get default card and set as selected
         if (selectedCardIdx == -1) {
             for (int i = 0; i < user.getPaymentInstruments().size(); i++) {
                 if (user.getPaymentInstruments().get(i).isDefault()) {
@@ -196,12 +193,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
 
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
-
         List<PaymentInstrument> paymentInstruments = user.getPaymentInstruments();
-
         final ViewPager viewPager = pagerContainer.getViewPager();
         CardPagerAdapter pagerAdapter = (CardPagerAdapter) viewPager.getAdapter();
 
+
+        //update viewPager to show newest card list
         pagerAdapter.setPaymentInstruments(Collections.unmodifiableList(paymentInstruments));
         pagerAdapter.notifyDataSetChanged();
 
@@ -240,12 +237,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         integrator.initiateScan();
     }
 
-    @OnClick(R.id.transaction_history)
-    public void viewTransactionHistory() {
-        Intent intent = TransactionListActivity.newIntent(this, userId, selectedCardIdx);
-        startActivity(intent);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
@@ -269,6 +260,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Dialog to show when QR code cannot scan successfully.
+     */
     private void cannotScanQR() {
         DialogUtils.customAlertDialogBuilder(this, R.string.error_cannot_scan_qr).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
@@ -281,11 +275,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void showPaymentActivity(PushPaymentData pushPaymentData) {
         PaymentData paymentData = paymentData(pushPaymentData);
 
-
         Intent intent = PaymentActivity.newIntent(this, paymentData);
         startActivity(intent);
     }
 
+    /**
+     * Generates PaymentData using data from PushPaymentData instance received.
+     * @param pushPaymentData pushpaymentdata to generate from
+     * @return paymentData instance
+     */
     private PaymentData paymentData(PushPaymentData pushPaymentData) {
         PaymentData.TipInfo tipInfo = null;
         double tip = 0;
@@ -313,24 +311,41 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         PaymentInstrument selectedPaymentInstrument = user.getPaymentInstruments().get(selectedCardIdx);
         AdditionalData additionalData = pushPaymentData.getAdditionalData();
 
-        return new PaymentData(userId, selectedPaymentInstrument.getId(), pushPaymentData.isDynamic(), pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), additionalData == null ? null : additionalData.getMobileNumber(), merchant(pushPaymentData));
+        boolean isDynamic = false;
+        String poi = pushPaymentData.getPointOfInitiationMethod();
+        if (poi != null) {
+            if (poi.endsWith("2")) {
+                isDynamic = true;
+            }
+        }
+        return new PaymentData(userId, selectedPaymentInstrument.getId(), isDynamic, pushPaymentData.getTransactionAmount(), tipInfo, tip, pushPaymentData.getTransactionCurrencyCode(), additionalData == null ? null : additionalData.getMobileNumber(), merchant(pushPaymentData));
     }
 
-    private Merchant merchant(PushPaymentData pushPaymentData) {
+    /**
+     * Generates Merchant using merchant data from PushPaymentData instance received.
+     * @param pushPaymentData pushpaymentdata to generate from
+     * @return Merchant instance
+     */
+    private Merchant merchant(PushPaymentData pushPaymentData){
         Merchant merchant = new Merchant();
 
-        merchant.setName(pushPaymentData.getMerchantName());
-        merchant.setCity(pushPaymentData.getMerchantCity());
-        merchant.setCategoryCode(pushPaymentData.getMerchantCategoryCode());
-        merchant.setIdentifierVisa02(pushPaymentData.getMerchantIdentifierVisa02());
-        merchant.setIdentifierVisa03(pushPaymentData.getMerchantIdentifierVisa03());
-        merchant.setIdentifierMastercard04(pushPaymentData.getMerchantIdentifierMastercard04());
-        merchant.setIdentifierMastercard05(pushPaymentData.getMerchantIdentifierMastercard05());
-        merchant.setIdentifierNPCI06(pushPaymentData.getMerchantIdentifierNPCI06());
-        merchant.setIdentifierNPCI07(pushPaymentData.getMerchantIdentifierNPCI07());
-        if (pushPaymentData.getAdditionalData() != null) {
-            merchant.setTerminalNumber(pushPaymentData.getAdditionalData().getTerminalId());
-            merchant.setStoreId(pushPaymentData.getAdditionalData().getStoreId());
+        try {
+            merchant.setName(pushPaymentData.getMerchantName());
+            merchant.setCity(pushPaymentData.getMerchantCity());
+            merchant.setCategoryCode(pushPaymentData.getMerchantCategoryCode());
+            merchant.setIdentifierVisa02(pushPaymentData.getMerchantIdentifierVisa02());
+            merchant.setIdentifierVisa03(pushPaymentData.getMerchantIdentifierVisa03());
+            merchant.setIdentifierMastercard04(pushPaymentData.getMerchantIdentifierMastercard04());
+            merchant.setIdentifierMastercard05(pushPaymentData.getMerchantIdentifierMastercard05());
+            merchant.setIdentifierNPCI06(pushPaymentData.getMerchantIdentifierNPCI06());
+            merchant.setIdentifierNPCI07(pushPaymentData.getMerchantIdentifierNPCI07());
+            if (pushPaymentData.getAdditionalData() != null) {
+                merchant.setTerminalNumber(pushPaymentData.getAdditionalData().getTerminalId());
+                merchant.setStoreId(pushPaymentData.getAdditionalData().getStoreId());
+            }
+        } catch (FormatException e)
+        {
+            //ignore this
         }
 
         return merchant;
@@ -400,8 +415,4 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         startActivity(intent);
     }
 
-    private void settings() {
-        Intent intent = SettingsActivity.newIntent(this, userId);
-        startActivity(intent);
-    }
 }

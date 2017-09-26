@@ -78,22 +78,6 @@
                 android:textSize="@dimen/size_34"
                 tools:text="@string/placeholder_available_balance" />
 
-            <Button
-                android:id="@+id/transaction_history"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/btn_rounded_corners"
-                android:fontFamily="sans-serif"
-                android:paddingLeft="20dp"
-
-                android:paddingRight="20dp"
-                android:text="@string/transaction_history"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/size_14" />
-
         </LinearLayout>
 
     </RelativeLayout>

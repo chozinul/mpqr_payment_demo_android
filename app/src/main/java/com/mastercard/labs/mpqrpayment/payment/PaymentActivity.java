@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -248,7 +247,6 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
             editText.setEnabled(true);
             editText.setFocusable(true);
         } else {
-            // TODO: Remove line below edit text
             layout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorDisabledLayoutColor));
             titleTextView.setTextColor(ContextCompat.getColor(this, R.color.colorEnabledLayoutColor));
             editText.setEnabled(false);

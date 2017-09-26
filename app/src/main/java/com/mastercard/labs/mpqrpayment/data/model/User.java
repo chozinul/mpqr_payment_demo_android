@@ -13,7 +13,6 @@ public class User extends RealmObject {
     private String firstName;
     private String lastName;
     private RealmList<PaymentInstrument> paymentInstruments;
-    private RealmList<Transaction> transactions;
 
     public long getId() {
         return id;
@@ -45,14 +44,6 @@ public class User extends RealmObject {
 
     public void setPaymentInstruments(RealmList<PaymentInstrument> paymentInstruments) {
         this.paymentInstruments = paymentInstruments;
-    }
-
-    public RealmList<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(RealmList<Transaction> transactions) {
-        this.transactions = transactions;
     }
 
 }

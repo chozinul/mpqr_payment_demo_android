@@ -1,21 +1,14 @@
 package com.mastercard.labs.mpqrpayment.payment;
 
-import android.app.Activity;
-import android.util.Log;
-
 import com.mastercard.labs.mpqrpayment.data.DataSource;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentData;
 import com.mastercard.labs.mpqrpayment.data.model.PaymentInstrument;
 import com.mastercard.labs.mpqrpayment.data.model.Receipt;
-import com.mastercard.labs.mpqrpayment.data.model.Transaction;
 import com.mastercard.labs.mpqrpayment.network.ServiceGenerator;
 import com.mastercard.labs.mpqrpayment.network.request.PaymentRequest;
 import com.mastercard.labs.mpqrpayment.network.response.PaymentResponse;
-import com.mastercard.labs.mpqrpayment.service.NotificationService;
 import com.mastercard.labs.mpqrpayment.utils.CurrencyCode;
-import com.mastercard.labs.mpqrpayment.utils.PreferenceManager;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,15 +17,10 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mastercard.labs.mpqrpayment.R.string.amount;
 
 /**
  * @author Muhammad Azeem (muhammad.azeem@mastercard.com) on 2/1/17
@@ -44,7 +32,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     private PaymentContract.View paymentView;
     private DataSource dataSource;
-    private final Executor executor = Executors.newSingleThreadExecutor();
 
     private PaymentData paymentData;
     private PaymentInstrument paymentInstrument;
@@ -69,8 +56,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
             paymentView.showInvalidDataError();
             return;
         }
-
-        // TODO: Validate if merchant has required identifier as the selected card
 
         paymentView.setAmount(paymentData.getTransactionAmount());
 
@@ -178,7 +163,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void makePayment() {
-        // TODO: Validate payment data before moving forward
         paymentView.askPin(PIN_SIZE);
     }
 
@@ -190,7 +174,7 @@ class PaymentPresenter implements PaymentContract.Presenter {
             return;
         }
 
-        // TODO: Validate pin on server
+        // Validate pin on server should occur here
 
         requestPayment();
     }
@@ -213,7 +197,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
         paymentView.showProcessingPaymentLoading();
 
-        // TODO: Pick correct identifier
         final String receiverIdentifier = paymentData.getMerchant().getIdentifierMastercard04();
         final PaymentRequest requestData = new PaymentRequest(receiverIdentifier, paymentData.getCardId(), paymentData.getCurrencyNumericCode(), paymentData.getTransactionAmount(), paymentData.getTipAmount(), paymentData.getMerchant().getTerminalNumber());
 
@@ -239,8 +222,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
                     return;
                 }
 
-                // Send notification
-
                 final Map<String, Object> message = new HashMap<>();
                 message.put("transactionAmount", requestData.getTransactionAmount());
                 message.put("tipAmount", requestData.getTip());
@@ -249,8 +230,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 message.put("transactionDate", paymentResponse.getTransactionDate());
                 message.put("referenceId", paymentResponse.getTransactionReference());
                 message.put("invoiceNumber", paymentResponse.getInvoiceNumber());
-
-                notifyMerchant(paymentData.getMobile(), message, receiverIdentifier);
 
                 // Update card amount
                 PaymentInstrument paymentInstrument = dataSource.getCard(requestData.getSenderCardId());
@@ -262,19 +241,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
                 if (paymentData.getTipType() != null) {
                     tipAmount = paymentData.getTipAmount();
                 }
-
-                //save transaction
-                Transaction transaction = new Transaction();
-                transaction.setReferenceId(paymentResponse.getTransactionReference());
-                transaction.setCurrencyNumericCode(requestData.getCurrency());
-                transaction.setInvoiceNumber(paymentResponse.getInvoiceNumber());
-                transaction.setMaskedIdentifier(paymentInstrument.getMaskedIdentifier());
-                transaction.setMerchantName(paymentData.getMerchant().getName());
-                transaction.setTipAmount(requestData.getTip());
-                transaction.setTransactionAmount(requestData.getTransactionAmount());
-                transaction.setTransactionDate(paymentResponse.getTransactionDate());
-
-                dataSource.saveTransaction(paymentData.getUserId(), transaction);
 
                 Receipt receipt = new Receipt(paymentData.getMerchant().getName(), paymentData.getMerchant().getCity(), paymentData.getTransactionAmount(), tipAmount, paymentData.getTotal(), paymentData.getCurrencyCode().toString(), paymentInstrument.getMaskedIdentifier(), paymentInstrument.getMethodType());
 
