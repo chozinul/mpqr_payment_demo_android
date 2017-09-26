@@ -88,7 +88,7 @@ dependencies {
 
     //required dependencies
     compile 'com.journeyapps:zxing-android-embedded:3.4.0'
-    compile files('libs/pushpayment-core-sdk-1.0.0.jar')
+    compile files('libs/pushpayment-core-sdk-2.0.0.jar')
     compile(name: 'qr-scan-sdk-release-1.0.0', ext: 'aar')
 
     compile 'com.android.support:appcompat-v7:25.3.1'
