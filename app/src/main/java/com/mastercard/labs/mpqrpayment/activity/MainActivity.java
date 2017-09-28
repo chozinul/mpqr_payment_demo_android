@@ -323,29 +323,25 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     /**
      * Generates Merchant using merchant data from PushPaymentData instance received.
+     *
      * @param pushPaymentData pushpaymentdata to generate from
      * @return Merchant instance
      */
-    private Merchant merchant(PushPaymentData pushPaymentData){
+    private Merchant merchant(PushPaymentData pushPaymentData) {
         Merchant merchant = new Merchant();
 
-        try {
-            merchant.setName(pushPaymentData.getMerchantName());
-            merchant.setCity(pushPaymentData.getMerchantCity());
-            merchant.setCategoryCode(pushPaymentData.getMerchantCategoryCode());
-            merchant.setIdentifierVisa02(pushPaymentData.getMerchantIdentifierVisa02());
-            merchant.setIdentifierVisa03(pushPaymentData.getMerchantIdentifierVisa03());
-            merchant.setIdentifierMastercard04(pushPaymentData.getMerchantIdentifierMastercard04());
-            merchant.setIdentifierMastercard05(pushPaymentData.getMerchantIdentifierMastercard05());
-            merchant.setIdentifierNPCI06(pushPaymentData.getMerchantIdentifierNPCI06());
-            merchant.setIdentifierNPCI07(pushPaymentData.getMerchantIdentifierNPCI07());
-            if (pushPaymentData.getAdditionalData() != null) {
-                merchant.setTerminalNumber(pushPaymentData.getAdditionalData().getTerminalId());
-                merchant.setStoreId(pushPaymentData.getAdditionalData().getStoreId());
-            }
-        } catch (FormatException e)
-        {
-            //ignore this
+        merchant.setName(pushPaymentData.getMerchantName());
+        merchant.setCity(pushPaymentData.getMerchantCity());
+        merchant.setCategoryCode(pushPaymentData.getMerchantCategoryCode());
+        merchant.setIdentifierVisa02(pushPaymentData.getMerchantIdentifierVisa02());
+        merchant.setIdentifierVisa03(pushPaymentData.getMerchantIdentifierVisa03());
+        merchant.setIdentifierMastercard04(pushPaymentData.getMerchantIdentifierMastercard04());
+        merchant.setIdentifierMastercard05(pushPaymentData.getMerchantIdentifierMastercard05());
+        merchant.setIdentifierNPCI06(pushPaymentData.getMerchantIdentifierNPCI06());
+        merchant.setIdentifierNPCI07(pushPaymentData.getMerchantIdentifierNPCI07());
+        if (pushPaymentData.getAdditionalData() != null) {
+            merchant.setTerminalNumber(pushPaymentData.getAdditionalData().getTerminalId());
+            merchant.setStoreId(pushPaymentData.getAdditionalData().getStoreId());
         }
 
         return merchant;
