@@ -12,16 +12,11 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -346,48 +341,6 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     }
 
     @Override
-    public void askPin(int pinLength) {
-        LinearLayout layout = new LinearLayout(this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setLayoutParams(params);
-
-        int padding = getResources().getDimensionPixelSize(R.dimen.size_14);
-        layout.setPadding(padding, 0, padding, 0);
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-        input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(pinLength)});
-
-        layout.addView(input, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle(R.string.enter_pin_title)
-                .setMessage(R.string.enter_pin_message)
-                .setView(layout)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        presenter.pin(input.getText().toString());
-                    }
-                }).create();
-
-        Window window = dialog.getWindow();
-        if (window != null) {
-            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        }
-
-        dialog.show();
-    }
-
-    @Override
     public void showProcessingPaymentLoading() {
         KeyboardUtils.hideKeyboard(this);
 
@@ -418,11 +371,6 @@ public class PaymentActivity extends AppCompatActivity implements PaymentContrac
     @Override
     public void showPaymentFailedError() {
         DialogUtils.showDialog(this, R.string.error, R.string.payment_failed);
-    }
-
-    @Override
-    public void showInvalidPinError() {
-        DialogUtils.showDialog(this, R.string.error, R.string.invalid_pin);
     }
 
     @Override

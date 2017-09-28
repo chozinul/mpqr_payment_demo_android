@@ -163,19 +163,6 @@ class PaymentPresenter implements PaymentContract.Presenter {
 
     @Override
     public void makePayment() {
-        paymentView.askPin(PIN_SIZE);
-    }
-
-    @Override
-    public void pin(String pin) {
-        Matcher matcher = pinPattern.matcher(pin);
-        if (!matcher.matches() || !pin.equals(pinValue)) {
-            paymentView.showInvalidPinError();
-            return;
-        }
-
-        // Validate pin on server should occur here
-
         requestPayment();
     }
 

@@ -46,8 +46,6 @@ public interface PaymentContract {
 
         void showCardSelection(List<PaymentInstrument> paymentInstruments, int selectedCardIdx);
 
-        void askPin(int pinLength);
-
         void showProcessingPaymentLoading();
 
         void hideProcessingPaymentLoading();
@@ -55,8 +53,6 @@ public interface PaymentContract {
         void showReceipt(Receipt receipt);
 
         void showPaymentFailedError();
-
-        void showInvalidPinError();
 
         void showNetworkError();
 
@@ -86,8 +82,6 @@ public interface PaymentContract {
         void selectCard();
 
         void makePayment();
-
-        void pin(String pin);
 
         void confirmCancellation();
 
